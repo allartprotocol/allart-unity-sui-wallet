@@ -5,8 +5,21 @@ using UnityEngine;
 
 public class WalletComponent : MonoBehaviour
 {
+    public static WalletComponent Instance { get; private set; }
+
     private Dictionary<string, Wallet> wallets = new Dictionary<string, Wallet>();
     public SUIRPCClient client;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            return;
+        }
+        Destroy(this.gameObject);
+    }
 
     private void Start()
     {

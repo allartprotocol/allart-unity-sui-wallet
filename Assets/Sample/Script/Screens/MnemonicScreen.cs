@@ -1,17 +1,10 @@
-using AllArt.SUI.Wallet;
-using Newtonsoft.Json.Serialization;
+using Chaos.NaCl;
 using Newtonsoft.Json;
 using SimpleScreen;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using AllArt.SUI.Requests;
-using Solnet.Rpc.Messages;
-using Chaos.NaCl;
-using UnityEditor.VersionControl;
 
 public class MnemonicScreen : BaseScreen
 {

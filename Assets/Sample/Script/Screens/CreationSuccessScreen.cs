@@ -1,6 +1,8 @@
 using SimpleScreen;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +13,12 @@ public class CreationSuccessScreen : BaseScreen
     // Start is called before the first frame update
     void Start()
     {
-        
+        continueBtn.onClick.AddListener(OnContinue);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnContinue()
     {
-        
+        manager.ShowScreen("LoginScreen");
     }
+
 }

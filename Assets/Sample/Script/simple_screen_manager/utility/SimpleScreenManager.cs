@@ -7,6 +7,7 @@ namespace SimpleScreen {
         public BaseScreen[] screens;
         private Dictionary<string, BaseScreen> screensDict = new Dictionary<string, BaseScreen>();
         public BaseScreen currentScreen;
+        public BaseScreen previousScreen;
 
         public static SimpleScreenManager instance;
 
@@ -52,6 +53,7 @@ namespace SimpleScreen {
         {
             curScreen?.HideScreen();
             screen.ShowScreen();
+            previousScreen = curScreen;
             currentScreen = screen;
         }
 
@@ -59,6 +61,7 @@ namespace SimpleScreen {
         {
             currentScreen?.HideScreen();
             screensDict[name].ShowScreen(data);
+            previousScreen = currentScreen;
             currentScreen = screensDict[name];
         }
 
@@ -66,6 +69,7 @@ namespace SimpleScreen {
         {
             curScreen?.HideScreen();
             screens[index].ShowScreen();
+            previousScreen = curScreen;
             currentScreen = screens[index];
         }
 
@@ -73,6 +77,7 @@ namespace SimpleScreen {
         {
             curScreen?.HideScreen();
             screensDict[name].ShowScreen(data);
+            previousScreen = curScreen;
             currentScreen = screensDict[name];
         }
 

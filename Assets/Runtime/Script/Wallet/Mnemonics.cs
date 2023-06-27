@@ -74,6 +74,32 @@ namespace AllArt.SUI.Wallet {
             return GetBIP39SeedBytes(mnemonic);
         }
 
+        public static bool IsValidPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return false;
+            if (!path.StartsWith("m/"))
+                return false;
+            var segments = path
+                        .Split('/')
+                        .Slice(1)
+                        .Select(a => a.Replace("'", ""))
+                        .Select(a => Convert.ToUInt32(a, 10));
+            if (segments.Any(a => a >= HardenedOffset))
+                return false;
+            return true;
+        }
+
+        public static bool IsValidMnemonic(string mnemonic)
+        {
+            if (string.IsNullOrEmpty(mnemonic))
+                return false;
+            string[] mnemonicWords = mnemonic.Split(' ');
+            if (mnemonicWords.Length != 12 && mnemonicWords.Length != 24)
+                return false;
+            return true;
+        }
+
         public static (byte[] Key, byte[] ChainCode) DerivePath(string path, byte[] _masterKey, byte[] _chainCode)
         {
             //if (!IsValidPath(path))

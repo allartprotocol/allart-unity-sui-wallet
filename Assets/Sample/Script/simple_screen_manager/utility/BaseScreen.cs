@@ -1,35 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
-namespace SimpleScreen { 
+namespace SimpleScreen
+{
     public class BaseScreen : MonoBehaviour, IScreen
     {
         private SimpleScreenManager _manager;
         protected CanvasGroup _canvasGroup;
 
-        public SimpleScreenManager manager {
+        public SimpleScreenManager manager
+        {
             get { return _manager; }
-            set { 
+            set
+            {
                 _manager = value;
                 tween = (IScreenAnimation)GetComponent(typeof(IScreenAnimation));
                 _canvasGroup = GetComponent<CanvasGroup>();
-            } 
+            }
         }
         public IScreenAnimation tween { get; set; }
 
         private void Awake()
         {
             tween = (IScreenAnimation)GetComponent(typeof(IScreenAnimation));
-        } 
+        }
 
         public virtual void HideScreen()
         {
-            if(tween != null)
+            if (tween != null)
             {
-                tween.TweenOut();          
-                if(_canvasGroup != null)
+                tween.TweenOut();
+                if (_canvasGroup != null)
                 {
                     _canvasGroup.interactable = false;
                     _canvasGroup.blocksRaycasts = false;
@@ -61,11 +62,11 @@ namespace SimpleScreen {
         public virtual void ShowScreen(object data = null)
         {
             Debug.Log($"Show {name}");
-            if(tween != null)
+            if (tween != null)
             {
                 tween.TweenIn();
                 if (_canvasGroup != null)
-                { 
+                {
                     _canvasGroup.interactable = true;
                     _canvasGroup.blocksRaycasts = true;
                 }

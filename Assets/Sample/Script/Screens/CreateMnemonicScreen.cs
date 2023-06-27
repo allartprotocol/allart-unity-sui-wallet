@@ -1,8 +1,6 @@
 using AllArt.SUI.Wallet;
 using SimpleScreen;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +14,6 @@ public class CreateMnemonicScreen : BaseScreen
     public Toggle saveConfirmationToggle;
     private string mnemonic;
 
-    // Start is called before the first frame update
     void Start()
     {
         continueBtn.onClick.AddListener(OnContinue);
@@ -25,15 +22,21 @@ public class CreateMnemonicScreen : BaseScreen
 
     private void OnCopy()
     {
-
+        GUIUtility.systemCopyBuffer = mnemonic;
     }
 
     private void OnContinue()
     {
+        if (!saveConfirmationToggle.isOn) return;
 
+        string password = PlayerPrefs.GetString("password");
+
+        WalletComponent.Instance.CreateNewWallet(mnemonic, password);
+        manager.ShowScreen("WalletSuccessScreen");
     }
 
-    private void PopulateWords() { 
+    private void PopulateWords()
+    {
         mnemonic = Mnemonics.GenerateNewMnemonic();
         string[] words = mnemonic.Split(' ');
         for (int i = 0; i < words.Length; i++)
@@ -51,6 +54,7 @@ public class CreateMnemonicScreen : BaseScreen
     {
         base.ShowScreen(data);
         PopulateWords();
+        saveConfirmationToggle.isOn = false;
     }
 
     public override void HideScreen()

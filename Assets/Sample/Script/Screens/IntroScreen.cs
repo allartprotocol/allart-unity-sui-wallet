@@ -18,11 +18,11 @@ public class IntroScreen : BaseScreen
 
     private void GoToRestore()
     {
-        throw new NotImplementedException();
+        
     }
 
     private void GoToCreate()
     {
-        throw new NotImplementedException();
+        manager.ShowScreen("PasswordCreate");
     }
 }

@@ -83,7 +83,16 @@ public class Wallet
         Debug.Log($"Encoded {encodedKeyPair}");
         string mnemonic = Mnemonics.DecryptMnemonicWithPassword(encodedKeyPair, password);
         Debug.Log($"Decoded {mnemonic}");
-        return new Wallet(mnemonic, password, walletName);
+        if(IsValid(mnemonic))
+        {
+            return new Wallet(mnemonic, password, walletName);
+        }
+        return null;
+    }
+
+    private static bool IsValid(string mnemonic)
+    {
+        return Mnemonics.IsValidMnemonic(mnemonic);
     }
 
     internal void RemoveWallet()

@@ -26,6 +26,23 @@ public class WalletComponent : MonoBehaviour
         client = new SUIRPCClient("https://fullnode.devnet.sui.io:443/");
     }
 
+    public bool CheckPasswordValidity(string password)
+    {
+        if(password.Length < 1 || password.Contains(" ") || string.IsNullOrEmpty(password))
+        {
+            return false;
+        }
+        Debug.Log("RESTORE!");
+
+        RestoreAllWallets(password);
+
+        if(wallets.Count > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public Wallet CreateNewWallet(string password = "password", string walletName = "")
     {
         Wallet wallet = new Wallet(password, walletName);
@@ -53,6 +70,11 @@ public class WalletComponent : MonoBehaviour
                 this.wallets.Add(wallet.walletName, wallet);
             }
         }
+    }
+
+    public Dictionary<string, Wallet> GetAllWallets()
+    {
+        return wallets;
     }
 
     public Wallet GetWalletByIndex(int index)

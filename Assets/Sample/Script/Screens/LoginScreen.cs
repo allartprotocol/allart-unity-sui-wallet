@@ -1,12 +1,12 @@
 using SimpleScreen;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginScreen : BaseScreen
 {
     public Button loginBtn;
+    public TMP_InputField password;
 
     void Start()
     {
@@ -15,6 +15,11 @@ public class LoginScreen : BaseScreen
 
     private void OnLogin()
     {
-        manager.ShowScreen("MnemonicScreen");
+        bool valid = WalletComponent.Instance.CheckPasswordValidity(password.text);
+        Debug.Log(password.text);
+        if (valid)
+        {
+            manager.ShowScreen("MainScreen");
+        }
     }
 }

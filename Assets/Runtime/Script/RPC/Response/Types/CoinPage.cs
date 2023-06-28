@@ -20,3 +20,7 @@ public class CoinMetadata
     public string description;
     public string icon_url;
 }
+
+public class PageForCoinAndObjectID {
+    public List<CoinPage> data;
+}

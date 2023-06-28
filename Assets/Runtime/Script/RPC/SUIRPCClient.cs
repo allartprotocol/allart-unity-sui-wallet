@@ -28,7 +28,6 @@ public class SUIRPCClient : RPCClient
     {
         RPCRequestBase rpcRequest = new RPCRequestBase("suix_getAllBalances");
         rpcRequest.AddParameter(wallet.publicKey);
-        Debug.Log(rpcRequest);
         var rpcResponse = await SendRequestAsync<List<Balance>>(rpcRequest);
         return rpcResponse;
     }
@@ -59,23 +58,23 @@ public class SUIRPCClient : RPCClient
         return rpcResponse;
     }
 
-    public async Task<JsonRpcResponse<List<CoinPage>>> GetAllCoins(Wallet wallet, string cursor = "", int limit = 100)
+    public async Task<JsonRpcResponse<PageForCoinAndObjectID>> GetAllCoins(Wallet wallet, string cursor = "", int limit = 100)
     {
         RPCRequestBase rpcRequest = new RPCRequestBase("suix_getAllCoins");
         rpcRequest.AddParameter(wallet.publicKey);
         rpcRequest.AddParameter(cursor);
         rpcRequest.AddParameter(limit);
-        var rpcResponse = await SendRequestAsync<List<CoinPage>>(rpcRequest);
+        var rpcResponse = await SendRequestAsync<PageForCoinAndObjectID>(rpcRequest);
         return rpcResponse;
     }
 
-    public async Task<JsonRpcResponse<List<CoinPage>>> GetAllCoins(string publicKey, string cursor = "", int limit = 100)
+    public async Task<JsonRpcResponse<PageForCoinAndObjectID>> GetAllCoins(string publicKey, string cursor = "", int limit = 100)
     {
         RPCRequestBase rpcRequest = new RPCRequestBase("suix_getAllCoins");
         rpcRequest.AddParameter(publicKey);
-        rpcRequest.AddParameter(cursor);
-        rpcRequest.AddParameter(limit);
-        var rpcResponse = await SendRequestAsync<List<CoinPage>>(rpcRequest);
+        //rpcRequest.AddParameter(cursor);
+        //rpcRequest.AddParameter(limit);
+        var rpcResponse = await SendRequestAsync<PageForCoinAndObjectID>(rpcRequest);
         return rpcResponse;
     }
 

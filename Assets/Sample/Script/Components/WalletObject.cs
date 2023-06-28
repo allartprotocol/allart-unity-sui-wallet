@@ -23,7 +23,7 @@ public class WalletObject : MonoBehaviour
 
     private async System.Threading.Tasks.Task FetchDisplayData(Balance balance)
     {
-        coinMetadata = await WalletComponent.Instance.GetCoinMetadata(balance.coinType);
+        coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
 
         coin_name.text = balance.coinType;
         coin_balance.text = balance.totalBalance.ToString();
@@ -36,7 +36,7 @@ public class WalletObject : MonoBehaviour
             coin_balance.text = $"{coinMetadata.symbol} {WalletComponent.ApplyDecimals(balance, coinMetadata)}";
         }
 
-        var geckoData = await WalletComponent.Instance.GetUSDPrice(coinMetadata);
+        var geckoData = WalletComponent.Instance.coinData[coinMetadata.symbol];
 
         if (geckoData != null) { 
 

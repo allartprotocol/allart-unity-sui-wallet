@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -9,6 +10,11 @@ public class WalletComponent : MonoBehaviour
 
     private Dictionary<string, Wallet> wallets = new Dictionary<string, Wallet>();
     public SUIRPCClient client;
+
+    public Dictionary<string, CoinMetadata> coinMetadatas = new Dictionary<string, CoinMetadata>();
+    public Dictionary<string, GeckoCoinData> coinData = new Dictionary<string, GeckoCoinData>();
+
+    public Wallet currentWallet;
 
     private string _password;
     public string password
@@ -33,6 +39,16 @@ public class WalletComponent : MonoBehaviour
     private void Start()
     {
         client = new SUIRPCClient("https://fullnode.devnet.sui.io:443/");
+    }
+
+    internal void SetWalletByIndex(int value)
+    {
+        SetCurrentWallet(GetWalletByIndex(value));
+    }
+
+    public void SetCurrentWallet(Wallet wallet)
+    {
+        currentWallet = wallet;
     }
 
     public void SetPassword(string password)
@@ -155,6 +171,53 @@ public class WalletComponent : MonoBehaviour
         wallets.Clear();
     }
 
+    public async Task GetDataForAllCoins(string owner)
+    {
+        var coins = await GetAllCoins(owner);
+
+        if(coins != null)
+        {
+            List<string> coinTypes = new List<string>();
+            foreach (var coin in coins.data)
+            {
+                if (!coinTypes.Contains(coin.coinType))
+                {
+                    coinTypes.Add(coin.coinType);
+                }
+            }
+
+            foreach (var coinType in coinTypes)
+            {
+                Debug.Log(coinType);
+                if(coinMetadatas.ContainsKey(coinType))
+                    continue;
+                var coinMetadata = await GetCoinMetadata(coinType);
+                if (coinMetadata != null)
+                {
+                    coinMetadatas.Add(coinType, coinMetadata);
+                }
+            }
+
+            foreach (var coin in coinMetadatas.Keys)
+            {
+                var coinMetadata = coinMetadatas[coin];
+                if (this.coinData.ContainsKey(coinMetadata.symbol))
+                    continue;
+                var coinData = await GetUSDPrice(coinMetadata);
+                if (coinData != null)
+                {
+                    this.coinData.Add(coinMetadata.symbol, coinData);
+                }
+            }
+        }
+    }
+
+    public async Task<PageForCoinAndObjectID> GetAllCoins(string owner)
+    {
+        var request = await client.GetAllCoins(owner);
+        return request.result;
+    }
+
     public async Task<GeckoCoinData> GetUSDPrice(CoinMetadata coinMetadata)
     {
         var rpc = new RPCClient("");
@@ -231,4 +294,5 @@ public class WalletComponent : MonoBehaviour
         var request = await client.GetBalance(account, coinType);
         return request.result;
     }
+
 }

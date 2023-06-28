@@ -1,18 +1,33 @@
+using SimpleScreen;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class SendScreen : MonoBehaviour
+public class SendScreen : BaseScreen
 {
-    // Start is called before the first frame update
-    void Start()
+    public TMP_InputField to;
+    public TMP_InputField amount;
+
+    public Button continueBtn;
+
+    private void Start()
     {
-        
+        continueBtn.onClick.AddListener(OnContinue);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ShowScreen(object data = null)
     {
-        
+        base.ShowScreen(data);
+    }
+
+    private void OnContinue()
+    {
+        manager.ShowScreen("SendConfirmScreen", new TransferData()
+        {
+            to = to.text,
+            amount = amount.text
+        });
     }
 }

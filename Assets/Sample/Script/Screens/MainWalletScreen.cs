@@ -1,5 +1,6 @@
 using SimpleScreen;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,31 +26,35 @@ public class MainWalletScreen : BaseScreen
         walletsDropdown.onValueChanged.AddListener(OnWalletSelected);
     }
 
-    private void OnWalletSelected(int value)
+    private async void OnWalletSelected(int value)
     {
-
+        WalletComponent.Instance.SetWalletByIndex(value);
+        await UpdateWalletData();
     }
 
     private void OnSend()
     {
+        manager.ShowScreen("SendScreen");
     }
 
     private void OnReceive()
     {
-        var wallet = WalletComponent.Instance.GetWalletByIndex(0);
+        var wallet = WalletComponent.Instance.currentWallet;
         manager.ShowScreen("QRScreen", wallet);
     }
 
-    private async void LoadWalletData()
+    private async Task LoadWalletData()
     {
-        var wallet = WalletComponent.Instance.GetWalletByIndex(0);
+        WalletComponent.Instance.SetWalletByIndex(0);
+        var wallet = WalletComponent.Instance.currentWallet;
+        await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
 
         walletPubText.text = wallet.publicKey;
 
         walletBalanceText.text = "0";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
-        
+
         foreach (var balance in balances)
         {
             var obj = Instantiate(objectListItemPrefab, objectListContent);
@@ -57,7 +62,7 @@ public class MainWalletScreen : BaseScreen
         }
     }
 
-    public override void ShowScreen(object data = null)
+    public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
 
@@ -76,17 +81,22 @@ public class MainWalletScreen : BaseScreen
             Debug.Log("No wallet found");
         }
 
-        LoadWalletData();
+        await UpdateWalletData();
+    }
+
+    private async Task UpdateWalletData()
+    {
+        await LoadWalletData();
         UpdateBalance();
     }
 
     private async void UpdateBalance()
     {
-        Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.GetWalletByIndex(0), "0x2::sui::SUI");
-        CoinMetadata coinMetadata = await WalletComponent.Instance.GetCoinMetadata(balance.coinType);
+        Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet, "0x2::sui::SUI");
+        CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
         if (balance != null)
         {
-            var geckoData = await WalletComponent.Instance.GetUSDPrice("sui");
+            var geckoData = WalletComponent.Instance.coinData[coinMetadata.symbol];
             if(geckoData != null)
             {
                 var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);

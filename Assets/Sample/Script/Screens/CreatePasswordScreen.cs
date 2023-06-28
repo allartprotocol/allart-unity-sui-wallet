@@ -1,4 +1,5 @@
 using SimpleScreen;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,6 +37,10 @@ public class CreatePasswordScreen : BaseScreen
                 {
                     PlayerPrefs.SetString("password", passwordField.text);
                     PlayerPrefs.Save();
+                    if (encryptMnem != null)
+                    {
+                        encryptMnem?.Invoke(passwordField.text);
+                    }
                     return true;
                 }
                 else
@@ -71,9 +76,19 @@ public class CreatePasswordScreen : BaseScreen
         base.InitScreen();
     }
 
+    private Func<string, bool> encryptMnem;
+
     public override void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+        if(data is Func<string, bool>)
+        {
+            encryptMnem = (Func<string, bool>)data;
+        }
+        else
+        {
+            encryptMnem = null;
+        }
         ClearInput();
     }
 

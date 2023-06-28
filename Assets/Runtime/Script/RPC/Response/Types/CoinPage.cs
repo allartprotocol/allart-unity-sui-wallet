@@ -13,8 +13,8 @@ public class CoinPage {
 
 public class CoinMetadata
 { 
-    public ObjectId id;
-    public string decimals;
+    public string id;
+    public int decimals;
     public string name;
     public string symbol;
     public string description;

@@ -11,12 +11,25 @@ namespace SimpleScreen {
 
         public static SimpleScreenManager instance;
 
+        private Stack<BaseScreen> _screenQueue = new Stack<BaseScreen>();
+
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
             }
+        }
+
+        public void GoBack() { 
+            var prevScreen = _screenQueue.Pop();
+            var curScreen = _screenQueue.Peek();
+
+            Debug.Log(curScreen.name);
+            Debug.Log(prevScreen.name);
+
+            prevScreen.HideScreen();
+            curScreen.ShowScreen();
         }
 
         private void Start()
@@ -37,6 +50,7 @@ namespace SimpleScreen {
 
 
                 currentScreen = screens[0];
+                _screenQueue.Push(currentScreen);
                 screens[0].ShowScreen();
             }
         }
@@ -55,6 +69,7 @@ namespace SimpleScreen {
             screen.ShowScreen();
             previousScreen = curScreen;
             currentScreen = screen;
+            _screenQueue.Push(currentScreen);
         }
 
         public void ShowScreen(string name, object data = null)
@@ -63,6 +78,7 @@ namespace SimpleScreen {
             screensDict[name].ShowScreen(data);
             previousScreen = currentScreen;
             currentScreen = screensDict[name];
+            _screenQueue.Push(currentScreen);
         }
 
         public void ShowScreen(BaseScreen curScreen, int index)
@@ -71,6 +87,7 @@ namespace SimpleScreen {
             screens[index].ShowScreen();
             previousScreen = curScreen;
             currentScreen = screens[index];
+            _screenQueue.Push(currentScreen);
         }
 
         public void ShowScreen(BaseScreen curScreen, string name, object data = null)
@@ -79,6 +96,7 @@ namespace SimpleScreen {
             screensDict[name].ShowScreen(data);
             previousScreen = curScreen;
             currentScreen = screensDict[name];
+            _screenQueue.Push(currentScreen);
         }
 
         public void HideScreen(string name) {

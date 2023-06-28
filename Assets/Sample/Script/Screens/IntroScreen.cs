@@ -18,7 +18,7 @@ public class IntroScreen : BaseScreen
 
     private void GoToRestore()
     {
-        
+        manager.ShowScreen("RestoreScreen");
     }
 
     private void GoToCreate()

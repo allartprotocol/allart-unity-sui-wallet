@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SimpleScreen
@@ -56,6 +57,12 @@ namespace SimpleScreen
             else
             {
                 gameObject.SetActive(false);
+            }
+
+            var backButton = GetComponentInChildren<BackButton>();
+            if (backButton != null)
+            {
+                backButton.Init(manager);
             }
         }
 

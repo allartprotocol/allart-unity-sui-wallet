@@ -29,7 +29,7 @@ public class CreateMnemonicScreen : BaseScreen
     {
         if (!saveConfirmationToggle.isOn) return;
 
-        string password = PlayerPrefs.GetString("password");
+        string password = WalletComponent.Instance.password;
 
         WalletComponent.Instance.CreateNewWallet(mnemonic, password);
         manager.ShowScreen("WalletSuccessScreen");

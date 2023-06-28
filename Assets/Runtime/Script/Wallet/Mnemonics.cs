@@ -100,6 +100,11 @@ namespace AllArt.SUI.Wallet {
             return true;
         }
 
+        public static string SanitizeMnemonic(string mnemonic)
+        {
+            return mnemonic.Trim().ToLowerInvariant();
+        }
+
         public static (byte[] Key, byte[] ChainCode) DerivePath(string path, byte[] _masterKey, byte[] _chainCode)
         {
             //if (!IsValidPath(path))

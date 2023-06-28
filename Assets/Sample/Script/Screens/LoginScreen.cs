@@ -16,9 +16,9 @@ public class LoginScreen : BaseScreen
     private void OnLogin()
     {
         bool valid = WalletComponent.Instance.CheckPasswordValidity(password.text);
-        Debug.Log(password.text);
         if (valid)
         {
+            WalletComponent.Instance.SetPassword(password.text);
             manager.ShowScreen("MainScreen");
         }
     }

@@ -188,4 +188,5 @@ public class SUIRPCClient : RPCClient
         var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);
         return rpcResponse.result;
     }
+
 }

@@ -115,10 +115,11 @@ public class Wallet
         
         var digest = ComputeBlake2bHash(data);
         var signature = Sign(digest);
-        var signatureScheme = 0x00;
 
-        var list = new List<byte>();
-        list.Add(0x00);
+        var list = new List<byte>
+        {
+            0x00
+        };
         list.AddRange(signature);
         list.AddRange(keyPair.publicKey);
 
@@ -137,8 +138,6 @@ public class Wallet
 
     public static byte[] GetMessageWithIntent(byte[] message)
     {
-        // See: sui/crates/sui-types/src/intent.rs 
-        // This is currently hardcoded with [IntentScope::TransactionData = 0, Version::V0 = 0, AppId::Sui = 0]
         var INTENT_BYTES = new byte[] { 0, 0, 0 };
 
         var messageWithIntent = new byte[INTENT_BYTES.Length + message.Length];

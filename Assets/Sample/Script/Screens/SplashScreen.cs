@@ -9,7 +9,7 @@ public class SplashScreen : BaseScreen
     public override void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         StartCoroutine(StartWallet());
     }
 

@@ -15,7 +15,7 @@ public class MnemonicScreen : BaseScreen
 
     private WalletComponent walletComponent;
 
-    string suiRpc = "https://fullnode.devnet.sui.io:443/";
+    string suiRpc = SUIConstantVars.mainNetNode;
 
     private void Start()
     {
@@ -32,7 +32,7 @@ public class MnemonicScreen : BaseScreen
         var filter = new MatchAllDataFilter();
         filter.MatchAll = new List<ObjectDataFilter>
         {
-            new StructTypeDataFilter() { StructType = "0x2::coin::Coin<0x2::sui::SUI>" },
+            new StructTypeDataFilter() { StructType = SUIConstantVars.suiCoinType },
             new OwnerDataFilter() { AddressOwner = wallet.publicKey }
         };
         query.filter = filter;

@@ -77,6 +77,27 @@ public class Wallet
         PlayerPrefs.SetString(walletName, encodedKeyPair);
     }
 
+    public void SaveWallet(string newPassword)
+    {
+        List<string> wallets = GetWalletSavedKeys();
+
+        if (string.IsNullOrEmpty(walletName))
+        {
+            walletName = $"wallet_{wallets.Count + 1}";
+        }
+
+        if (!wallets.Contains(walletName))
+        {
+            wallets.Add(walletName);
+            PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
+        }
+
+        Debug.Log($"Mnemonic {mnemonic}");
+        string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, newPassword);
+        Debug.Log($"Encoded {encodedKeyPair}");
+        PlayerPrefs.SetString(walletName, encodedKeyPair);
+    }
+
     public static Wallet RestoreWallet(string walletName, string password)
     {
         string encodedKeyPair = PlayerPrefs.GetString(walletName);

@@ -188,4 +188,16 @@ public class SUIRPCClient : RPCClient
         return rpcResponse.result;
     }
 
+    public async Task<TransactionBlockBytes> Pay(Wallet signer, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
+    {
+        RPCRequestBase rpcRequest = new RPCRequestBase("unsafe_pay");
+        rpcRequest.AddParameter(signer.publicKey);
+        rpcRequest.AddParameter(inputCoins);
+        rpcRequest.AddParameter(recipients);
+        rpcRequest.AddParameter(amounts);
+        rpcRequest.AddParameter(gas);
+        rpcRequest.AddParameter(gasBudget);
+        var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);
+        return rpcResponse.result;
+    }
 }

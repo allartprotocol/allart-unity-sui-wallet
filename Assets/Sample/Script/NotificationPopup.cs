@@ -13,7 +13,7 @@ public class NotificationPopup : MonoBehaviour
     {
         titleText.text = message;
         GetComponentInChildren<Image>().color = color;
-        GetComponentInChildren<UITween>().TweenPosition(Vector2.zero);
+        //GetComponentInChildren<UITween>().TweenPosition(Vector2.zero);
         SetDestroyTimer();
     }
 
@@ -23,8 +23,8 @@ public class NotificationPopup : MonoBehaviour
 
     IEnumerator DestroyAfter() {
         yield return new WaitForSeconds(4);
-        GetComponentInChildren<UITween>().TweenPosition(GetComponentInChildren<UITween>().startPosition);
-        yield return new WaitForSeconds(0.2f);
+        //GetComponentInChildren<UITween>().TweenPosition(GetComponentInChildren<UITween>().startPosition);
+        //yield return new WaitForSeconds(0.2f);
         Destroy(gameObject);
     }
 }

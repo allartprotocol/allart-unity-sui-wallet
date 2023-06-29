@@ -26,6 +26,7 @@ public class RestoreScreen : BaseScreen
         if(string.IsNullOrEmpty(mnemonic))
         {
             Debug.Log("Please enter mnemonic");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please enter mnemonic");
             return;
         }
 
@@ -35,6 +36,7 @@ public class RestoreScreen : BaseScreen
         if(!Mnemonics.IsValidMnemonic(mnemonicField.text))
         {
             Debug.Log("Invalid mnemonic");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid mnemonic");
             return;
         }
 

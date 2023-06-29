@@ -13,6 +13,8 @@ namespace SimpleScreen {
 
         private Stack<BaseScreen> _screenQueue = new Stack<BaseScreen>();
 
+        
+
         private void Awake()
         {
             if (instance == null)

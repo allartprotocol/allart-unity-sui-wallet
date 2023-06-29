@@ -16,7 +16,10 @@ public class CreatePasswordScreen : BaseScreen
     void Start()
     {
         continueBtn.onClick.AddListener(OnContinue);
+        
     }
+
+    
 
     private void OnContinue()
     {
@@ -35,25 +38,32 @@ public class CreatePasswordScreen : BaseScreen
             {
                 if (termsToggle.isOn)
                 {
-                    PlayerPrefs.SetString("password", passwordField.text);
-                    PlayerPrefs.Save();
+                    WalletComponent.Instance.SetPassword(passwordField.text);
                     if (encryptMnem != null)
                     {
                         encryptMnem?.Invoke(passwordField.text);
                     }
+                    InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Password created successfully");
                     return true;
                 }
                 else
                 {
                     Debug.Log("Please accept terms and conditions");
+                    InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please accept terms and conditions");
                     return false;
                 }
             }
             else
             {
                 Debug.Log("Password does not match");
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Password does not match");
                 return false;
             }
+        }
+        else
+        {
+            Debug.Log("Please fill all the fields");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill all the fields");
         }
         return false;
     }

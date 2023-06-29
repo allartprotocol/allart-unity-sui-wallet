@@ -27,7 +27,11 @@ public class CreateMnemonicScreen : BaseScreen
 
     private void OnContinue()
     {
-        if (!saveConfirmationToggle.isOn) return;
+        if (!saveConfirmationToggle.isOn)
+        {
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please confirm that you have saved your mnemonic");
+            return;
+        }
 
         string password = WalletComponent.Instance.password;
 

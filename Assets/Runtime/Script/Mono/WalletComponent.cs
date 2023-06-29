@@ -4,6 +4,13 @@ using System.Numerics;
 using System.Threading.Tasks;
 using UnityEngine;
 
+public enum ENodeType
+{
+    MainNet,
+    TestNet,
+    DevNet
+}
+
 public class WalletComponent : MonoBehaviour
 {
     public static WalletComponent Instance { get; private set; }
@@ -15,6 +22,21 @@ public class WalletComponent : MonoBehaviour
     public Dictionary<string, GeckoCoinData> coinData = new Dictionary<string, GeckoCoinData>();
 
     public Wallet currentWallet;
+    public CoinMetadata currentCoinMetadata;
+
+    public string nodeAddress { get { 
+            switch (_nodeType)
+            {
+                case ENodeType.MainNet:
+                    return SUIConstantVars.mainNetNode;
+                case ENodeType.TestNet:
+                    return SUIConstantVars.testNetNode;
+                case ENodeType.DevNet:
+                    return SUIConstantVars.devNetNode;
+                default:
+                    return SUIConstantVars.mainNetNode;
+            }
+        }}
 
     private string _password;
     public string password
@@ -24,6 +46,9 @@ public class WalletComponent : MonoBehaviour
             _password = value;
         }
     }
+
+    public ENodeType _nodeType { get; private set; }
+
 
     private void Awake()
     {
@@ -38,7 +63,28 @@ public class WalletComponent : MonoBehaviour
 
     private void Start()
     {
-        client = new SUIRPCClient("https://fullnode.devnet.sui.io:443/");
+        if(PlayerPrefs.HasKey("nodeType"))
+        {
+            _nodeType = (ENodeType)PlayerPrefs.GetInt("nodeType");
+        }
+        else
+        {
+            _nodeType = ENodeType.MainNet;
+        }
+
+        client = new SUIRPCClient(nodeAddress);
+    }
+
+    public void SetNodeAddress(ENodeType nodeAddress)
+    {
+        if(nodeAddress == _nodeType)
+        {
+            return;
+        }
+        PlayerPrefs.SetInt("nodeType", (int)nodeAddress);
+        
+        this._nodeType = nodeAddress;
+        client = new SUIRPCClient(this.nodeAddress);
     }
 
     internal void SetWalletByIndex(int value)
@@ -252,7 +298,14 @@ public class WalletComponent : MonoBehaviour
         return request.result;
     }
 
-    public async Task<TransactionBlockBytes> Pay(Wallet wallet, ObjectId[] inputCoins, SUIAddress[] recipients, BigInteger[] amounts, ObjectId gas, BigInteger gasBudget)
+    //public async Task<TransactionBlockBytes> Pay(Wallet wallet, ObjectId[] inputCoins, SUIAddress[] recipients, BigInteger[] amounts, ObjectId gas, BigInteger gasBudget)
+    //{
+
+    //    var request = await client.Pay(wallet, inputCoins, recipients, amounts, gas, gasBudget);
+    //    return request;
+    //}
+
+    public async Task<TransactionBlockBytes> Pay(Wallet wallet, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
     {
 
         var request = await client.Pay(wallet, inputCoins, recipients, amounts, gas, gasBudget);
@@ -295,4 +348,13 @@ public class WalletComponent : MonoBehaviour
         return request.result;
     }
 
+    internal void ChangePassword(string oldPassword, string newPassword)
+    {
+        RestoreAllWallets(oldPassword);
+
+        foreach (var wallet in wallets.Values)
+        {
+            wallet.SaveWallet(newPassword);
+        }
+    }
 }

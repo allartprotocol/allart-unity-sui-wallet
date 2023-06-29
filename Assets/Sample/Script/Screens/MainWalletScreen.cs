@@ -1,4 +1,5 @@
 using SimpleScreen;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
@@ -11,25 +12,33 @@ public class MainWalletScreen : BaseScreen
     public TextMeshProUGUI walletBalanceText;
     public TextMeshProUGUI percentageText;
 
-    public TMP_Dropdown walletsDropdown;
+    public Button walletsDropdown;
 
     public Button receiveBtn;
     public Button sendBtn;
+    public Button settingsBtn;
 
     public Transform objectListContent;
     public GameObject objectListItemPrefab;
+
+    private List<WalletObject> loadedObjects = new List<WalletObject>();
 
     private void Start()
     {
         receiveBtn.onClick.AddListener(OnReceive);
         sendBtn.onClick.AddListener(OnSend);
-        walletsDropdown.onValueChanged.AddListener(OnWalletSelected);
+        walletsDropdown.onClick.AddListener(OnWalletSelected);
+        settingsBtn.onClick.AddListener(OnSettings);
     }
 
-    private async void OnWalletSelected(int value)
+    private void OnSettings()
     {
-        WalletComponent.Instance.SetWalletByIndex(value);
-        await UpdateWalletData();
+        manager.ShowScreen("SettingsScreen");
+    }
+
+    private void OnWalletSelected()
+    {
+        manager.ShowScreen("WalletsListScreen");
     }
 
     private void OnSend()
@@ -45,7 +54,8 @@ public class MainWalletScreen : BaseScreen
 
     private async Task LoadWalletData()
     {
-        WalletComponent.Instance.SetWalletByIndex(0);
+        if(WalletComponent.Instance.currentWallet == null)
+            WalletComponent.Instance.SetWalletByIndex(0);
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
 
@@ -55,10 +65,17 @@ public class MainWalletScreen : BaseScreen
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
 
-        foreach (var balance in balances)
+        foreach (var obj in loadedObjects)
         {
+            Destroy(obj.gameObject);
+        }
+        loadedObjects.Clear();
+        foreach (var balance in balances)
+        {            
             var obj = Instantiate(objectListItemPrefab, objectListContent);
-            obj.GetComponent<WalletObject>().Init(balance);
+            WalletObject wo = obj.GetComponent<WalletObject>();
+            loadedObjects.Add(wo);
+            wo.Init(balance);
         }
     }
 
@@ -71,15 +88,7 @@ public class MainWalletScreen : BaseScreen
 
         var wallet = WalletComponent.Instance.GetAllWallets();
 
-        if (wallet.Count > 0)
-        {
-            PopulateDropdownWithWallets(wallet, walletsDropdown);
-            walletsDropdown.value = 0;
-        }
-        else
-        {
-            Debug.Log("No wallet found");
-        }
+        
 
         await UpdateWalletData();
     }
@@ -93,26 +102,25 @@ public class MainWalletScreen : BaseScreen
     private async void UpdateBalance()
     {
         Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet, "0x2::sui::SUI");
+        if (!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
+            return;
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
         if (balance != null)
         {
             var geckoData = WalletComponent.Instance.coinData[coinMetadata.symbol];
-            if(geckoData != null)
+            if (geckoData != null)
             {
                 var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);
                 walletBalanceText.text = $"${usdValue.ToString("0.00")}";
                 percentageText.text = $"{geckoData.market_data.price_change_percentage_24h.ToString("0.00")}%";
             }
         }
-    }
 
-    void PopulateDropdownWithWallets(Dictionary<string, Wallet> wallets, TMP_Dropdown walletsDropdown)
-    {
-        foreach (var wallet in wallets)
+        if(WalletComponent.Instance.currentCoinMetadata == null)
         {
-            walletsDropdown.options.Add(new TMP_Dropdown.OptionData(wallet.Key));
+            WalletComponent.Instance.currentCoinMetadata = coinMetadata;
         }
-    }
+    }  
 
     public override void HideScreen()
     {

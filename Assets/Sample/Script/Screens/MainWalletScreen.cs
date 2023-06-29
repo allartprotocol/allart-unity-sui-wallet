@@ -1,5 +1,4 @@
 using SimpleScreen;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
@@ -12,33 +11,98 @@ public class MainWalletScreen : BaseScreen
     public TextMeshProUGUI walletBalanceText;
     public TextMeshProUGUI percentageText;
 
-    public Button walletsDropdown;
+    public TMP_Dropdown walletsDropdown;
 
     public Button receiveBtn;
     public Button sendBtn;
     public Button settingsBtn;
+
+    public Button assets;
+    public Button history;
 
     public Transform objectListContent;
     public GameObject objectListItemPrefab;
 
     private List<WalletObject> loadedObjects = new List<WalletObject>();
 
+    public Transform assetHolder;
+    public Transform historyHolder;
+
+    public GameObject historyObjectPrefab;
+    public Transform historyContent;
+
+    public List<EventObject> loadedEvents = new List<EventObject>();
+
     private void Start()
     {
         receiveBtn.onClick.AddListener(OnReceive);
         sendBtn.onClick.AddListener(OnSend);
-        walletsDropdown.onClick.AddListener(OnWalletSelected);
+        walletsDropdown.onValueChanged.AddListener(OnWalletSelected);
         settingsBtn.onClick.AddListener(OnSettings);
+        assets.onClick.AddListener(OnAssets);
+        history.onClick.AddListener(OnHistory);
+    }
+
+    private void OnHistory()
+    {
+        assetHolder.gameObject.SetActive(false);
+        historyHolder.gameObject.SetActive(true);
+        PopulateHidtory();
+    }
+
+    void PopulateWalletsDropdown()
+    {
+
+        walletsDropdown.ClearOptions();
+
+        var wallets = WalletComponent.Instance.GetAllWallets();
+
+        List<string> options = new List<string>();
+
+        foreach (var wallet in wallets)
+        {
+            options.Add(wallet.Key);
+        }
+
+        walletsDropdown.AddOptions(options);
+    }
+
+    async void PopulateHidtory()
+    {
+
+        var history = await WalletComponent.Instance.GetTransactionsForWallet(WalletComponent.Instance.currentWallet);
+
+        foreach (var obj in loadedEvents)
+        {
+            Destroy(obj.gameObject);
+        }
+
+        loadedEvents.Clear();
+
+        foreach (var eventPage in history.data)
+        {
+            var obj = Instantiate(historyObjectPrefab, historyContent);
+            var eventObject = obj.GetComponent<EventObject>();
+            eventObject.InitializeObject(eventPage);
+            loadedEvents.Add(eventObject);
+        }
+    }
+
+    private void OnAssets()
+    {
+        assetHolder.gameObject.SetActive(true);
+        historyHolder.gameObject.SetActive(false);
     }
 
     private void OnSettings()
     {
-        manager.ShowScreen("SettingsScreen");
+        manager.ShowScreen("WalletsListScreen");
     }
 
-    private void OnWalletSelected()
+    private async void OnWalletSelected(int value)
     {
-        manager.ShowScreen("WalletsListScreen");
+        WalletComponent.Instance.SetWalletByIndex(value);
+        await UpdateWalletData();
     }
 
     private void OnSend()
@@ -54,7 +118,7 @@ public class MainWalletScreen : BaseScreen
 
     private async Task LoadWalletData()
     {
-        if(WalletComponent.Instance.currentWallet == null)
+        if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
@@ -71,7 +135,7 @@ public class MainWalletScreen : BaseScreen
         }
         loadedObjects.Clear();
         foreach (var balance in balances)
-        {            
+        {
             var obj = Instantiate(objectListItemPrefab, objectListContent);
             WalletObject wo = obj.GetComponent<WalletObject>();
             loadedObjects.Add(wo);
@@ -88,9 +152,10 @@ public class MainWalletScreen : BaseScreen
 
         var wallet = WalletComponent.Instance.GetAllWallets();
 
-        
+        OnAssets();
 
         await UpdateWalletData();
+        PopulateWalletsDropdown();
     }
 
     private async Task UpdateWalletData()
@@ -116,11 +181,11 @@ public class MainWalletScreen : BaseScreen
             }
         }
 
-        if(WalletComponent.Instance.currentCoinMetadata == null)
+        if (WalletComponent.Instance.currentCoinMetadata == null)
         {
             WalletComponent.Instance.currentCoinMetadata = coinMetadata;
         }
-    }  
+    }
 
     public override void HideScreen()
     {

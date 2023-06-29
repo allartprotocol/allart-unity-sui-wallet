@@ -17,6 +17,7 @@ public class WalletComponent : MonoBehaviour
 
     private Dictionary<string, Wallet> wallets = new Dictionary<string, Wallet>();
     public SUIRPCClient client;
+    public WebsocketController websocketController;
 
     public Dictionary<string, CoinMetadata> coinMetadatas = new Dictionary<string, CoinMetadata>();
     public Dictionary<string, GeckoCoinData> coinData = new Dictionary<string, GeckoCoinData>();
@@ -73,6 +74,7 @@ public class WalletComponent : MonoBehaviour
         }
 
         client = new SUIRPCClient(nodeAddress);
+        websocketController = new WebsocketController(nodeAddress);
     }
 
     public void SetNodeAddress(ENodeType nodeAddress)
@@ -85,6 +87,8 @@ public class WalletComponent : MonoBehaviour
         
         this._nodeType = nodeAddress;
         client = new SUIRPCClient(this.nodeAddress);
+        websocketController.Stop();
+        websocketController = new WebsocketController(this.nodeAddress);
     }
 
     internal void SetWalletByIndex(int value)
@@ -92,9 +96,15 @@ public class WalletComponent : MonoBehaviour
         SetCurrentWallet(GetWalletByIndex(value));
     }
 
-    public void SetCurrentWallet(Wallet wallet)
+    public async void SetCurrentWallet(Wallet wallet)
     {
         currentWallet = wallet;
+
+        SenderFilter filter = new SenderFilter(currentWallet.publicKey);
+        RecipientFilter recipientFilter = new RecipientFilter(currentWallet.publicKey);
+        FilterOr filterOr = new FilterOr(new List<object> { filter, recipientFilter });
+        await GetTransactionsForWallet(currentWallet);
+        await websocketController.Subscribe(new List<object> { filter });
     }
 
     public void SetPassword(string password)
@@ -234,7 +244,6 @@ public class WalletComponent : MonoBehaviour
 
             foreach (var coinType in coinTypes)
             {
-                Debug.Log(coinType);
                 if(coinMetadatas.ContainsKey(coinType))
                     continue;
                 var coinMetadata = await GetCoinMetadata(coinType);
@@ -356,5 +365,15 @@ public class WalletComponent : MonoBehaviour
         {
             wallet.SaveWallet(newPassword);
         }
+    }
+
+    public async Task<PageForEventAndEventID> GetTransactionsForWallet(Wallet wallet) {
+        SenderFilter filter = new SenderFilter(currentWallet.publicKey);
+        RecipientFilter recipientFilter = new RecipientFilter(currentWallet.publicKey);
+        FilterOr filterOr = new FilterOr(new List<object> { filter, recipientFilter });
+        var filters = new List<object> { filter };
+        var eventQuery = new EventQuery(filters);
+        var request = await client.QueryEvents(filter);
+        return request.result;
     }
 }

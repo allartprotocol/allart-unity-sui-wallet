@@ -13,12 +13,27 @@ public class WalletListScreen : BaseScreen
 
     public Transform container;
 
+    public Button settingsButton;
+    public Button lockButton;
+
     public List<WalletListObject> walletListObjects = new List<WalletListObject>();
 
     // Start is called before the first frame update
     void Start()
     {
         addWallet.onClick.AddListener(OnAddWallet);
+        settingsButton.onClick.AddListener(OnSettings);
+        lockButton.onClick.AddListener(OnLock);
+    }
+
+    private void OnLock()
+    {
+        manager.ShowScreen("LoginScreen");
+    }
+
+    private void OnSettings()
+    {
+        manager.ShowScreen("SettingsScreen");
     }
 
     private void OnAddWallet()

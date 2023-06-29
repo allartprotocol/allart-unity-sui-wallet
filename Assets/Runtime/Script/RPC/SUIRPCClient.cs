@@ -200,4 +200,11 @@ public class SUIRPCClient : RPCClient
         var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);
         return rpcResponse.result;
     }
+
+    public async Task<JsonRpcResponse<PageForEventAndEventID>> QueryEvents(object filter) {
+        RPCRequestBase rpcRequest = new RPCRequestBase("suix_queryEvents");
+        rpcRequest.AddParameter(filter);
+        var rpcResponse = await SendRequestAsync<PageForEventAndEventID>(rpcRequest);
+        return rpcResponse;
+    }
 }

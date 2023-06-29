@@ -4,22 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using NativeWebSocket;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+using Org.BouncyCastle.Cms;
 
-public class WebsocketController : MonoBehaviour
+public class WebsocketController
 {
     WebSocket websocket;
     public Action onWSEvent;
 
     public static WebsocketController instance;
 
-    private void Awake()
+    public WebsocketController(string url)
     {
         instance = this;
+        SetupConnection(url);
     }
 
     public async void SetupConnection(string url)
     {
+        if (url.Contains("https://"))
+            url = url.Replace("https://", "wss://");
+
         websocket = new WebSocket(url);
+        Debug.Log(url);
 
         websocket.OnOpen += () =>
         {
@@ -33,12 +41,14 @@ public class WebsocketController : MonoBehaviour
 
         websocket.OnClose += (e) =>
         {
-            Debug.Log("Connection closed!");
+            Debug.Log("Connection closed! " + e);
         };
 
         websocket.OnMessage += (bytes) =>
         {
-            Debug.Log("OnMessage!");
+            // Reading a plain text message
+            var message = System.Text.Encoding.UTF8.GetString(bytes);
+            Debug.Log("OnMessage! " + message);
             onWSEvent?.Invoke();
         };
 
@@ -54,35 +64,36 @@ public class WebsocketController : MonoBehaviour
 #endif
     }
 
-    async void Subscribe(string parameter)
+    public async Task Subscribe(List<object> filterParams)
     {
         if (websocket.State == WebSocketState.Open)
         {
-            await websocket.SendText("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sui_subscribeEvent\", \"params\": [" + parameter + "]}");
+            EventFilter filter = new EventFilter("sui_subscribeEvent", filterParams);
+
+            string filterString = JsonConvert.SerializeObject(filter);
+            Debug.Log(filterString);
+            await websocket.SendText(filterString);
         }
     }
 
-    public async void Unsubscribe(string parameter)
+    public async void Unsubscribe(string id)
     {
         if (websocket.State == WebSocketState.Open)
         {
-            await websocket.SendText("{\"jsonrpc\":\"2.0\", \"id\":1, \"method\":\"sui_unsubscribeEvent\", \"params\":[" + parameter + "]}");
+            EventFilter filter = new EventFilter("sui_unsubscribeEvent", new List<object> { id });
+            string filterString = JsonConvert.SerializeObject(filter);
+            await websocket.SendText(filterString);
         }
     }
 
-    async void Stop()
+    public async void Stop()
     {
         await websocket.Close();
     }
 
-    private void OnDestroy()
+    ~WebsocketController()
     {
-        websocket?.Close();
+        websocket.Close();
     }
-
-    private void OnApplicationQuit()
-    {
-        websocket?.Close();
-    }
-
 }
+

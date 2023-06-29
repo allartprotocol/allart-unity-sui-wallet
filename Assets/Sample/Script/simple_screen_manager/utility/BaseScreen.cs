@@ -68,7 +68,6 @@ namespace SimpleScreen
 
         public virtual void ShowScreen(object data = null)
         {
-            Debug.Log($"Show {name}");
             if (tween != null)
             {
                 tween.TweenIn();

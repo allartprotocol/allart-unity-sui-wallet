@@ -16,6 +16,15 @@ public class Wallet
             return keyPair.suiAddress;
         }
     }
+
+    public string privateKey
+    {
+        get
+        {
+            return keyPair.suiSecret;
+        }
+    }
+
     public string password { get; private set; }
 
     private KeyPair keyPair;
@@ -101,9 +110,7 @@ public class Wallet
     public static Wallet RestoreWallet(string walletName, string password)
     {
         string encodedKeyPair = PlayerPrefs.GetString(walletName);
-        Debug.Log($"Encoded {encodedKeyPair}");
         string mnemonic = Mnemonics.DecryptMnemonicWithPassword(encodedKeyPair, password);
-        Debug.Log($"Decoded {mnemonic}");
         if(IsValid(mnemonic))
         {
             return new Wallet(mnemonic, password, walletName);

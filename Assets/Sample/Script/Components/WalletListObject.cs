@@ -30,6 +30,6 @@ public class WalletListObject : MonoBehaviour
     private void OnClick()
     {
         WalletComponent.Instance.SetCurrentWallet(wallet);
-        manager.ShowScreen("MainScreen");
+        manager.ShowScreen("WalletSettings", wallet);
     }
 }

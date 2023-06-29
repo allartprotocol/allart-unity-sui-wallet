@@ -14,6 +14,14 @@ namespace AllArt.SUI.Wallet
         public string publicKeyString { get; set; }
         public string suiAddress { get; set; }
 
+        public string suiSecret
+        {
+            get
+            {
+                return ToSuiAddress(privateKey);
+            }
+        }
+
         public KeyPair(byte[] publicKey, byte[] privateKey)
         {
 

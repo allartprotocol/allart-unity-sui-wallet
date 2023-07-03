@@ -1,8 +1,5 @@
 using SimpleScreen;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,17 +25,18 @@ public class WalletListScreen : BaseScreen
 
     private void OnLock()
     {
-        manager.ShowScreen("LoginScreen");
+        WalletComponent.Instance.LockWallet();
+        GoTo("LoginScreen");
     }
 
     private void OnSettings()
     {
-        manager.ShowScreen("SettingsScreen");
+        GoTo("SettingsScreen");
     }
 
     private void OnAddWallet()
     {
-        manager.ShowScreen("ImportPrivateScreen");
+        GoTo("ImportPrivateScreen");
     }
 
     void PopulateDropdownWithWallets(Dictionary<string, Wallet> wallets)
@@ -52,14 +50,14 @@ public class WalletListScreen : BaseScreen
 
         foreach (var wallet in wallets)
         {
-            if(walletListObjects.Exists(x => x.walletName == wallet.Key))
+            if (walletListObjects.Exists(x => x.walletName == wallet.Key))
             {
                 continue;
             }
             var walletItem = Instantiate(walletItemPrefab, container);
             var walletListObject = walletItem.GetComponent<WalletListObject>();
             walletListObject.SetWallet(wallet.Value, wallet.Key, manager);
-            walletListObjects.Add(walletListObject);            
+            walletListObjects.Add(walletListObject);
         }
     }
 

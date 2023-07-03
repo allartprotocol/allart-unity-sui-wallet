@@ -25,11 +25,12 @@ public class ShowSecretKey : BaseScreen
     private void OnCopy()
     {
         GUIUtility.systemCopyBuffer = wallet.privateKey;
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Copied to clipboard");
     }
 
     private void OnDone()
     {
-        manager.ShowScreen("MainScreen");
+        GoTo("MainScreen");
     }
 
     public override void ShowScreen(object data = null)

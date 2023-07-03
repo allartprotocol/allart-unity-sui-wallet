@@ -18,11 +18,11 @@ public class IntroScreen : BaseScreen
 
     private void GoToRestore()
     {
-        manager.ShowScreen("RestoreScreen");
+        GoTo("RestoreScreen");
     }
 
     private void GoToCreate()
     {
-        manager.ShowScreen("PasswordCreate");
+        GoTo("PasswordCreate");
     }
 }

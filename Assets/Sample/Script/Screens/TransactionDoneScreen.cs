@@ -17,7 +17,7 @@ public class TransactionDoneScreen : BaseScreen
 
     private void OnDone()
     {
-        manager.ShowScreen("MainScreen");
+        GoTo("MainScreen");
     }
 
 }

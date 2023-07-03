@@ -35,12 +35,13 @@ public class SendScreen : BaseScreen
 
     private void OnTokenSelect()
     {
-        manager.ShowScreen("TokenSelectScreen");
+        GoTo("TokenSelectScreen");
     }
 
     public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+        amount.text = "0";
         tokenName.text = WalletComponent.Instance.currentCoinMetadata.name;
         var coinType = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault().Key;
         balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, 
@@ -49,10 +50,11 @@ public class SendScreen : BaseScreen
 
     private void OnContinue()
     {
-        manager.ShowScreen("SendConfirmScreen", new TransferData()
+        GoTo("SendConfirmScreen", new TransferData()
         {
             to = to.text,
-            amount = amount.text
+            amount = amount.text,
+            coin = WalletComponent.Instance.currentCoinMetadata
         });
     }
 }

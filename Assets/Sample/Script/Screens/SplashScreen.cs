@@ -17,8 +17,8 @@ public class SplashScreen : BaseScreen
     {
         yield return new WaitForSeconds(2f);
         if(PlayerPrefs.HasKey("wallets"))
-            manager.ShowScreen("LoginScreen");
+            GoTo("LoginScreen");
         else
-            manager.ShowScreen("IntroPage");
+            GoTo("IntroPage");
     }
 }

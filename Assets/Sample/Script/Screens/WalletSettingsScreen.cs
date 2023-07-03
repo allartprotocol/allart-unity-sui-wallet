@@ -25,24 +25,28 @@ public class WalletSettingsScreen : BaseScreen
     public override void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+        if(data == null)
+        {
+            return;
+        }
         wallet = data as Wallet;
         walletPubKey.text = wallet.publicKey;
     }
 
     private void OnRemoveWallets()
     {
-        manager.ShowScreen("RemoveWalletsScreen", wallet);
+        GoTo("RemoveWalletScreen", wallet);
     }
 
 
     private void OnExportPrivate()
     {
-        manager.ShowScreen("ExportPrivate", wallet);
+        GoTo("ExportPrivate", wallet);
     }
 
     private void OnExportPhrase()
     {
-        manager.ShowScreen("ExportPhrase", wallet);
+        GoTo("ExportPhrase", wallet);
 
     }
 }

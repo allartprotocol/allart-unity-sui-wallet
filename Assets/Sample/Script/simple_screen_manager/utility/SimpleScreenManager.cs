@@ -39,6 +39,12 @@ namespace SimpleScreen {
             PopulateDictionary();
         }
 
+        public void ClearHistory(BaseScreen baseScreen)
+        {
+            _screenQueue.Clear();
+            _screenQueue.Push(baseScreen);
+        }
+
         private void PopulateDictionary()
         {
             if (screens != null && screens.Length > 0)

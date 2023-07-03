@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SimpleScreen
@@ -19,6 +20,12 @@ namespace SimpleScreen
                 _canvasGroup = GetComponent<CanvasGroup>();
             }
         }
+
+        public void GoTo(string page, object data = null)
+        {
+            manager.ShowScreen(this, page, data);
+        }
+
         public IScreenAnimation tween { get; set; }
 
         private void Awake()

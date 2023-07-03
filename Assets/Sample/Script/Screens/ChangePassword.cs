@@ -58,6 +58,6 @@ public class ChangePassword : BaseScreen
         InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Password changed successfully");
         WalletComponent.Instance.ChangePassword(oldPassword.text, newPassword.text);
         WalletComponent.Instance.SetPassword(newPassword.text);
-        manager.ShowScreen("MainScreen");
+        GoTo("MainScreen");
     }
 }

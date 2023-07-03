@@ -101,9 +101,7 @@ public class Wallet
             PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
         }
 
-        Debug.Log($"Mnemonic {mnemonic}");
         string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, newPassword);
-        Debug.Log($"Encoded {encodedKeyPair}");
         PlayerPrefs.SetString(walletName, encodedKeyPair);
     }
 
@@ -128,7 +126,6 @@ public class Wallet
         List<string> wallets = GetWalletSavedKeys();
         wallets.Remove(walletName);
         PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
-        PlayerPrefs.DeleteKey(walletName);
     }
 
     public byte[] Sign(byte[] message)

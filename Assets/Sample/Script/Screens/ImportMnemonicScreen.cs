@@ -26,6 +26,7 @@ public class ImportMnemonicScreen : BaseScreen
         if (string.IsNullOrEmpty(mnemonic))
         {
             Debug.Log("Please enter mnemonic");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please enter mnemonic");
             return;
         }
 
@@ -35,12 +36,21 @@ public class ImportMnemonicScreen : BaseScreen
         if (!Mnemonics.IsValidMnemonic(mnemonicField.text))
         {
             Debug.Log("Invalid mnemonic");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid mnemonic");
+            return;
+        }
+
+        if(WalletComponent.Instance.DoesWalletWithMnemonicExists(mnemonic))
+        {
+            Debug.Log("Wallet already exist");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
             return;
         }
 
         this.mnemonic = mnemonic;
         CreateAndEncryptMnemonic(WalletComponent.Instance.password);
-        manager.ShowScreen("MainScreen");
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Wallet imported successfully");
+        GoTo("MainScreen");
     }
 
 

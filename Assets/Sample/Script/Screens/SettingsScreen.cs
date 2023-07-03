@@ -19,12 +19,12 @@ public class SettingsScreen : BaseScreen
 
     private void OnRemoveWallets()
     {
-        manager.ShowScreen("RemoveWalletsScreen");
+        GoTo("RemoveWalletsScreen");
     }
 
     private void OnNetwork()
     {
-        manager.ShowScreen("NetworkSelectScreen");
+        GoTo("NetworkSelectScreen");
     }
 
     private void OnAutolockTimer()
@@ -34,7 +34,7 @@ public class SettingsScreen : BaseScreen
 
     private void OnChangePassword()
     {
-        manager.ShowScreen("ChangePassword");
+        GoTo("ChangePassword");
 
     }
 }

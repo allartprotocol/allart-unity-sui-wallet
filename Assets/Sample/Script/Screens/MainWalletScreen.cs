@@ -33,6 +33,8 @@ public class MainWalletScreen : BaseScreen
 
     public List<EventObject> loadedEvents = new List<EventObject>();
 
+    public Transform loadingScreen;
+
     private void Start()
     {
         receiveBtn.onClick.AddListener(OnReceive);
@@ -96,7 +98,7 @@ public class MainWalletScreen : BaseScreen
 
     private void OnSettings()
     {
-        manager.ShowScreen("WalletsListScreen");
+        GoTo("WalletsListScreen");
     }
 
     private async void OnWalletSelected(int value)
@@ -107,19 +109,22 @@ public class MainWalletScreen : BaseScreen
 
     private void OnSend()
     {
-        manager.ShowScreen("SendScreen");
+        GoTo("SendScreen");
     }
 
     private void OnReceive()
     {
         var wallet = WalletComponent.Instance.currentWallet;
-        manager.ShowScreen("QRScreen", wallet);
+        GoTo("QRScreen", wallet);
     }
 
     private async Task LoadWalletData()
     {
         if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
+
+        
+
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
 
@@ -156,12 +161,27 @@ public class MainWalletScreen : BaseScreen
 
         await UpdateWalletData();
         PopulateWalletsDropdown();
+
+        manager.ClearHistory(this);
     }
 
     private async Task UpdateWalletData()
     {
-        await LoadWalletData();
-        UpdateBalance();
+        try
+        {
+            loadingScreen.gameObject.SetActive(true);
+            await LoadWalletData();
+            UpdateBalance();
+        }
+        catch (System.Exception e)
+        {
+            loadingScreen.gameObject.SetActive(false);
+            Debug.LogError(e);
+        }
+        finally
+        {
+            loadingScreen.gameObject.SetActive(false);
+        }
     }
 
     private async void UpdateBalance()

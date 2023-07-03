@@ -17,7 +17,7 @@ public class ForgotPasswordScreen : BaseScreen
 
     private void OnContinue()
     {
-        manager.ShowScreen("RemoveWalletsScreen");
+        GoTo("RemoveWalletsScreen");
     }
 
 }

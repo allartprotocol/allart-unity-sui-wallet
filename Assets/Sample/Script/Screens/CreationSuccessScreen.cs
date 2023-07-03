@@ -18,7 +18,7 @@ public class CreationSuccessScreen : BaseScreen
 
     private void OnContinue()
     {
-        manager.ShowScreen("LoginScreen");
+        GoTo("LoginScreen");
     }
 
 }

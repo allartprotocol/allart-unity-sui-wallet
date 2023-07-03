@@ -73,11 +73,11 @@ public class CreatePasswordScreen : BaseScreen
         Debug.Log(manager.previousScreen.name);
         if (manager.previousScreen.name == "IntroPage")
         {
-            manager.ShowScreen("CreateRecoveryPhrase");
+            GoTo("CreateRecoveryPhrase");
         }
         else
         {
-            manager.ShowScreen("WalletSuccessScreen");
+            GoTo("WalletSuccessScreen");
         }
     }
 

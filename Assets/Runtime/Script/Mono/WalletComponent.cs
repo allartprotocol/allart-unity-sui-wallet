@@ -118,9 +118,16 @@ public class WalletComponent : MonoBehaviour
         {
             return false;
         }
-        Debug.Log("RESTORE!");
 
-        RestoreAllWallets(password);
+        try
+        {
+            RestoreAllWallets(password);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return false;
+        }
 
         if(wallets.Count > 0)
         {
@@ -157,6 +164,20 @@ public class WalletComponent : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool DoesWalletWithMnemonicExists(string mnemonic) { 
+        
+        var walletNames = Wallet.GetWalletSavedKeys();
+        foreach (var walletName in walletNames)
+        {
+            Wallet wallet = Wallet.RestoreWallet(walletName, password);
+            if (wallet != null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Dictionary<string, Wallet> GetAllWallets()
@@ -216,6 +237,11 @@ public class WalletComponent : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void RemoveWallet(Wallet wallet) {
+        wallet.RemoveWallet();
+        wallets.Remove(wallet.walletName);
     }
 
     public void RemoveAllWallets()
@@ -375,5 +401,10 @@ public class WalletComponent : MonoBehaviour
         var eventQuery = new EventQuery(filters);
         var request = await client.QueryEvents(filter);
         return request.result;
+    }
+
+    internal void LockWallet()
+    {
+        password = null;
     }
 }

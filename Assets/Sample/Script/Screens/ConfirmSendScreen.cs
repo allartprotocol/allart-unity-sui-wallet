@@ -14,6 +14,7 @@ public class ConfirmSendScreen : BaseScreen {
 
     public TextMeshProUGUI to;
     public TextMeshProUGUI fee;
+    public TextMeshProUGUI amount;
 
     public Button confirmBtn;
     private TransferData TransferData;
@@ -35,34 +36,40 @@ public class ConfirmSendScreen : BaseScreen {
         {
             await PayOtherCurrency();
         }
-        manager.ShowScreen("TransactionDone");
+        GoTo("TransactionDone");
     }
 
     private async System.Threading.Tasks.Task PaySui()
     {
         var wallet = WalletComponent.Instance.currentWallet;
+
         ObjectResponseQuery query = new ObjectResponseQuery();
+
         var filter = new MatchAllDataFilter();
         filter.MatchAll = new List<ObjectDataFilter>
         {
             new StructTypeDataFilter() { StructType = "0x2::coin::Coin<0x2::sui::SUI>" },
             new OwnerDataFilter() { AddressOwner = wallet.publicKey }
         };
-        loaderScreen.gameObject.SetActive(true);
         query.filter = filter;
+
         ObjectDataOptions options = new ObjectDataOptions();
         query.options = options;
-        var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
-        Debug.Log(JsonConvert.SerializeObject(res));
-        var res_pay = await WalletComponent.Instance.PaySui(wallet, res.data[0].data.objectId, TransferData.to,
-            ulong.Parse(TransferData.amount), "1000000000");
+        ulong amount = (ulong)(float.Parse(TransferData.amount) / Mathf.Pow(10, TransferData.coin.decimals));
 
-        Debug.Log(JsonConvert.SerializeObject(res_pay));
+        loaderScreen.gameObject.SetActive(true);
+
+        var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
+        
+        var res_pay = await WalletComponent.Instance.PaySui(wallet, res.data[0].data.objectId, TransferData.to,
+            amount, "1000000000");
+
         var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.txBytes)));
 
         var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.txBytes,
             new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
         loaderScreen.gameObject.SetActive(false);
+        GoTo("TransactionDone");
     }
 
     private async System.Threading.Tasks.Task PayOtherCurrency()
@@ -94,7 +101,7 @@ public class ConfirmSendScreen : BaseScreen {
         var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.txBytes,
             new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
         loaderScreen.gameObject.SetActive(false);
-        manager.ShowScreen("TransactionDone");
+        GoTo("TransactionDone");
     }
 
 
@@ -108,7 +115,7 @@ public class ConfirmSendScreen : BaseScreen {
         {
             TransferData = confirmSendData;
             to.text = confirmSendData.to;
-            Debug.LogError("ConfirmSendScreen: data is null");
+            amount.text = $"{confirmSendData.amount} {confirmSendData.coin.symbol}";
             return;
         }
     }

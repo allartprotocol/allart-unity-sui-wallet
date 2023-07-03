@@ -41,7 +41,7 @@ public class RestoreScreen : BaseScreen
         }
 
         this.mnemonic = mnemonic;        
-        manager.ShowScreen("PasswordCreate", (Func<string, bool>)CreateAndEncryptMnemonic);
+        GoTo("PasswordCreate", (Func<string, bool>)CreateAndEncryptMnemonic);
     }
 
 

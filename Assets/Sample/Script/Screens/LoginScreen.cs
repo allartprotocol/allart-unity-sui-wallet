@@ -16,9 +16,15 @@ public class LoginScreen : BaseScreen
         forgotPasswordBtn.onClick.AddListener(OnForgotPassword);
     }
 
+    public override void ShowScreen(object data = null)
+    {
+        base.ShowScreen(data);
+        password.text = "";
+    }
+
     private void OnForgotPassword()
     {
-        manager.ShowScreen("ForgotPassword");
+        GoTo("ForgotPassword");
     }
 
     private void OnLogin()
@@ -39,12 +45,13 @@ public class LoginScreen : BaseScreen
         {
             Debug.Log(ex.Message);
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid password");
+            return;
         }
         
         if (valid)
         {
             WalletComponent.Instance.SetPassword(password.text);
-            manager.ShowScreen("MainScreen");
+            GoTo("MainScreen");
         }
         else
         {

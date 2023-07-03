@@ -22,6 +22,7 @@ public class ExportPhrase : BaseScreen
     {
         base.ShowScreen(data);
         wallet = data as Wallet;
+        password.text = "";
     }
 
     private void OnLogin()
@@ -53,7 +54,7 @@ public class ExportPhrase : BaseScreen
         if (valid)
         {
             WalletComponent.Instance.SetPassword(password.text);
-            manager.ShowScreen("DisplayPhrase", wallet);
+            GoTo("DisplayPhrase", wallet);
         }
         else
         {

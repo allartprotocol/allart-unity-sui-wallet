@@ -11,6 +11,8 @@ public class SendScreen : BaseScreen
 {
     public TextMeshProUGUI tokenName;
 
+    public Image tokenImage;
+
     public TMP_InputField to;
     public TMP_InputField amount;
 
@@ -30,7 +32,13 @@ public class SendScreen : BaseScreen
 
     private void OnMax()
     {
-        amount.text = balance.totalBalance.ToString();
+        var meta = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault();
+        if(meta.Value == null)
+        {
+            return;
+        }
+        var coinType = meta.Value;
+        amount.text = (balance.totalBalance / (Mathf.Pow(10, coinType.decimals))).ToString();
     }
 
     private void OnTokenSelect()
@@ -46,6 +54,15 @@ public class SendScreen : BaseScreen
         var coinType = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault().Key;
         balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, 
             coinType);
+
+        if(WalletComponent.Instance.coinImages.ContainsKey(WalletComponent.Instance.currentCoinMetadata.symbol))
+        {
+            tokenImage.sprite = WalletComponent.Instance.coinImages[WalletComponent.Instance.currentCoinMetadata.symbol];
+        }
+        else
+        {
+            tokenImage.sprite = null;
+        }
     }
 
     private void OnContinue()

@@ -122,7 +122,6 @@ public class MainWalletScreen : BaseScreen
     {
         if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
-
         
 
         var wallet = WalletComponent.Instance.currentWallet;

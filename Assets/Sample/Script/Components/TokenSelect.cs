@@ -43,7 +43,7 @@ public class TokenSelect : MonoBehaviour
             _balance = value;
             if (_balance != null)
             {
-                coinBalance.text = (Mathf.Pow(10, coinMetadata.decimals) * _balance.totalBalance).ToString();
+                coinBalance.text = (_balance.totalBalance / Mathf.Pow(10, coinMetadata.decimals)).ToString();
             }
         }
     }

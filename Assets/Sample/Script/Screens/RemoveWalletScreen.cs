@@ -27,6 +27,11 @@ public class RemoveWalletScreen : BaseScreen
     private void OnRemoveWallets()
     {
         WalletComponent.Instance.RemoveWallet(wallet);
-        GoTo("WalletsListScreen");
+        if(WalletComponent.Instance.GetAllWallets().Count == 0)
+        {
+            GoTo("SplashScreen");
+            return;
+        }
+        GoTo("MainScreen");
     }
 }

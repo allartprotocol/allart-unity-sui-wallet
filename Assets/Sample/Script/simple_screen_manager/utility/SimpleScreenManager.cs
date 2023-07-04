@@ -11,9 +11,7 @@ namespace SimpleScreen {
 
         public static SimpleScreenManager instance;
 
-        private Stack<BaseScreen> _screenQueue = new Stack<BaseScreen>();
-
-        
+        private Stack<BaseScreen> _screenQueue = new Stack<BaseScreen>();        
 
         private void Awake()
         {
@@ -25,6 +23,10 @@ namespace SimpleScreen {
 
         public void GoBack() { 
             var prevScreen = _screenQueue.Pop();
+            if(_screenQueue.Count == 0)
+            {
+                return;
+            }
             var curScreen = _screenQueue.Peek();
 
             Debug.Log(curScreen.name);
@@ -67,7 +69,7 @@ namespace SimpleScreen {
         {
             screen.manager = this;
             if(hide)
-                screen.InitScreen();//gameObject.SetActive(false);
+                screen.InitScreen();
             screensDict.Add(screen.gameObject.name, screen);
         }
 

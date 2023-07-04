@@ -35,7 +35,7 @@ public class CreateMnemonicScreen : BaseScreen
 
         string password = WalletComponent.Instance.password;
 
-        WalletComponent.Instance.CreateNewWallet(mnemonic, password);
+        WalletComponent.Instance.CreateWallet(mnemonic, password);
         GoTo("WalletSuccessScreen");
     }
 

@@ -71,7 +71,13 @@ public class Wallet
 
         if (string.IsNullOrEmpty(walletName))
         {
-            walletName = $"wallet_{wallets.Count + 1}";
+            int lastWalletNumber = 0;
+            if (wallets.Count > 0)
+            {
+                string lastWallet = wallets[wallets.Count - 1];
+                lastWalletNumber = int.Parse(lastWallet.Split('_')[1]);
+            }
+            walletName = $"wallet_{lastWalletNumber+1}";
         }
 
         if (!wallets.Contains(walletName))

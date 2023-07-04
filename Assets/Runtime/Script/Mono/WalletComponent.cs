@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -21,11 +20,15 @@ public class WalletComponent : MonoBehaviour
 
     public Dictionary<string, CoinMetadata> coinMetadatas = new Dictionary<string, CoinMetadata>();
     public Dictionary<string, GeckoCoinData> coinData = new Dictionary<string, GeckoCoinData>();
+    public Dictionary<string, Sprite> coinImages = new Dictionary<string, Sprite>();
 
     public Wallet currentWallet;
     public CoinMetadata currentCoinMetadata;
 
-    public string nodeAddress { get { 
+    public string nodeAddress
+    {
+        get
+        {
             switch (_nodeType)
             {
                 case ENodeType.MainNet:
@@ -37,13 +40,15 @@ public class WalletComponent : MonoBehaviour
                 default:
                     return SUIConstantVars.mainNetNode;
             }
-        }}
+        }
+    }
 
     private string _password;
     public string password
     {
         get { return _password; }
-        private set { 
+        private set
+        {
             _password = value;
         }
     }
@@ -64,7 +69,7 @@ public class WalletComponent : MonoBehaviour
 
     private void Start()
     {
-        if(PlayerPrefs.HasKey("nodeType"))
+        if (PlayerPrefs.HasKey("nodeType"))
         {
             _nodeType = (ENodeType)PlayerPrefs.GetInt("nodeType");
         }
@@ -79,12 +84,12 @@ public class WalletComponent : MonoBehaviour
 
     public void SetNodeAddress(ENodeType nodeAddress)
     {
-        if(nodeAddress == _nodeType)
+        if (nodeAddress == _nodeType)
         {
             return;
         }
         PlayerPrefs.SetInt("nodeType", (int)nodeAddress);
-        
+
         this._nodeType = nodeAddress;
         client = new SUIRPCClient(this.nodeAddress);
         websocketController.Stop();
@@ -114,7 +119,7 @@ public class WalletComponent : MonoBehaviour
 
     public bool CheckPasswordValidity(string password)
     {
-        if(password.Length < 1 || password.Contains(" ") || string.IsNullOrEmpty(password))
+        if (password.Length < 1 || password.Contains(" ") || string.IsNullOrEmpty(password))
         {
             return false;
         }
@@ -129,7 +134,7 @@ public class WalletComponent : MonoBehaviour
             return false;
         }
 
-        if(wallets.Count > 0)
+        if (wallets.Count > 0)
         {
             return true;
         }
@@ -155,26 +160,38 @@ public class WalletComponent : MonoBehaviour
         var walletNames = Wallet.GetWalletSavedKeys();
         foreach (var walletName in walletNames)
         {
-            Wallet wallet = Wallet.RestoreWallet(walletName, password);
-            if (wallet != null)
+            Debug.LogError(walletName);
+            try
             {
-                if(!this.wallets.ContainsKey(wallet.walletName))
+                Wallet wallet = Wallet.RestoreWallet(walletName, password);
+                if (wallet != null)
                 {
-                    this.wallets.Add(wallet.walletName, wallet);
+                    if (!this.wallets.ContainsKey(wallet.walletName))
+                    {
+                        this.wallets.Add(wallet.walletName, wallet);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
             }
         }
     }
 
-    public bool DoesWalletWithMnemonicExists(string mnemonic) { 
-        
+    public bool DoesWalletWithMnemonicExists(string mnemonic)
+    {
+
         var walletNames = Wallet.GetWalletSavedKeys();
         foreach (var walletName in walletNames)
         {
             Wallet wallet = Wallet.RestoreWallet(walletName, password);
             if (wallet != null)
             {
-                return true;
+                if (wallet.mnemonic == mnemonic)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -239,25 +256,31 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
-    public void RemoveWallet(Wallet wallet) {
+    public void RemoveWallet(Wallet wallet)
+    {
         wallet.RemoveWallet();
         wallets.Remove(wallet.walletName);
     }
 
     public void RemoveAllWallets()
     {
-        foreach (var wallet in wallets.Values)
-        {
-            wallet.RemoveWallet();
-        }
         wallets.Clear();
+
+        currentWallet = null;
+        password = "";
+
+        PlayerPrefs.DeleteAll();
     }
 
+    /// <summary>
+    /// Retrieves all coin data for an owner.  
+    /// </summary>
+    /// <param name="owner">The address of the owner of the coins.</param>
     public async Task GetDataForAllCoins(string owner)
     {
         var coins = await GetAllCoins(owner);
 
-        if(coins != null)
+        if (coins != null)
         {
             List<string> coinTypes = new List<string>();
             foreach (var coin in coins.data)
@@ -270,7 +293,7 @@ public class WalletComponent : MonoBehaviour
 
             foreach (var coinType in coinTypes)
             {
-                if(coinMetadatas.ContainsKey(coinType))
+                if (coinMetadatas.ContainsKey(coinType))
                     continue;
                 var coinMetadata = await GetCoinMetadata(coinType);
                 if (coinMetadata != null)
@@ -288,6 +311,23 @@ public class WalletComponent : MonoBehaviour
                 if (coinData != null)
                 {
                     this.coinData.Add(coinMetadata.symbol, coinData);
+                }
+            }
+
+            foreach (var data in coinData.Keys)
+            {
+                var coin = coinData[data];
+                if(coin.image != null && coin.image.thumb != null)
+                {
+                    if(coinImages.ContainsKey(data))
+                    {
+                        continue;
+                    }
+                    var image = await GetImage(coin.image.thumb);
+                    if (image != null)
+                    {
+                        coinImages.Add(data, image);
+                    }
                 }
             }
         }
@@ -332,13 +372,6 @@ public class WalletComponent : MonoBehaviour
         var request = await client.GetAllBalances(wallet);
         return request.result;
     }
-
-    //public async Task<TransactionBlockBytes> Pay(Wallet wallet, ObjectId[] inputCoins, SUIAddress[] recipients, BigInteger[] amounts, ObjectId gas, BigInteger gasBudget)
-    //{
-
-    //    var request = await client.Pay(wallet, inputCoins, recipients, amounts, gas, gasBudget);
-    //    return request;
-    //}
 
     public async Task<TransactionBlockBytes> Pay(Wallet wallet, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
     {
@@ -393,7 +426,8 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
-    public async Task<PageForEventAndEventID> GetTransactionsForWallet(Wallet wallet) {
+    public async Task<PageForEventAndEventID> GetTransactionsForWallet(Wallet wallet)
+    {
         SenderFilter filter = new SenderFilter(currentWallet.publicKey);
         RecipientFilter recipientFilter = new RecipientFilter(currentWallet.publicKey);
         FilterOr filterOr = new FilterOr(new List<object> { filter, recipientFilter });

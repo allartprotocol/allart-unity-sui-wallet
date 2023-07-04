@@ -11,6 +11,7 @@ public class GeckoImage {
     public string thumb;
     public string small;
     public string large;
+    public Sprite thumbImage;
 }
 
 public class MarketData {

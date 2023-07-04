@@ -39,7 +39,10 @@ public class WalletObject : MonoBehaviour
         var geckoData = WalletComponent.Instance.coinData[coinMetadata.symbol];
 
         if (geckoData != null) { 
-
+            if(geckoData.market_data.current_price == null)
+            {
+                return;
+            }
             var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);
             coin_usd.text = $"${usdValue.ToString("0.00")}";
             coin_change.text = $"{geckoData.market_data.price_change_percentage_24h.ToString("0.00")}%";

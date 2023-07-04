@@ -16,7 +16,7 @@ public class RemoveWalletsScreen : BaseScreen
 
     private void OnRemoveWallets()
     {
-        PlayerPrefs.DeleteAll();
+        WalletComponent.Instance.RemoveAllWallets();
         GoTo("SplashScreen");
     }
 }

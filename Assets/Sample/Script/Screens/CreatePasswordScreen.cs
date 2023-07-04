@@ -36,6 +36,13 @@ public class CreatePasswordScreen : BaseScreen
         {
             if (passwordField.text == confirmPasswordField.text)
             {
+                if(passwordField.text.Length < 3)
+                {
+                    Debug.Log("Password must be at least 3 characters long");
+                    InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Password must be at least 3 characters long");
+                    return false;
+                }
+
                 if (termsToggle.isOn)
                 {
                     WalletComponent.Instance.SetPassword(passwordField.text);
@@ -60,11 +67,8 @@ public class CreatePasswordScreen : BaseScreen
                 return false;
             }
         }
-        else
-        {
-            Debug.Log("Please fill all the fields");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill all the fields");
-        }
+        Debug.Log("Please fill all the fields");
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill all the fields");
         return false;
     }
 

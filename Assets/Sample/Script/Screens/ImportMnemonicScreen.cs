@@ -48,7 +48,18 @@ public class ImportMnemonicScreen : BaseScreen
         }
 
         this.mnemonic = mnemonic;
-        CreateAndEncryptMnemonic(WalletComponent.Instance.password);
+        Wallet wal = CreateAndEncryptMnemonic(WalletComponent.Instance.password);
+        if(wal != null)
+        {
+            WalletComponent.Instance.SetCurrentWallet(wal);
+            WalletComponent.Instance.RestoreAllWallets(WalletComponent.Instance.password);
+        }
+        else
+        {
+            Debug.Log("Wallet creation failed");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet creation failed");
+            return;
+        }
         InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Wallet imported successfully");
         GoTo("MainScreen");
     }
@@ -59,11 +70,10 @@ public class ImportMnemonicScreen : BaseScreen
         base.InitScreen();
     }
 
-    public bool CreateAndEncryptMnemonic(string password)
+    public Wallet CreateAndEncryptMnemonic(string password)
     {
         Debug.Log(mnemonic + " " + password);
-        WalletComponent.Instance.CreateNewWallet(this.mnemonic, password);
-        return true;
+        return WalletComponent.Instance.CreateWallet(this.mnemonic, password);
     }
 
     public override void ShowScreen(object data = null)

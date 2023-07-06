@@ -122,6 +122,11 @@ public class Wallet
         return null;
     }
 
+    public void RestoreWalletFromPrivateKey(byte[] privateKey)
+    {
+        keyPair = Mnemonics.GenerateKeyPairFromPrivateKey(privateKey);
+    }
+
     private static bool IsValid(string mnemonic)
     {
         return Mnemonics.IsValidMnemonic(mnemonic);

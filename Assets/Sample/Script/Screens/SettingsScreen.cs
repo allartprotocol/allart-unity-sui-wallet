@@ -29,7 +29,7 @@ public class SettingsScreen : BaseScreen
 
     private void OnAutolockTimer()
     {
-        throw new NotImplementedException();
+        GoTo("TimerSelect");
     }
 
     private void OnChangePassword()

@@ -53,21 +53,51 @@ public class ConfirmSendScreen : BaseScreen {
         };
         query.filter = filter;
 
-        ObjectDataOptions options = new ObjectDataOptions();
+        ObjectDataOptions options = new();
         query.options = options;
-        ulong amount = (ulong)(float.Parse(TransferData.amount) / Mathf.Pow(10, TransferData.coin.decimals));
+        ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
 
         loaderScreen.gameObject.SetActive(true);
+        try {
+            var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
 
-        var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
+            if(res == null || res.data.Count == 0)
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
+                return;
+            }
+
+            List<string> objects = new();
+
+            foreach(var data in res.data)
+            {
+                objects.Add(data.data.objectId);
+            }
+
+            Debug.Log(TransferData.amount);
+            var res_pay = await WalletComponent.Instance.PaySui(wallet, objects, new List<string>() {TransferData.to},
+                new List<string>() {amount.ToString()}, "1000000000");
+
+            var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.txBytes)));
+
+            var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.txBytes,
+                new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
+
+            if(transaction.error != null && transaction.error.code != 0)
+            {
+                Debug.Log(transaction.error.message);
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
+                return;
+            }
+
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e.Message);
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
+        }
+
         
-        var res_pay = await WalletComponent.Instance.PaySui(wallet, res.data[0].data.objectId, TransferData.to,
-            amount, "1000000000");
-
-        var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.txBytes)));
-
-        var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.txBytes,
-            new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
         loaderScreen.gameObject.SetActive(false);
         GoTo("TransactionDone");
     }
@@ -75,17 +105,20 @@ public class ConfirmSendScreen : BaseScreen {
     private async System.Threading.Tasks.Task PayOtherCurrency()
     {
         var wallet = WalletComponent.Instance.currentWallet;
-        ObjectResponseQuery query = new ObjectResponseQuery();
-        var filter = new MatchAllDataFilter();
-        filter.MatchAll = new List<ObjectDataFilter>
+        ObjectResponseQuery query = new();
+        var filter = new MatchAllDataFilter
         {
-            new StructTypeDataFilter() { StructType = "0x2::coin::Coin<0x2::sui::SUI>" },
-            new OwnerDataFilter() { AddressOwner = wallet.publicKey }
+            MatchAll = new List<ObjectDataFilter>
+            {
+                new StructTypeDataFilter() { StructType = "0x2::coin::Coin<0x2::sui::SUI>" },
+                new OwnerDataFilter() { AddressOwner = wallet.publicKey }
+            }
         };
         loaderScreen.gameObject.SetActive(true);
         query.filter = filter;
-        ObjectDataOptions options = new ObjectDataOptions();
+        ObjectDataOptions options = new();
         query.options = options;
+        Debug.Log(TransferData.amount);
         var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
         Debug.Log(JsonConvert.SerializeObject(res));
         var res_pay = await WalletComponent.Instance.Pay(wallet,

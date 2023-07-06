@@ -16,6 +16,14 @@ public class SuiTransactionBlockResponse
     public object[] objectChanges { get; set; }
     public BalanceChange[] balanceChanges { get; set; }
     public string timestampMs;
+    public ObjectResponseError error { get; set; }
+}
+
+public class ObjectResponseError{
+    public int code { get; set; }
+    public string objectId { get; set; }
+    public string message { get; set; }
+
 }
 
 public class BalanceChange {

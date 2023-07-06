@@ -7,10 +7,6 @@ public class SUIObjectResponse {
     public ObjectResponseError error;
 }
 
-public class ObjectResponseError { 
-    
-}
-
 public class ObjectData
 { 
     public string objectId;

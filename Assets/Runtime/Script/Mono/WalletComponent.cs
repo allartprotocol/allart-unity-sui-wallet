@@ -84,7 +84,8 @@ public class WalletComponent : MonoBehaviour
         }
 
         client = new SUIRPCClient(nodeAddress);
-        websocketController = new WebsocketController(nodeAddress);
+        websocketController = WebsocketController.instance;
+        websocketController.SetupConnection(nodeAddress);
     }
 
     private void OnDisable()
@@ -98,7 +99,7 @@ public class WalletComponent : MonoBehaviour
 
     #region Timer 
 
-    void StartTimer()
+    public void StartTimer()
     {
         if (timeoutTimer != null)
             StopCoroutine(timeoutTimer);
@@ -107,7 +108,14 @@ public class WalletComponent : MonoBehaviour
 
     private IEnumerator Timer()
     {
-        yield return new WaitForSeconds(10000000);
+        float time = -1;
+        if(PlayerPrefs.HasKey("timeout")){
+            time = PlayerPrefs.GetFloat("timeout");
+        }
+        if(time == -1){
+            time = 10000000;
+        }
+        yield return new WaitForSeconds(time);
         websocketController?.Stop();
         password = null;
         var manager = FindObjectOfType<SimpleScreen.SimpleScreenManager>();
@@ -133,7 +141,7 @@ public class WalletComponent : MonoBehaviour
         this.nodeType = nodeAddress;
         client = new SUIRPCClient(this.nodeAddress);
         websocketController.Stop();
-        websocketController = new WebsocketController(this.nodeAddress);
+        websocketController.SetupConnection(this.nodeAddress);
     }
 
     /// <summary>
@@ -474,7 +482,7 @@ public class WalletComponent : MonoBehaviour
         return request;
     }
 
-    public async Task<TransactionBlockBytes> PaySui(Wallet wallet, string inputCoins, string recipients, ulong amounts, string gasBudget)
+    public async Task<TransactionBlockBytes> PaySui(Wallet wallet, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
     {
         var request = await client.PaySui(wallet, inputCoins, recipients, amounts, gasBudget);
         return request;

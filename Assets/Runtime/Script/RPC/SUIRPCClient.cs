@@ -153,7 +153,7 @@ public class SUIRPCClient : RPCClient
 
     public async Task<SuiTransactionBlockResponse> ExecuteTransactionBlock(string txBytes, IEnumerable<string> serializedSignatures, ObjectDataOptions options, ExecuteTransactionRequestType requestType)
     {
-        RPCRequestBase rpcRequest = new RPCRequestBase("sui_executeTransactionBlock");
+        RPCRequestBase rpcRequest = new("sui_executeTransactionBlock");
         rpcRequest.AddParameter(txBytes);
         rpcRequest.AddParameter(serializedSignatures);
         rpcRequest.AddParameter(options);
@@ -162,15 +162,15 @@ public class SUIRPCClient : RPCClient
         return rpcResponse.result;
     }
 
-    public async Task<TransactionBlockBytes> PaySui(Wallet signer, string inputCoins, string recipients, ulong amounts, string gasBudget)
+    public async Task<TransactionBlockBytes> PaySui(Wallet signer, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
     {
 
-        RPCRequestBase rpcRequest = new RPCRequestBase("unsafe_transferSui");
+        RPCRequestBase rpcRequest = new("unsafe_paySui");
         rpcRequest.AddParameter(signer.publicKey);
         rpcRequest.AddParameter(inputCoins);
-        rpcRequest.AddParameter(gasBudget);
         rpcRequest.AddParameter(recipients);
-        rpcRequest.AddParameter(amounts.ToString());
+        rpcRequest.AddParameter(amounts);
+        rpcRequest.AddParameter(gasBudget);
         var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);
         return rpcResponse.result;
     }

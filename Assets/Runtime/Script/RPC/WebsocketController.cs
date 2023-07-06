@@ -1,24 +1,20 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using NativeWebSocket;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Cms;
 
-public class WebsocketController
+public class WebsocketController: MonoBehaviour
 {
     WebSocket websocket;
     public Action onWSEvent;
 
     public static WebsocketController instance;
 
-    public WebsocketController(string url)
+    public void Awake()
     {
         instance = this;
-        SetupConnection(url);
     }
 
     public async void SetupConnection(string url)
@@ -51,8 +47,6 @@ public class WebsocketController
             Debug.Log("OnMessage! " + message);
             onWSEvent?.Invoke();
         };
-
-        //InvokeRepeating("SendWebSocketMessage", 0.0f, 5f);
 
         await websocket.Connect();
     }
@@ -94,9 +88,6 @@ public class WebsocketController
         await websocket.Close();
     }
 
-    ~WebsocketController()
-    {
-        websocket.Close();
-    }
+    
 }
 

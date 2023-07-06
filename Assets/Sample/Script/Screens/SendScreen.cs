@@ -98,6 +98,12 @@ public class SendScreen : BaseScreen
 
     private void OnContinue()
     {
+        if(string.IsNullOrEmpty(to.text) || string.IsNullOrEmpty(amount.text))
+        {
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill in all fields");
+            return;
+        }
+        
         GoTo("SendConfirmScreen", new TransferData()
         {
             to = to.text,

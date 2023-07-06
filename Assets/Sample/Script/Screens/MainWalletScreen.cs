@@ -2,6 +2,7 @@ using SimpleScreen;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -90,6 +91,10 @@ public class MainWalletScreen : BaseScreen
         }
 
         loadedEvents.Clear();
+        if(history.Count != 0)
+        {
+            history = history.OrderByDescending(x => x.timestampMs).ToList();
+        }
 
         foreach (var eventPage in history)
         {

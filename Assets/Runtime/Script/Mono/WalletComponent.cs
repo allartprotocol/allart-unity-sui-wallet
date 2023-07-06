@@ -21,6 +21,7 @@ public class WalletComponent : MonoBehaviour
 
     public Dictionary<string, CoinMetadata> coinMetadatas = new();
     public Dictionary<string, GeckoCoinData> coinData = new();
+    public Dictionary<string, CoinPage> coinPages = new();
     public Dictionary<string, Sprite> coinImages = new();
 
     public Wallet currentWallet;
@@ -358,16 +359,15 @@ public class WalletComponent : MonoBehaviour
 
         if (coins != null)
         {
-            List<string> coinTypes = new();
             foreach (var coin in coins.data)
             {
-                if (!coinTypes.Contains(coin.coinType))
+                if (!coinPages.ContainsKey(coin.coinType))
                 {
-                    coinTypes.Add(coin.coinType);
+                    coinPages.Add(coin.coinType, coin);
                 }
             }
 
-            foreach (var coinType in coinTypes)
+            foreach (var coinType in coinPages.Keys)
             {
                 if (coinMetadatas.ContainsKey(coinType))
                     continue;

@@ -18,16 +18,46 @@ public class SendScreen : BaseScreen
 
     public Button continueBtn;
     public Button tokenSelectBtn;
+    public Button closeButton;
+    public Button scanButton;
+    public Transform feed;
+
 
     public Button max;
 
     Balance balance;
+    private QRReader qrReader;
 
     private void Start()
     {
         continueBtn.onClick.AddListener(OnContinue);
         tokenSelectBtn.onClick.AddListener(OnTokenSelect);
+        closeButton.onClick.AddListener(OnClose);
+        scanButton.onClick.AddListener(OnScan);
         max.onClick.AddListener(OnMax);
+
+        
+        qrReader = FindObjectOfType<QRReader>();
+        qrReader.OnQRRead += OnQRCodeFound;
+    }
+
+    private void OnQRCodeFound(string obj)
+    {
+        to.text = obj;
+        Debug.Log("QR Code Found: " + obj);
+        OnClose();
+    }
+
+    private void OnScan()
+    {
+        feed.gameObject.SetActive(true);
+        qrReader.StartFeed();
+    }
+
+    private void OnClose()
+    {
+        feed.gameObject.SetActive(false);
+        qrReader.StopFeed();
     }
 
     private void OnMax()
@@ -55,14 +85,15 @@ public class SendScreen : BaseScreen
         balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, 
             coinType);
 
-        if(WalletComponent.Instance.coinImages.ContainsKey(WalletComponent.Instance.currentCoinMetadata.symbol))
-        {
-            tokenImage.sprite = WalletComponent.Instance.coinImages[WalletComponent.Instance.currentCoinMetadata.symbol];
-        }
-        else
-        {
-            tokenImage.sprite = null;
-        }
+        var tokenImgComponent = GetComponentInChildren<TokenImage>();
+        WalletComponent.Instance.coinImages.TryGetValue(WalletComponent.Instance.currentCoinMetadata.symbol, out Sprite image);
+        tokenImgComponent.Init(image, WalletComponent.Instance.currentCoinMetadata.name);
+    }
+
+    override public void HideScreen()
+    {
+        base.HideScreen();
+        OnClose();
     }
 
     private void OnContinue()

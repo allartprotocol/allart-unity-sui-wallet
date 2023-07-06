@@ -1,3 +1,4 @@
+using System;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;
@@ -8,12 +9,12 @@ public class QRScreen : BaseScreen
     public Image qrImage;
     public TMP_InputField publicKey;
     public Button copyButton;
-
+    
     private Wallet wallet;
 
     private void Start()
     {
-        copyButton.onClick.AddListener(OnCopy);
+        copyButton.onClick.AddListener(OnCopy);        
     }
 
     public override void ShowScreen(object data)

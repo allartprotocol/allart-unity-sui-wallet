@@ -1,29 +1,47 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using ZXing;
 
 public class QRReader : MonoBehaviour
 {
 
     private WebCamTexture camTexture;
-    private Rect screenRect;
-    void Start()
+    
+    public RawImage feed;
+    private Coroutine tryScanRoutine;
+
+    public Action<string> OnQRRead;
+
+    public void StartFeed()
     {
-        screenRect = new Rect(0, 0, Screen.width, Screen.height);
-        camTexture = new WebCamTexture();
-        camTexture.requestedHeight = Screen.height;
-        camTexture.requestedWidth = Screen.width;
-        if (camTexture != null)
+        camTexture = new WebCamTexture
         {
-            camTexture.Play();
+            requestedHeight = (int)feed.rectTransform.rect.height,
+            requestedWidth = (int)feed.rectTransform.rect.width
+        };
+        camTexture?.Play();
+
+        feed.texture = camTexture;
+        tryScanRoutine = StartCoroutine(ScanRoutine());
+    }
+
+    public void StopFeed()
+    {
+        camTexture?.Stop();
+        if(tryScanRoutine != null)
+            StopCoroutine(tryScanRoutine);
+    }
+
+    IEnumerator ScanRoutine(){
+        while(true){
+            yield return new WaitForSeconds(1f);
+            TryReadQR();
         }
     }
 
-    void OnGUI()
-    {
-        // drawing the camera on screen
-        GUI.DrawTexture(screenRect, camTexture, ScaleMode.ScaleToFit);
-        // do the reading — you might want to attempt to read less often than you draw on the screen for performance sake
+    void TryReadQR(){
         try
         {
             IBarcodeReader barcodeReader = new BarcodeReader();
@@ -32,6 +50,8 @@ public class QRReader : MonoBehaviour
               camTexture.width, camTexture.height);
             if (result != null)
             {
+                Debug.Log("DECODED TEXT FROM QR: " + result.Text);
+                OnQRRead?.Invoke(result.Text);
             }
         }
         catch (Exception ex) { Debug.LogWarning(ex.Message); }

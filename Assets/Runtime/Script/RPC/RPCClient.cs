@@ -18,24 +18,22 @@ public class RPCClient
     internal async Task<JsonRpcResponse<T>> SendRequest<T>(object data)
     {
         var requestJson = JsonConvert.SerializeObject(data, new Newtonsoft.Json.Converters.StringEnumConverter());
-        Debug.Log(requestJson);
+        // Debug.Log(requestJson);
         var requestData = System.Text.Encoding.UTF8.GetBytes(requestJson);
-        using (var uwr = new UnityWebRequest(_uri, "POST"))
+        using var uwr = new UnityWebRequest(_uri, "POST");
+        uwr.uploadHandler = new UploadHandlerRaw(requestData);
+        uwr.downloadHandler = new DownloadHandlerBuffer();
+        uwr.SetRequestHeader("Content-Type", "application/json");
+        uwr.SendWebRequest();
+
+        while (!uwr.isDone)
         {
-            uwr.uploadHandler = new UploadHandlerRaw(requestData);
-            uwr.downloadHandler = new DownloadHandlerBuffer();
-            uwr.SetRequestHeader("Content-Type", "application/json");
-            uwr.SendWebRequest();
-
-            while (!uwr.isDone)
-            {
-                await Task.Yield();
-            }
-
-            Debug.Log(uwr.downloadHandler.text);
-            var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
-            return response;
+            await Task.Yield();
         }
+
+        // Debug.Log(uwr.downloadHandler.text);
+        var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
+        return response;
     }
 
     internal async Task<T> SendAPIRequest<T>(object data)
@@ -63,21 +61,18 @@ public class RPCClient
 
     public async Task<T> Get<T>(string url)
     {
-        using (var uwr = new UnityWebRequest(url, "GET"))
+        using var uwr = new UnityWebRequest(url, "GET");
+        uwr.downloadHandler = new DownloadHandlerBuffer();
+        uwr.SetRequestHeader("Content-Type", "application/json");
+        uwr.SendWebRequest();
+
+        while (!uwr.isDone)
         {
-            uwr.downloadHandler = new DownloadHandlerBuffer();
-            uwr.SetRequestHeader("Content-Type", "application/json");
-            uwr.SendWebRequest();
-
-            while (!uwr.isDone)
-            {
-                await Task.Yield();
-            }
-
-            Debug.Log(uwr.downloadHandler.text);
-            var response = JsonConvert.DeserializeObject<T>(uwr.downloadHandler.text);
-            return response;
+            await Task.Yield();
         }
+
+        var response = JsonConvert.DeserializeObject<T>(uwr.downloadHandler.text);
+        return response;
     }
 
     public async Task<Sprite> DownloadImage(string url)

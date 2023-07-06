@@ -17,7 +17,9 @@ public class ForgotPasswordScreen : BaseScreen
 
     private void OnContinue()
     {
-        GoTo("RemoveWalletsScreen");
+        WalletComponent.Instance.RemoveAllWallets();
+        manager.ClearHistory(null);
+        GoTo("RestoreScreen");
     }
 
 }

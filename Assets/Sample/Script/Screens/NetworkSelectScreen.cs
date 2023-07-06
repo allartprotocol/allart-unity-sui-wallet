@@ -20,7 +20,7 @@ public class NetworkSelectScreen : BaseScreen
     }
 
     private void CheckSelection() {
-        switch (WalletComponent.Instance._nodeType)
+        switch (WalletComponent.Instance.nodeType)
         {
             case ENodeType.TestNet:
                 testNet.transform.Find("check").gameObject.SetActive(true);

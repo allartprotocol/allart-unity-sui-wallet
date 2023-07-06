@@ -172,6 +172,11 @@ namespace AllArt.SUI.Wallet {
         {
             return StringCipher.Decrypt(encryptedMnemonic, password);
         }
+
+        public static string GetPasswordWithMenmonic(string encryptedMnemonic, string mnemonic)
+        {
+            return StringCipher.Decrypt(encryptedMnemonic, mnemonic);
+        }
     }
 
 }

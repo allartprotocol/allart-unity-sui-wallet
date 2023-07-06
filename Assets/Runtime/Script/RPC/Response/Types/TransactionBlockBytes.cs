@@ -11,3 +11,4 @@ public class TransactionBlockBytes {
 public class InputObjectKind { 
     public ObjectRef ImmOrOwnedMoveObject { get; set; }
 }
+

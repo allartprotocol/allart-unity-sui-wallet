@@ -1,5 +1,7 @@
 using SimpleScreen;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -23,7 +25,7 @@ public class MainWalletScreen : BaseScreen
     public Transform objectListContent;
     public GameObject objectListItemPrefab;
 
-    private List<WalletObject> loadedObjects = new List<WalletObject>();
+    private List<WalletObject> loadedObjects = new();
 
     public Transform assetHolder;
     public Transform historyHolder;
@@ -31,7 +33,7 @@ public class MainWalletScreen : BaseScreen
     public GameObject historyObjectPrefab;
     public Transform historyContent;
 
-    public List<EventObject> loadedEvents = new List<EventObject>();
+    public List<EventObject> loadedEvents = new();
 
     public Transform loadingScreen;
 
@@ -43,13 +45,19 @@ public class MainWalletScreen : BaseScreen
         settingsBtn.onClick.AddListener(OnSettings);
         assets.onClick.AddListener(OnAssets);
         history.onClick.AddListener(OnHistory);
+        WebsocketController.instance.onWSEvent += OnNewTransaction;
+    }
+
+    private async void OnNewTransaction()
+    {
+        await UpdateWalletData();
     }
 
     private void OnHistory()
     {
         assetHolder.gameObject.SetActive(false);
         historyHolder.gameObject.SetActive(true);
-        PopulateHidtory();
+        PopulateHistory();
     }
 
     void PopulateWalletsDropdown()
@@ -59,20 +67,22 @@ public class MainWalletScreen : BaseScreen
 
         var wallets = WalletComponent.Instance.GetAllWallets();
 
-        List<string> options = new List<string>();
+        List<string> options = new();
 
         foreach (var wallet in wallets)
         {
-            options.Add(wallet.Key);
+            options.Add(wallet.Value.publicKey);
         }
 
         walletsDropdown.AddOptions(options);
     }
 
-    async void PopulateHidtory()
+    // <summary>
+    /// Populates the history of transactions for the current wallet.
+    /// </summary>
+    async void PopulateHistory()
     {
-
-        var history = await WalletComponent.Instance.GetTransactionsForWallet(WalletComponent.Instance.currentWallet);
+        var history = await WalletComponent.Instance.GetTransactionsForSelectedWallet();
 
         foreach (var obj in loadedEvents)
         {
@@ -81,11 +91,11 @@ public class MainWalletScreen : BaseScreen
 
         loadedEvents.Clear();
 
-        foreach (var eventPage in history.data)
+        foreach (var eventPage in history)
         {
             var obj = Instantiate(historyObjectPrefab, historyContent);
             var eventObject = obj.GetComponent<EventObject>();
-            eventObject.InitializeObject(eventPage);
+            eventObject.InitializeObject(eventPage, manager);
             loadedEvents.Add(eventObject);
         }
     }
@@ -122,7 +132,6 @@ public class MainWalletScreen : BaseScreen
     {
         if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
-        
 
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
@@ -130,6 +139,7 @@ public class MainWalletScreen : BaseScreen
         walletPubText.text = wallet.publicKey;
 
         walletBalanceText.text = "0";
+        percentageText.text = "0%";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
 
@@ -143,8 +153,10 @@ public class MainWalletScreen : BaseScreen
             var obj = Instantiate(objectListItemPrefab, objectListContent);
             WalletObject wo = obj.GetComponent<WalletObject>();
             loadedObjects.Add(wo);
-            wo.Init(balance);
+            wo.Init(balance, manager);
         }
+
+        sendBtn.interactable = balances.Count > 0;
     }
 
     public override async void ShowScreen(object data = null)
@@ -186,6 +198,8 @@ public class MainWalletScreen : BaseScreen
     private async void UpdateBalance()
     {
         Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet, "0x2::sui::SUI");
+        percentageText.text = "0%";
+        walletBalanceText.text = "0";
         if (!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
             return;
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];

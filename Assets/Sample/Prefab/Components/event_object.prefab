@@ -55,7 +55,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3792067916457792382}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3792067916457792382}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -253,7 +253,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5333017989033781916}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.2}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -362,10 +362,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253eab00740c79841a985cfa9d060fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  packageId: {fileID: 5333017989026144538}
-  transactionModule: {fileID: 5333017990700327261}
-  sender: {fileID: 0}
-  type: {fileID: 9057571323415747276}
+  successImage: {fileID: 21300000, guid: 57c060eaeacfcb94ea844724b0fe6821, type: 3}
+  failImage: {fileID: 21300000, guid: 67229e1bea53b4848b8562a9d4810d92, type: 3}
+  statusImage: {fileID: 5333017989999674121}
+  eventPage:
+    timestampMs: 
+  nameTxt: {fileID: 5333017990700327261}
+  amount: {fileID: 5333017989026144538}
+  date: {fileID: 9057571323415747276}
 --- !u!1 &5333017989082459132
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +502,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 67229e1bea53b4848b8562a9d4810d92, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -655,7 +659,7 @@ GameObject:
   - component: {fileID: 9057571323415747277}
   - component: {fileID: 9057571323415747276}
   m_Layer: 5
-  m_Name: ammount (1)
+  m_Name: date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

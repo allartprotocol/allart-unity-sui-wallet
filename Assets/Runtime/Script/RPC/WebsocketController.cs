@@ -26,7 +26,7 @@ public class WebsocketController
         if (url.Contains("https://"))
             url = url.Replace("https://", "wss://");
 
-        websocket = new WebSocket(url);
+        websocket = new WebSocket("wss://fullnode.testnet.sui.io/");
         Debug.Log(url);
 
         websocket.OnOpen += () =>
@@ -62,13 +62,16 @@ public class WebsocketController
 #if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
 #endif
+        if(websocket != null)
+            Debug.Log(websocket.State);
+
     }
 
-    public async Task Subscribe(List<object> filterParams)
+    public async Task Subscribe(object filterParams)
     {
         if (websocket.State == WebSocketState.Open)
         {
-            EventFilter filter = new EventFilter("sui_subscribeEvent", filterParams);
+            EventFilter filter = new("suix_subscribeTransaction", new List<object>{filterParams}); //{filterParams}
 
             string filterString = JsonConvert.SerializeObject(filter);
             Debug.Log(filterString);
@@ -80,7 +83,7 @@ public class WebsocketController
     {
         if (websocket.State == WebSocketState.Open)
         {
-            EventFilter filter = new EventFilter("sui_unsubscribeEvent", new List<object> { id });
+            EventFilter filter = new("suix_unsubscribeEvent", new List<object> { id });
             string filterString = JsonConvert.SerializeObject(filter);
             await websocket.SendText(filterString);
         }

@@ -19,6 +19,14 @@ public class SenderFilter
     public string Sender;
 }
 
+public class ObjectFilter{
+    public ObjectFilter(string address)
+    {
+        Object = address;
+    }
+    public string Object;
+}
+
 public class RecipientFilter
 {
     public RecipientFilter(string address)
@@ -63,15 +71,15 @@ public class FilterAnd
 
 public class FilterOr
 {
-    public List<object> Or;
+    public List<object> Any;
 
     public FilterOr(List<object> or)
     {
-        Or = or;
+        Any = or;
     }
 
     public void Add(object obj)
     {
-        Or.Add(obj);
+        Any.Add(obj);
     }
 }

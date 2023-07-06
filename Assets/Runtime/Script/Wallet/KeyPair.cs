@@ -18,7 +18,10 @@ namespace AllArt.SUI.Wallet
         {
             get
             {
-                return ToSuiAddress(privateKey);
+                byte[] first32Bytes = new byte[32];
+                Array.Copy(privateKey, 0, first32Bytes, 0, 32);
+                var hash = BitConverter.ToString(first32Bytes).Replace("-", "").ToLowerInvariant();
+                return "0x" + hash[..64];
             }
         }
 

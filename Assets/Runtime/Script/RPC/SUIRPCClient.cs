@@ -202,9 +202,24 @@ public class SUIRPCClient : RPCClient
     }
 
     public async Task<JsonRpcResponse<PageForEventAndEventID>> QueryEvents(object filter) {
-        RPCRequestBase rpcRequest = new RPCRequestBase("suix_queryEvents");
+        RPCRequestBase rpcRequest = new("suix_queryEvents");
         rpcRequest.AddParameter(filter);
         var rpcResponse = await SendRequestAsync<PageForEventAndEventID>(rpcRequest);
         return rpcResponse;
+    }
+
+    public async Task<JsonRpcResponse<PageForTransactionBlockResponseAndTransactionDigest>> QueryTransactionBlocks(object filters) {
+        RPCRequestBase rpcRequest = new("suix_queryTransactionBlocks");
+        rpcRequest.AddParameter(filters);
+        var rpcResponse = await SendRequestAsync<PageForTransactionBlockResponseAndTransactionDigest>(rpcRequest);
+        return rpcResponse;
+    }
+
+    public async Task<List<SuiTransactionBlockResponse>> MultiGetTransactionBlocks(List<string> digests, TransactionBlockResponseOptions options) {
+        RPCRequestBase rpcRequest = new("sui_multiGetTransactionBlocks");
+        rpcRequest.AddParameter(digests);
+        rpcRequest.AddParameter(options);
+        var rpcResponse = await SendRequestAsync<List<SuiTransactionBlockResponse>>(rpcRequest);
+        return rpcResponse.result;
     }
 }

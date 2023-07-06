@@ -12,6 +12,7 @@ public class TokenSelect : MonoBehaviour
     private Balance _balance;
 
     private SimpleScreenManager manager;
+    public TokenImage tokenImage;
 
     public CoinMetadata coinMetadata
     {
@@ -64,6 +65,10 @@ public class TokenSelect : MonoBehaviour
         this.coinData = coinData;
         this.balance = balance;
         this.manager = manager;
+
+        tokenImage = GetComponentInChildren<TokenImage>();
+        WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
+        tokenImage.Init(image, coinMetadata.name);
         go.onClick.AddListener(OnGo);
     }
 

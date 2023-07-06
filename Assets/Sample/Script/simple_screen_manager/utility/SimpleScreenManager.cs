@@ -29,9 +29,6 @@ namespace SimpleScreen {
             }
             var curScreen = _screenQueue.Peek();
 
-            Debug.Log(curScreen.name);
-            Debug.Log(prevScreen.name);
-
             prevScreen.HideScreen();
             curScreen.ShowScreen();
         }
@@ -44,7 +41,8 @@ namespace SimpleScreen {
         public void ClearHistory(BaseScreen baseScreen)
         {
             _screenQueue.Clear();
-            _screenQueue.Push(baseScreen);
+            if(baseScreen != null)
+                _screenQueue.Push(baseScreen);
         }
 
         private void PopulateDictionary()

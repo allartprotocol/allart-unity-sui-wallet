@@ -1,5 +1,12 @@
+using System.Collections.Generic;
 using System.Numerics;
+using Unity.VisualScripting;
 
+public class PageForTransactionBlockResponseAndTransactionDigest{
+    public List<TransactionDigest> data { get; set; }
+}
+
+[System.Serializable]
 public class SuiTransactionBlockResponse
 {
     public string digest { get; set; }
@@ -7,15 +14,38 @@ public class SuiTransactionBlockResponse
     public string rawTransaction { get; set; }
     public TransactionEffects effects { get; set; }
     public object[] objectChanges { get; set; }
+    public BalanceChange[] balanceChanges { get; set; }
+    public string timestampMs;
 }
 
+public class BalanceChange {
+    public Owner owner { get; set; }
+    public ulong ammount { get; set; }
+    public string coinType { get; set; }
+}
+
+[System.Serializable]
 public class TransactionBlock
 {
-    public Transaction data { get; set; }
+    public TransactionData data { get; set; }
     public string[] txSignatures { get; set; }
 }
 
+[System.Serializable]
+public class TransactionDigest{
+    public string digest { get; set; }
+}
 
+[System.Serializable]
+public class TransactionData {
+    public string messageVersion { get; set; }
+    public Transaction transaction { get; set; }
+    public string sender { get; set; }
+    public GasData gasData { get; set; }
+
+}
+
+[System.Serializable]
 public class Transaction
 {
     public string kind { get; set; }
@@ -24,6 +54,7 @@ public class Transaction
     public string sender { get; set; }
 }
 
+[System.Serializable]
 public class TransactionEffects
 {
     public string messageVersion { get; set; }
@@ -34,6 +65,7 @@ public class TransactionEffects
     public TransactionObject gasObject { get; set; }
 }
 
+[System.Serializable]
 public class TransactionInputs
 {
     public string type { get; set; }
@@ -41,6 +73,7 @@ public class TransactionInputs
     public string value { get; set; }
 }
 
+[System.Serializable]
 public class TransactionObject
 {
     public Owner owner { get; set; }
@@ -56,7 +89,7 @@ public class ObjectRef
 
 public class Owner
 {
-    public string AdressOwner { get; set; }
+    public string AddressOwner { get; set; }
 }
 
 public class TransactionStatus
@@ -79,12 +112,6 @@ public class GasUsed
     public string nonRefundableStorageFees { get; set; }
 }
 
-public class BalanceChange
-{
-    public string amount { get; set; }
-    public string coinType { get; set; }
-    public Owner owner { get; set; }
-}
 
 public class SUIEvent
 {

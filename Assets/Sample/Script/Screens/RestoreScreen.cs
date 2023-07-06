@@ -52,7 +52,7 @@ public class RestoreScreen : BaseScreen
 
     public bool CreateAndEncryptMnemonic(string password) {
         Debug.Log(mnemonic + " " + password);
-        WalletComponent.Instance.CreateNewWallet(this.mnemonic, password);
+        WalletComponent.Instance.CreateWallet(this.mnemonic, password);
         return true;
     }
 

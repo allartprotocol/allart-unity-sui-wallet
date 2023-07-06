@@ -36,7 +36,7 @@ public class WalletListScreen : BaseScreen
 
     private void OnAddWallet()
     {
-        GoTo("ImportPrivateScreen");
+        GoTo("AddWalletScreen");
     }
 
     void PopulateDropdownWithWallets(Dictionary<string, Wallet> wallets)

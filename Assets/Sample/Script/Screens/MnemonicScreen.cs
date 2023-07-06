@@ -61,7 +61,7 @@ public class MnemonicScreen : BaseScreen
         Wallet wallet;
         if (string.IsNullOrEmpty(mnem))
         {
-            wallet = walletComponent.CreateNewWallet("password", "");
+            wallet = walletComponent.CreateWalletWithNewMnemonic("password", "");
         }
         else
         {

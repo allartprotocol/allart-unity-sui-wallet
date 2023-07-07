@@ -17,13 +17,15 @@ public class WalletComponent : MonoBehaviour
 
     private Dictionary<string, Wallet> wallets = new();
     public SUIRPCClient client { get; private set; }
-    public WebsocketController websocketController;
+    private WebsocketController websocketController {get; set;}
 
-    public Dictionary<string, CoinMetadata> coinMetadatas = new();
-    public Dictionary<string, GeckoCoinData> coinData = new();
-    public Dictionary<string, CoinPage> coinPages = new();
-    public Dictionary<string, Sprite> coinImages = new();
+    // cached coin data
+    public Dictionary<string, CoinMetadata> coinMetadatas {get; private set;} = new();
+    public Dictionary<string, GeckoCoinData> coinData {get; private set;} = new();
+    public Dictionary<string, CoinPage> coinPages {get; private set;} = new();
+    public Dictionary<string, Sprite> coinImages {get; private set;} = new();
 
+    // currently selected wallet
     public Wallet currentWallet;
     public CoinMetadata currentCoinMetadata;
 
@@ -31,17 +33,13 @@ public class WalletComponent : MonoBehaviour
     {
         get
         {
-            switch (nodeType)
+            return nodeType switch
             {
-                case ENodeType.MainNet:
-                    return SUIConstantVars.mainNetNode;
-                case ENodeType.TestNet:
-                    return SUIConstantVars.testNetNode;
-                case ENodeType.DevNet:
-                    return SUIConstantVars.devNetNode;
-                default:
-                    return SUIConstantVars.mainNetNode;
-            }
+                ENodeType.MainNet => SUIConstantVars.mainNetNode,
+                ENodeType.TestNet => SUIConstantVars.testNetNode,
+                ENodeType.DevNet => SUIConstantVars.devNetNode,
+                _ => SUIConstantVars.mainNetNode,
+            };
         }
     }
 
@@ -100,6 +98,9 @@ public class WalletComponent : MonoBehaviour
 
     #region Timer 
 
+    /// <summary>
+    /// Starts a timer coroutine that will disconnect the websocket connection.
+    /// </summary>
     public void StartTimer()
     {
         if (timeoutTimer != null)
@@ -110,10 +111,12 @@ public class WalletComponent : MonoBehaviour
     private IEnumerator Timer()
     {
         float time = -1;
-        if(PlayerPrefs.HasKey("timeout")){
+        if (PlayerPrefs.HasKey("timeout"))
+        {
             time = PlayerPrefs.GetFloat("timeout");
         }
-        if(time == -1){
+        if (time == -1)
+        {
             time = 10000000;
         }
         yield return new WaitForSeconds(time);
@@ -146,27 +149,9 @@ public class WalletComponent : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets the current wallet to the wallet at the specified index in the list of wallets and subscribes to its transactions.
+    /// Sets the password for the wallet component and starts the timer.
     /// </summary>
-    /// <param name="value">The index of the wallet to set as the current wallet.</param>
-    internal void SetWalletByIndex(int value)
-    {
-        SetCurrentWallet(GetWalletByIndex(value));
-    }
-
-    /// <summary>
-    /// Sets the current wallet to the specified wallet and subscribes to its transactions using the websocket controller.
-    /// </summary>
-    /// <param name="wallet">The wallet to set as the current wallet.</param>
-    public async void SetCurrentWallet(Wallet wallet)
-    {
-        currentWallet = wallet;
-
-        var fromToFilter = new FromAndToAddressFilter(new FromToObject(wallet.publicKey, wallet.publicKey));
-        await GetTransactionsForSelectedWallet();
-        await websocketController.Subscribe(fromToFilter);
-    }
-
+    /// <param name="password">The password to set.</param>
     public void SetPassword(string password)
     {
         this.password = password;
@@ -200,6 +185,35 @@ public class WalletComponent : MonoBehaviour
         }
         return false;
     }
+
+    /// <summary>
+    /// Sets the current wallet to the wallet at the specified index in the list of wallets and subscribes to its transactions.
+    /// </summary>
+    /// <param name="value">The index of the wallet to set as the current wallet.</param>
+    internal void SetWalletByIndex(int value)
+    {
+        SetCurrentWallet(GetWalletByIndex(value));
+    }
+
+    /// <summary>
+    /// Sets the current wallet to the specified wallet and subscribes to its transactions using the websocket controller.
+    /// </summary>
+    /// <param name="wallet">The wallet to set as the current wallet.</param>
+    public async void SetCurrentWallet(Wallet wallet)
+    {
+        currentWallet = wallet;
+
+        var fromOrToFilter = new FromOrToAddressFilter(new FromOrObject(wallet.publicKey));
+        var fromAndToFilter = new FromAndToAddressFilter(new FromToObject(wallet.publicKey, wallet.publicKey));
+        var filterOr = new FilterOr(new List<object>() { new FromAddresObject(new FromAddressFilter(wallet.publicKey)), new ToAddresObject( new ToAddressFilter(wallet.publicKey)) });
+        var toFilter = new ToAddressFilter(wallet.publicKey);
+        var fromFilter = new FromAddressFilter(wallet.publicKey);
+        await GetTransactionsForSelectedWallet();
+        websocketController.UnsubscribeCurrent();
+        await websocketController.Subscribe(fromFilter);
+    }
+
+    #region Wallet Management
 
     /// <summary>
     /// Represents a cryptocurrency wallet that can store and manage multiple accounts.
@@ -298,6 +312,11 @@ public class WalletComponent : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Returns the wallet with the specified public key.
+    /// </summary>
+    /// <param name="publicKey">The public key of the wallet to retrieve.</param>
+    /// <returns>The wallet with the specified public key, or null if no wallet was found.</returns>
     public Wallet GetWalletByPublicKey(string publicKey)
     {
         foreach (var wallet in wallets.Values)
@@ -310,6 +329,10 @@ public class WalletComponent : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Removes the wallet with the specified name from the list of wallets and clears it from memory.
+    /// </summary>
+    /// <param name="walletName">The name of the wallet to remove.</param>
     public void RemoveWalletByName(string walletName)
     {
         if (wallets.ContainsKey(walletName))
@@ -320,6 +343,10 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes the wallet with the specified public key from the list of wallets and clears it from memory.
+    /// </summary>
+    /// <param name="publicKey">The public key of the wallet to remove.</param>
     public void RemoveWalletByPublicKey(string publicKey)
     {
         foreach (var wallet in wallets.Values)
@@ -333,12 +360,19 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes the specified wallet from the list of wallets and clears it from memory.
+    /// </summary>
+    /// <param name="wallet">The wallet to remove.</param>
     public void RemoveWallet(Wallet wallet)
     {
         wallet.RemoveWallet();
         wallets.Remove(wallet.walletName);
     }
 
+    /// <summary>
+    /// Removes all wallets from the list of wallets and clears the current wallet and password.
+    /// </summary>
     public void RemoveAllWallets()
     {
         wallets.Clear();
@@ -348,6 +382,7 @@ public class WalletComponent : MonoBehaviour
 
         PlayerPrefs.DeleteAll();
     }
+    #endregion
 
     /// <summary>
     /// Retrieves all coin data for an owner.  
@@ -475,6 +510,43 @@ public class WalletComponent : MonoBehaviour
         return request.result;
     }
 
+    #region RPC methods
+
+    /// <summary>
+    /// Retrieves a page of SUI objects of a specific type that are owned by the specified wallet.
+    /// </summary>
+    /// <param name="wallet">The wallet that owns the SUI objects.</param>
+    /// <param name="type">The type of SUI objects to retrieve.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="Page_for_SuiObjectResponse_and_ObjectID"/> object representing the page of SUI objects of the specified type that are owned by the specified wallet.</returns>
+    public async Task<Page_for_SuiObjectResponse_and_ObjectID> GetOwnedObjectsOfType(Wallet wallet, string type)
+    {
+        ObjectResponseQuery coinQuery = new();
+        var coinFilter = new MatchAllDataFilter
+        {
+            MatchAll = new List<ObjectDataFilter>
+            {
+                new StructTypeDataFilter() { StructType =  $"0x2::coin::Coin<{type}>"},
+                new OwnerDataFilter() { AddressOwner = wallet.publicKey }
+            }
+        };
+        coinQuery.filter = coinFilter;
+        ObjectDataOptions options = new();
+        coinQuery.options = options;
+
+        var ownedCoins = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, coinQuery, null, 3);
+        return ownedCoins;
+    }
+
+    /// <summary>
+    /// Sends a payment transaction from the specified wallet to the specified recipients.
+    /// </summary>
+    /// <param name="wallet">The wallet to send the payment from.</param>
+    /// <param name="inputCoins">The input coins to use for the payment.</param>
+    /// <param name="recipients">The recipients of the payment.</param>
+    /// <param name="amounts">The amounts to send to each recipient.</param>
+    /// <param name="gas">The gas price to use for the transaction.</param>
+    /// <param name="gasBudget">The maximum gas budget for the transaction.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="TransactionBlockBytes"/> object representing the transaction bytes for the payment transaction.</returns>
     public async Task<TransactionBlockBytes> Pay(Wallet wallet, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
     {
 
@@ -482,42 +554,86 @@ public class WalletComponent : MonoBehaviour
         return request;
     }
 
+    /// <summary>
+    /// Sends a payment transaction in SUI from the specified wallet to the specified recipients.
+    /// </summary>
+    /// <param name="wallet">The wallet to send the payment from.</param>
+    /// <param name="inputCoins">The input coins to use for the payment.</param>
+    /// <param name="recipients">The recipients of the payment.</param>
+    /// <param name="amounts">The amounts to send to each recipient.</param>
+    /// <param name="gasBudget">The maximum gas budget for the transaction.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="TransactionBlockBytes"/> object representing the transaction bytes for the payment transaction.</returns>
     public async Task<TransactionBlockBytes> PaySui(Wallet wallet, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
     {
         var request = await client.PaySui(wallet, inputCoins, recipients, amounts, gasBudget);
         return request;
     }
 
+    /// <summary>
+    /// Retrieves a page of SUI objects owned by the specified account that match the specified query.
+    /// </summary>
+    /// <param name="account">The account that owns the SUI objects.</param>
+    /// <param name="query">The query to match the SUI objects against.</param>
+    /// <param name="objectId">The ID of the object to start the page from.</param>
+    /// <param name="limit">The maximum number of objects to return in the page.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="Page_for_SuiObjectResponse_and_ObjectID"/> object representing the page of SUI objects that match the specified query and are owned by the specified account.</returns>
     public async Task<Page_for_SuiObjectResponse_and_ObjectID> GetOwnedObjects(string account, ObjectResponseQuery query, string objectId, uint limit)
     {
         var request = await client.GetOwnedObjects(account, query, objectId, limit);
         return request;
     }
 
+    /// <summary>
+    /// Retrieves the SUI object with the specified ID.
+    /// </summary>
+    /// <param name="objectId">The ID of the SUI object to retrieve.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="SUIObjectResponse"/> object representing the retrieved SUI object.</returns>
     public async Task<SUIObjectResponse> GetObject(string objectId)
     {
         var request = await client.GetObject(objectId);
         return request;
     }
 
+    /// <summary>
+    /// Retrieves metadata for a specific coin type.
+    /// </summary>
+    /// <param name="coinType">The type of coin to retrieve metadata for.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="CoinMetadata"/> object representing the metadata for the specified coin type.</returns>
     public async Task<CoinMetadata> GetCoinMetadata(string coinType)
     {
         var request = await client.GetCoinMetadata(coinType);
         return request.result;
     }
 
+    /// <summary>
+    /// Retrieves the balance of a specified coin type for the specified account.
+    /// </summary>
+    /// <param name="account">The account to retrieve the balance for.</param>
+    /// <param name="coinType">The type of coin to retrieve the balance for.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="Balance"/> object representing the balance of the specified coin type for the specified account.</returns>
     public async Task<Balance> GetBalance(string account, string coinType)
     {
         var request = await client.GetBalance(account, coinType);
         return request.result;
     }
 
+    /// <summary>
+    /// Retrieves the balance of a specified coin type for the specified account.
+    /// </summary>
+    /// <param name="account">The wallet to retrieve the balance for.</param>
+    /// <param name="coinType">The type of coin to retrieve the balance for.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="Balance"/> object representing the balance of the specified coin type for the specified account.</returns>
     public async Task<Balance> GetBalance(Wallet account, string coinType)
     {
         var request = await client.GetBalance(account, coinType);
         return request.result;
     }
 
+    /// <summary>
+    /// Changes the password for all wallets by restoring them with the old password and saving them with the new password.
+    /// </summary>
+    /// <param name="oldPassword">The old password to restore the wallets with.</param>
+    /// <param name="newPassword">The new password to save the wallets with.</param>
     internal void ChangePassword(string oldPassword, string newPassword)
     {
         RestoreAllWallets(oldPassword);
@@ -528,6 +644,10 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Retrieves a list of SUI transaction blocks for the currently selected wallet.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="List{T}"/> of <see cref="SuiTransactionBlockResponse"/> objects representing the retrieved SUI transaction blocks.</returns>
     public async Task<List<SuiTransactionBlockResponse>> GetTransactionsForSelectedWallet()
     {
         ObjectResponseQuery query = new()
@@ -572,6 +692,8 @@ public class WalletComponent : MonoBehaviour
         var request = await client.QueryTransactionBlocks(transactionInputObject);
         return request.result;
     }
+
+    #endregion
 
     internal void LockWallet()
     {

@@ -40,6 +40,10 @@ public class ConfirmSendScreen : BaseScreen {
         GoTo("TransactionDone");
     }
 
+    /// <summary>
+    /// Sends a payment in SUI currency.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous payment operation.</returns>
     private async System.Threading.Tasks.Task PaySui()
     {
         var wallet = WalletComponent.Instance.currentWallet;
@@ -103,12 +107,16 @@ public class ConfirmSendScreen : BaseScreen {
         GoTo("TransactionDone");
     }
 
+    /// <summary>
+    /// Sends a payment in a currency other tokens.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous payment operation.</returns>
     private async System.Threading.Tasks.Task PayOtherCurrency()
     {
         var wallet = WalletComponent.Instance.currentWallet;
 
         string type = WalletComponent.Instance.coinMetadatas.FirstOrDefault(x => x.Value == WalletComponent.Instance.currentCoinMetadata).Key;
-        Page_for_SuiObjectResponse_and_ObjectID ownedCoins = await GetOwnedObjectsOfType(wallet, type);
+        Page_for_SuiObjectResponse_and_ObjectID ownedCoins = await WalletComponent.Instance.GetOwnedObjectsOfType(wallet, type);
 
         if (ownedCoins == null || ownedCoins.data.Count == 0)
         {
@@ -142,28 +150,15 @@ public class ConfirmSendScreen : BaseScreen {
 
         var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.txBytes,
             new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
+
+        if(transaction.error != null && transaction.error.code != 0)
+        {
+            Debug.Log(transaction.error.message);
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
+            return;
+        }
         loaderScreen.gameObject.SetActive(false);
         GoTo("TransactionDone");
-    }
-
-    private async Task<Page_for_SuiObjectResponse_and_ObjectID> GetOwnedObjectsOfType(Wallet wallet, string type)
-    {
-        ObjectResponseQuery coinQuery = new();
-        var coinFilter = new MatchAllDataFilter
-        {
-            MatchAll = new List<ObjectDataFilter>
-            {
-                new StructTypeDataFilter() { StructType =  $"0x2::coin::Coin<{type}>"},
-                new OwnerDataFilter() { AddressOwner = wallet.publicKey }
-            }
-        };
-        loaderScreen.gameObject.SetActive(true);
-        coinQuery.filter = coinFilter;
-        ObjectDataOptions options = new();
-        coinQuery.options = options;
-
-        var ownedCoins = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, coinQuery, null, 3);
-        return ownedCoins;
     }
 
     public override void ShowScreen(object data = null)

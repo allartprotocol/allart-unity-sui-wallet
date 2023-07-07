@@ -18,7 +18,7 @@ public class RPCClient
     internal async Task<JsonRpcResponse<T>> SendRequest<T>(object data)
     {
         var requestJson = JsonConvert.SerializeObject(data, new Newtonsoft.Json.Converters.StringEnumConverter());
-        Debug.Log(requestJson);
+        // Debug.Log(requestJson);
         var requestData = System.Text.Encoding.UTF8.GetBytes(requestJson);
         using var uwr = new UnityWebRequest(_uri, "POST");
         uwr.uploadHandler = new UploadHandlerRaw(requestData);
@@ -31,7 +31,7 @@ public class RPCClient
             await Task.Yield();
         }
 
-        Debug.Log(uwr.downloadHandler.text);
+        // Debug.Log(uwr.downloadHandler.text);
         var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
         return response;
     }

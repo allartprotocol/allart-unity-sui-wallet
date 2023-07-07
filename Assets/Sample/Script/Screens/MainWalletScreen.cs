@@ -37,6 +37,7 @@ public class MainWalletScreen : BaseScreen
     public List<EventObject> loadedEvents = new();
 
     public Transform loadingScreen;
+    public Transform noBalanceText;
 
     private void Start()
     {
@@ -147,6 +148,15 @@ public class MainWalletScreen : BaseScreen
         percentageText.text = "0%";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
+
+        if(balances.Count == 0)
+        {
+            noBalanceText.gameObject.SetActive(true);
+        }
+        else
+        {
+            noBalanceText.gameObject.SetActive(false);
+        }
 
         foreach (var obj in loadedObjects)
         {

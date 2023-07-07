@@ -11,8 +11,6 @@ public class InputObjectFilter{
     public string ChangedObject { get; set; }
 }
 
-
-
 public class FromAndToAddressFilter {
 
     public FromAndToAddressFilter(FromToObject fromAndToAddress)
@@ -35,9 +33,9 @@ public class FromOrToAddressFilter {
 
 public class FromOrObject
 {
-    public FromOrObject(string from, string to)
+    public FromOrObject(string addr)
     {
-        this.addr = from;
+        this.addr = addr;
     }
     public string addr { get; set; }
 }
@@ -50,24 +48,42 @@ public class Filter{
     public object filter;
 }
 
+
+public class FromAddresObject {
+    public FromAddresObject(FromAddressFilter from)
+    {
+        this.FromAddress = from;
+    }
+    public FromAddressFilter FromAddress { get; set; }
+}
+
+public class ToAddresObject
+{
+    public ToAddresObject(ToAddressFilter to)
+    {
+        this.ToAddress = to;
+    }
+    public ToAddressFilter ToAddress { get; set; }
+}
+
 public class FromAddressFilter
 {
     public FromAddressFilter(string from)
     {
-        this.from = from;
+        this.FromAddress = from;
     }
 
-    public string from;
+    public string FromAddress;
 }
 
 public class ToAddressFilter
 {
-    public ToAddressFilter(string to)
+    public ToAddressFilter(string from)
     {
-        this.to = to;
+        this.ToAddress = from;
     }
 
-    public string to;
+    public string ToAddress;
 }
 
 public class FromToObject{

@@ -21,7 +21,7 @@ namespace AllArt.SUI.Wallet
                 byte[] first32Bytes = new byte[32];
                 Array.Copy(privateKey, 0, first32Bytes, 0, 32);
                 var hash = BitConverter.ToString(first32Bytes).Replace("-", "").ToLowerInvariant();
-                return "0x" + hash[..64];
+                return hash[..64];
             }
         }
 

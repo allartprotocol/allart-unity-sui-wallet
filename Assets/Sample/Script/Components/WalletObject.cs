@@ -39,14 +39,14 @@ public class WalletObject : MonoBehaviour
     {
         coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
 
-        coin_name.text = balance.coinType;
+        // coin_name.text = balance.coinType;
         coin_balance.text = balance.totalBalance.ToString();
         coin_usd.text = "$0";
         coin_change.text = "+0%";
 
         if (coinMetadata != null)
         {
-            coin_name.text = coinMetadata.name;
+            // coin_name.text = coinMetadata.name;
             coin_balance.text = $"{coinMetadata.symbol} {WalletComponent.ApplyDecimals(balance, coinMetadata)}";
         }
 

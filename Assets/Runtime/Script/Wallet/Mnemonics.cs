@@ -149,10 +149,14 @@ namespace AllArt.SUI.Wallet {
             }
         }
 
+        /// <summary>
+        /// Generates a key pair from a given mnemonic.
+        /// </summary>
+        /// <param name="mnemonics">The mnemonic to generate the key pair from.</param>
+        /// <returns>A KeyPair object containing the generated public and private keys.</returns>
         public static KeyPair GenerateKeyPairFromMnemonic(string mnemonics)
         {
             byte[] bip39seed = GenerateSeedFromMnemonic(mnemonics);
-
 
             var publicKey = new byte[Ed25519.PublicKeySizeInBytes];
             var privateKey = new byte[Ed25519.ExpandedPrivateKeySizeInBytes];
@@ -164,6 +168,7 @@ namespace AllArt.SUI.Wallet {
 
             return new KeyPair(publicKey, privateKey);
         }
+
         public static string EncryptMnemonicWithPassword(string mnemonic, string password)
         {
             return StringCipher.Encrypt(mnemonic, password);

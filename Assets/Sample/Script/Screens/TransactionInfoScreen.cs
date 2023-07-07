@@ -84,7 +84,9 @@ public class TransactionInfoScreen : BaseScreen {
         status.text = suiTransactionBlockResponse.effects.status.status;
         sender.text = suiTransactionBlockResponse.transaction.data.sender;
         network.text = "SUI";
-        fee.text = (float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price) / Mathf.Pow(10,9)).ToString() + " SUI";
+        var feeText = (float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price) / Mathf.Pow(10,9)).ToString("0.############");
+        Debug.Log(float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price));
+        fee.text = $"{feeText} SUI";
         balanceChange.text = GetBalanceChange();
     }
 

@@ -22,15 +22,17 @@ namespace SimpleScreen {
         }
 
         public void GoBack() { 
-            var prevScreen = _screenQueue.Pop();
             if(_screenQueue.Count == 0)
             {
                 return;
             }
+            var prevScreen = _screenQueue.Pop();
             var curScreen = _screenQueue.Peek();
 
             prevScreen.HideScreen();
             curScreen.ShowScreen();
+            previousScreen = prevScreen;
+            currentScreen = curScreen;
         }
 
         private void Start()
@@ -82,6 +84,7 @@ namespace SimpleScreen {
 
         public void ShowScreen(string name, object data = null)
         {
+            Debug.Log(currentScreen?.gameObject.name);
             currentScreen?.HideScreen();
             screensDict[name].ShowScreen(data);
             previousScreen = currentScreen;

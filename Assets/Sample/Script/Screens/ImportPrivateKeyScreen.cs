@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using AllArt.SUI.Wallet;
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;

@@ -1,3 +1,4 @@
+using AllArt.SUI.RPC.Response.Types;
 using SimpleScreen;
 using System;
 using System.Collections.Generic;
@@ -167,8 +168,8 @@ public class MainWalletScreen : BaseScreen
         {
             var obj = Instantiate(objectListItemPrefab, objectListContent);
             WalletObject wo = obj.GetComponent<WalletObject>();
-            loadedObjects.Add(wo);
             wo.Init(balance, manager);
+            loadedObjects.Add(wo);
         }
 
         sendBtn.interactable = balances.Count > 0;
@@ -193,11 +194,11 @@ public class MainWalletScreen : BaseScreen
 
     private async Task UpdateWalletData()
     {
+        loadingScreen.gameObject.SetActive(true);
+        await LoadWalletData();
+        UpdateBalance();
         try
         {
-            loadingScreen.gameObject.SetActive(true);
-            await LoadWalletData();
-            UpdateBalance();
         }
         catch (System.Exception e)
         {
@@ -220,7 +221,7 @@ public class MainWalletScreen : BaseScreen
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
         if (balance != null)
         {
-            var geckoData = WalletComponent.Instance.coinData[coinMetadata.symbol];
+            var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
             if (geckoData != null)
             {
                 var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);

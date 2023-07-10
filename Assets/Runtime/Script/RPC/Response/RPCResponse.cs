@@ -1,5 +1,6 @@
-namespace Solnet.Rpc.Messages
-{
+namespace AllArt.SUI.RPC.Response {
+
+
     public class JsonRpcResponse<T> : ResponseBase
     {
         public T result { get; set; }

@@ -1,3 +1,4 @@
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +40,7 @@ public class WalletListScreen : BaseScreen
         GoTo("AddWalletScreen");
     }
 
-    void PopulateDropdownWithWallets(Dictionary<string, Wallet> wallets)
+    void PopulateDropdownWithWallets(Dictionary<string, AllArt.SUI.Wallets.Wallet> wallets)
     {
         foreach (var walletListObject in walletListObjects)
         {

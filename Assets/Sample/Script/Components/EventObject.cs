@@ -1,4 +1,5 @@
 using System;
+using AllArt.SUI.RPC.Response.Types;
 using Newtonsoft.Json;
 using SimpleScreen;
 using UnityEngine;
@@ -42,7 +43,7 @@ public class EventObject : MonoBehaviour
             date.text = eventPage.transaction.data.transaction.kind;
 
         DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)ulong.Parse(eventPage.timestampMs));
-        date.text = dateTime.ToString("dd/MM/yyyy HH:mm:ss");
+        date.text = dateTime.ToString("MMMM d, yyyy 'at' h:mm tt");
 
         amount.text = eventPage.digest;
 

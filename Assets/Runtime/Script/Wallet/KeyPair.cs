@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AllArt.SUI.Wallet
+namespace AllArt.SUI.Wallets
 {
     public class KeyPair { 
 

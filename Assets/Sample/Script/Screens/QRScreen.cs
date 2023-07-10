@@ -1,4 +1,5 @@
 using System;
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;

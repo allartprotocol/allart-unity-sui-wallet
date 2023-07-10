@@ -1,3 +1,4 @@
+using AllArt.SUI.RPC.Response.Types;
 using SimpleScreen;
 using System;
 using System.Collections;

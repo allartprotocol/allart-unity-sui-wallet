@@ -1,3 +1,6 @@
+using AllArt.SUI.RPC.Filter.Types;
+using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.Wallets;
 using Chaos.NaCl;
 using Newtonsoft.Json;
 using SimpleScreen;
@@ -88,6 +91,8 @@ public class ConfirmSendScreen : BaseScreen {
             var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.txBytes,
                 new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
 
+            Debug.Log(JsonConvert.SerializeObject(transaction));
+
             if(transaction.error != null && transaction.error.code != 0)
             {
                 Debug.Log(transaction.error.message);
@@ -161,17 +166,21 @@ public class ConfirmSendScreen : BaseScreen {
         GoTo("TransactionDone");
     }
 
-    public override void ShowScreen(object data = null)
+    public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
 
         var confirmSendData = data as TransferData;
         Debug.Log(confirmSendData.to);
+
+        string feeAmount = await WalletComponent.Instance.GetReferenceGasPrice();
+        float feeAmountFloat = float.Parse(feeAmount) / Mathf.Pow(10, 9);
         if (confirmSendData != null)
         {
             TransferData = confirmSendData;
             to.text = confirmSendData.to;
             amount.text = $"{confirmSendData.amount} {confirmSendData.coin.symbol}";
+            fee.text = $"{feeAmountFloat.ToString("0.#########")} SUI";
             return;
         }
     }

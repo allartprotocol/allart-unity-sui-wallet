@@ -2,36 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectDataFilter { 
+namespace AllArt.SUI.RPC.Filter.Types {
 
-}
 
-public class  MatchAllDataFilter: ObjectDataFilter
-{
-    public List<ObjectDataFilter> MatchAll;
-}
+    public class ObjectDataFilter { 
 
-public class  MatchAnyDataFilter: ObjectDataFilter
-{
-    public List<ObjectDataFilter> MatchAny;
-}
+    }
 
-public class  MatchNoneDataFilter: ObjectDataFilter
-{
-    public List<ObjectDataFilter> MatchNone;
-}
+    public class  MatchAllDataFilter: ObjectDataFilter
+    {
+        public List<ObjectDataFilter> MatchAll;
+    }
 
-public class  StructTypeDataFilter: ObjectDataFilter
-{
-    public string StructType;
-}
+    public class  MatchAnyDataFilter: ObjectDataFilter
+    {
+        public List<ObjectDataFilter> MatchAny;
+    }
 
-public class OwnerDataFilter: ObjectDataFilter
-{
-    public string AddressOwner;
-}
+    public class  MatchNoneDataFilter: ObjectDataFilter
+    {
+        public List<ObjectDataFilter> MatchNone;
+    }
 
-public class VersionDataFilter : ObjectDataFilter
-{
-    public string Version;
+    public class  StructTypeDataFilter: ObjectDataFilter
+    {
+        public string StructType;
+    }
+
+    public class OwnerDataFilter: ObjectDataFilter
+    {
+        public string AddressOwner;
+    }
+
+    public class VersionDataFilter : ObjectDataFilter
+    {
+        public string Version;
+    }
 }

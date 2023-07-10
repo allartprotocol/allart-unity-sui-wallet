@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+namespace AllArt.SUI.RPC.Response.Types {
 
-public class ObjectId {
+    public class ObjectId {
 
-    public ObjectId(string id)
-    {
-        this.id = id;
+        public ObjectId(string id)
+        {
+            this.id = id;
+        }
+
+        public string id;
     }
 
-    public string id;
 }

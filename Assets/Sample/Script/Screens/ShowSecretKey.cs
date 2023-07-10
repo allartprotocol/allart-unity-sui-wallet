@@ -1,3 +1,4 @@
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System.Collections;
 using System.Collections.Generic;

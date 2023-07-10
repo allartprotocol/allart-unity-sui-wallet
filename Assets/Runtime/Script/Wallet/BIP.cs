@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AllArt.SUI.Wallet
+namespace AllArt.SUI.Wallets
 {
     public class BIP
     {

@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class ResponseBase {
-    public string jsonrpc;
-    public int id;
+namespace AllArt.SUI.RPC.Response {
+    public class ResponseBase {
+        public string jsonrpc;
+        public int id;
+    }
 }

@@ -1,3 +1,6 @@
+using AllArt.SUI.RPC.Filter.Types;
+using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.Wallets;
 using Chaos.NaCl;
 using Newtonsoft.Json;
 using SimpleScreen;

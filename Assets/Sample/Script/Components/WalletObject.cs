@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AllArt.SUI.RPC.Response.Types;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;
@@ -39,14 +40,14 @@ public class WalletObject : MonoBehaviour
     {
         coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
 
-        // coin_name.text = balance.coinType;
+        coin_name.text = "";
         coin_balance.text = balance.totalBalance.ToString();
         coin_usd.text = "$0";
         coin_change.text = "+0%";
 
         if (coinMetadata != null)
         {
-            // coin_name.text = coinMetadata.name;
+            coin_name.text = coinMetadata.name;
             coin_balance.text = $"{coinMetadata.symbol} {WalletComponent.ApplyDecimals(balance, coinMetadata)}";
         }
 
@@ -54,7 +55,7 @@ public class WalletObject : MonoBehaviour
         WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
         tokenImage.Init(image, coinMetadata.name);
 
-        var geckoData = WalletComponent.Instance.coinData[coinMetadata.symbol];
+        var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
         geckoCoinData = geckoData;
         if (geckoData != null && geckoData.market_data != null) { 
             if(geckoData.market_data.current_price == null)

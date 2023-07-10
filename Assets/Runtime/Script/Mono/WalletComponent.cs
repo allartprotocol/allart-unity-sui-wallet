@@ -2,6 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AllArt.SUI.RPC;
+using AllArt.SUI.RPC.Filter.Types;
+using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.Wallets;
 using UnityEngine;
 
 public enum ENodeType
@@ -21,7 +25,7 @@ public class WalletComponent : MonoBehaviour
 
     // cached coin data
     public Dictionary<string, CoinMetadata> coinMetadatas {get; private set;} = new();
-    public Dictionary<string, GeckoCoinData> coinData {get; private set;} = new();
+    public Dictionary<string, GeckoCoinData> coinGeckoData {get; private set;} = new();
     public Dictionary<string, CoinPage> coinPages {get; private set;} = new();
     public Dictionary<string, Sprite> coinImages {get; private set;} = new();
 
@@ -398,7 +402,7 @@ public class WalletComponent : MonoBehaviour
             {
                 if (!coinPages.ContainsKey(coin.coinType))
                 {
-                    coinPages.Add(coin.coinType, coin);
+                    coinPages.TryAdd(coin.coinType, coin);
                 }
             }
 
@@ -409,35 +413,35 @@ public class WalletComponent : MonoBehaviour
                 var coinMetadata = await GetCoinMetadata(coinType);
                 if (coinMetadata != null)
                 {
-                    coinMetadatas.Add(coinType, coinMetadata);
+                    coinMetadatas.TryAdd(coinType, coinMetadata);
                 }
             }
 
             foreach (var coin in coinMetadatas.Keys)
             {
                 var coinMetadata = coinMetadatas[coin];
-                if (this.coinData.ContainsKey(coinMetadata.symbol))
+                if (this.coinGeckoData.ContainsKey(coinMetadata.symbol))
                     continue;
                 var coinData = await GetUSDPrice(coinMetadata);
                 if (coinData != null)
                 {
-                    this.coinData.Add(coinMetadata.symbol, coinData);
+                    this.coinGeckoData.TryAdd(coinMetadata.symbol, coinData);
                 }
             }
 
-            foreach (var data in coinData.Keys)
+            foreach (var dataKey in coinGeckoData.Keys)
             {
-                var coin = coinData[data];
+                var coin = coinGeckoData[dataKey];
                 if (coin.image != null && coin.image.thumb != null)
                 {
-                    if (coinImages.ContainsKey(data))
+                    if (coinImages.ContainsKey(dataKey))
                     {
                         continue;
                     }
                     var image = await GetImage(coin.image.thumb);
                     if (image != null)
                     {
-                        coinImages.Add(data, image);
+                        coinImages.TryAdd(dataKey, image);
                     }
                 }
             }
@@ -502,6 +506,22 @@ public class WalletComponent : MonoBehaviour
     public static float ApplyDecimals(Balance balance, CoinMetadata coinMetadata)
     {
         return balance.totalBalance / Mathf.Pow(10f, coinMetadata.decimals);
+    }
+
+    /// <summary>
+    /// Applies the decimal places for a given balance based on the coin metadata.
+    /// </summary>
+    /// <param name="balance">The balance to apply the decimal places to.</param>
+    /// <param name="coinMetadata">The metadata for the coin to apply the decimal places for.</param>
+    /// <returns>The balance with the decimal places applied.</returns>
+    public static float ApplyDecimals(ulong balance, CoinMetadata coinMetadata)
+    {
+        return balance / Mathf.Pow(10f, coinMetadata.decimals);
+    }
+
+    public static float ApplyDecimals(long balance, CoinMetadata coinMetadata)
+    {
+        return balance / Mathf.Pow(10f, coinMetadata.decimals);
     }
 
     public async Task<List<Balance>> GetAllBalances(Wallet wallet)
@@ -684,6 +704,12 @@ public class WalletComponent : MonoBehaviour
         var transactions = await client.MultiGetTransactionBlocks(digests, new TransactionBlockResponseOptions());
 
         return transactions;
+    }
+
+    public async Task<string> GetReferenceGasPrice()
+    {
+        var request = await client.GetReferenceGasPrice();
+        return request.result;
     }
 
     public async Task<PageForTransactionBlockResponseAndTransactionDigest> GetTransactionsForWallet(Wallet wallet)

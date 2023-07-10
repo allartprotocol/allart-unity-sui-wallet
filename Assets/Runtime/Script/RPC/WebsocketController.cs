@@ -4,7 +4,8 @@ using UnityEngine;
 using NativeWebSocket;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Solnet.Rpc.Messages;
+using AllArt.SUI.RPC.Response;
+using AllArt.SUI.RPC.Filter.Types;
 
 public class WebsocketController: MonoBehaviour
 {
@@ -64,8 +65,6 @@ public class WebsocketController: MonoBehaviour
 #if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
 #endif
-        if(websocket != null)
-            Debug.Log(websocket.State);
 
     }
 

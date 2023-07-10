@@ -1,3 +1,4 @@
+using AllArt.SUI.RPC.Response.Types;
 using SimpleScreen;
 using System;
 using System.Collections;
@@ -43,7 +44,7 @@ public class TokenSelectScreen : BaseScreen
             var tokenSelectComponent = tokenSelect.GetComponent<TokenSelect>();
             var coinMetadata = WalletComponent.Instance.coinMetadatas[coin.Key];
 
-            tokenSelectComponent.InitComponent(coin.Value, WalletComponent.Instance.coinData[coinMetadata.symbol], balance, manager);
+            tokenSelectComponent.InitComponent(coin.Value, WalletComponent.Instance.coinGeckoData[coinMetadata.symbol], balance, manager);
             tokenSelects.Add(tokenSelectComponent);
         }
     }

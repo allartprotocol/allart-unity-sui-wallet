@@ -1,3 +1,4 @@
+using AllArt.SUI.RPC.Response.Types;
 using SimpleScreen;
 using System;
 using System.Collections;
@@ -62,13 +63,19 @@ public class SendScreen : BaseScreen
 
     private void OnMax()
     {
+        float balance = GetMaxBalance();
+        amount.text = balance.ToString();
+    }
+
+    private float GetMaxBalance(){
         var meta = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault();
         if(meta.Value == null)
         {
-            return;
+            return 0;
         }
         var coinType = meta.Value;
-        amount.text = (balance.totalBalance / (Mathf.Pow(10, coinType.decimals))).ToString();
+        return balance.totalBalance / (Mathf.Pow(10, coinType.decimals));
+
     }
 
     private void OnTokenSelect()
@@ -101,6 +108,12 @@ public class SendScreen : BaseScreen
         if(string.IsNullOrEmpty(to.text) || string.IsNullOrEmpty(amount.text))
         {
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill in all fields");
+            return;
+        }
+
+        if(float.Parse(amount.text) <= 0)
+        {
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Amount must be greater than 0");
             return;
         }
         

@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-namespace AllArt.SUI.Wallet { 
+namespace AllArt.SUI.Wallets { 
     public static class Mnemonics
     {
         private const uint HardenedOffset = 0x80000000;

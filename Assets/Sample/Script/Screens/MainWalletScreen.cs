@@ -1,4 +1,4 @@
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using SimpleScreen;
 using System;
 using System.Collections.Generic;
@@ -39,6 +39,7 @@ public class MainWalletScreen : BaseScreen
 
     public Transform loadingScreen;
     public Transform noBalanceText;
+    public Transform noActivityText;
 
     private void Start()
     {
@@ -86,6 +87,16 @@ public class MainWalletScreen : BaseScreen
     async void PopulateHistory()
     {
         var history = await WalletComponent.Instance.GetTransactionsForSelectedWallet();
+
+        if(history.Count == 0)
+        {
+            noActivityText.gameObject.SetActive(true);
+            return;
+        }
+        else
+        {
+            noActivityText.gameObject.SetActive(false);
+        }
 
         foreach (var obj in loadedEvents)
         {

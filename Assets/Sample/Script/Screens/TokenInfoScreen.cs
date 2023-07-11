@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using SimpleScreen;
 using UnityEngine;
 using UnityEngine.UI;

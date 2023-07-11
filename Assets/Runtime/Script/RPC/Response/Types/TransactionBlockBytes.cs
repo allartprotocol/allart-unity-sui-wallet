@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AllArt.SUI.RPC.Response.Types {
+namespace AllArt.SUI.RPC.Response {
 
     public class TransactionBlockBytes { 
         public string txBytes { get; set; }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AllArt.SUI.RPC.Response.Types{
+namespace AllArt.SUI.RPC.Response{
     public class CoinPage {
         public string coinType;
         public string coinObjectId;

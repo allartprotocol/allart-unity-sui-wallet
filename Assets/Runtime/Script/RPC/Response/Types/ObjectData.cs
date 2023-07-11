@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AllArt.SUI.RPC.Response.Types {
+namespace AllArt.SUI.RPC.Response {
 
     public class SUIObjectResponse {
         public ObjectData data;

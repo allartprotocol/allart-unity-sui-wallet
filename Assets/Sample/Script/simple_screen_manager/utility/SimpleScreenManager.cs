@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using AllArt.SUI.RPC.Response;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace SimpleScreen { 
@@ -12,6 +14,8 @@ namespace SimpleScreen {
         public static SimpleScreenManager instance;
 
         private Stack<BaseScreen> _screenQueue = new Stack<BaseScreen>();        
+
+        public int historyCount => _screenQueue.Count;
 
         private void Awake()
         {
@@ -75,39 +79,48 @@ namespace SimpleScreen {
 
         public void ShowScreen(BaseScreen curScreen, BaseScreen screen)
         {
-            curScreen?.HideScreen();
-            screen.ShowScreen();
             previousScreen = curScreen;
             currentScreen = screen;
             _screenQueue.Push(currentScreen);
+            curScreen?.HideScreen();
+            screen.ShowScreen();
         }
 
-        public void ShowScreen(string name, object data = null)
+        public void ShowScreen(string name)
         {
-            Debug.Log(currentScreen?.gameObject.name);
             currentScreen?.HideScreen();
-            screensDict[name].ShowScreen(data);
             previousScreen = currentScreen;
             currentScreen = screensDict[name];
             _screenQueue.Push(currentScreen);
+            screensDict[name].ShowScreen(null);
+        }
+
+        public void ShowScreen(string name, object data = default)
+        {
+            Debug.Log(JsonConvert.SerializeObject(data as SuiTransactionBlockResponse));
+            currentScreen?.HideScreen();
+            previousScreen = currentScreen;
+            currentScreen = screensDict[name];
+            _screenQueue.Push(currentScreen);
+            screensDict[name].ShowScreen(data);
         }
 
         public void ShowScreen(BaseScreen curScreen, int index)
         {
             curScreen?.HideScreen();
-            screens[index].ShowScreen();
             previousScreen = curScreen;
             currentScreen = screens[index];
             _screenQueue.Push(currentScreen);
+            screens[index].ShowScreen();
         }
 
         public void ShowScreen(BaseScreen curScreen, string name, object data = null)
         {
             curScreen?.HideScreen();
-            screensDict[name].ShowScreen(data);
             previousScreen = curScreen;
             currentScreen = screensDict[name];
             _screenQueue.Push(currentScreen);
+            screensDict[name].ShowScreen(data);
         }
 
         public void HideScreen(string name) {

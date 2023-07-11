@@ -1,5 +1,5 @@
 
-namespace AllArt.SUI.RPC.Response.Types {
+namespace AllArt.SUI.RPC.Response {
     public class TransferData { 
         public string to;
         public string amount;

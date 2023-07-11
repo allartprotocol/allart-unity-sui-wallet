@@ -1,5 +1,5 @@
 
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 
 namespace AllArt.SUI.RPC.Filter.Types {
     public class ObjectResponseQuery { 

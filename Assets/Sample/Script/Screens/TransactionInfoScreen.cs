@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using Newtonsoft.Json;
 using SimpleScreen;
 using TMPro;
@@ -81,11 +81,11 @@ public class TransactionInfoScreen : BaseScreen {
         Application.OpenURL($"https://suiexplorer.com/txblock/{suiTransactionBlockResponse.digest}?network={network}");
     }
 
-    public override void ShowScreen(object data){
+    public override void ShowScreen(object data) {
         base.ShowScreen(data);
+        Debug.Log(data.GetType());
 
-        suiTransactionBlockResponse = (SuiTransactionBlockResponse)data;
-        Debug.Log(JsonUtility.ToJson(data));
+        suiTransactionBlockResponse = data as SuiTransactionBlockResponse;
 
         if(suiTransactionBlockResponse.effects.status.status == "success")
             statusImage.sprite = successImage;
@@ -100,11 +100,26 @@ public class TransactionInfoScreen : BaseScreen {
         else
             type.text = "Receive";
 
+        var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
+
+        Debug.Log(JsonUtility.ToJson(gasUsed));
+        float gasUsedFloat = 0;
+        if(gasUsed != null && gasUsed != default ){
+            if(gasUsed.computationCost != null)
+                gasUsedFloat += float.Parse(gasUsed.computationCost);
+            if(gasUsed.storageCost != null)
+                gasUsedFloat += float.Parse(gasUsed.storageCost);
+            if(gasUsed.storageRebate != null)
+                gasUsedFloat -= float.Parse(gasUsed.storageRebate);
+            if(gasUsed.nonRefundableStorageFees != null)
+                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFees);
+        }
+        gasUsedFloat += float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price);
+
         status.text = suiTransactionBlockResponse.effects.status.status;
         sender.text = suiTransactionBlockResponse.transaction.data.sender;
         network.text = "SUI";
-        var feeText = (float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price) / Mathf.Pow(10,9)).ToString("0.############");
-        Debug.Log(float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price));
+        var feeText = (gasUsedFloat / Mathf.Pow(10,9)).ToString("0.############");
         fee.text = $"~{feeText} SUI";
         try{
             balanceChange.text = GetBalanceChange();

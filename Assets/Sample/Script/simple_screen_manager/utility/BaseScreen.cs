@@ -2,6 +2,7 @@
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SimpleScreen
 {
@@ -9,6 +10,7 @@ namespace SimpleScreen
     {
         private SimpleScreenManager _manager;
         protected CanvasGroup _canvasGroup;
+        private BackButton backButton;
 
         public SimpleScreenManager manager
         {
@@ -66,14 +68,33 @@ namespace SimpleScreen
                 gameObject.SetActive(false);
             }
 
-            var backButton = GetComponentInChildren<BackButton>();
-            if (backButton != null)
-            {
-                backButton.Init(manager);
-            }
+            backButton = GetComponentInChildren<BackButton>();
+            backButton?.Init(manager);
         }
 
         public virtual void ShowScreen(object data = null)
+        {
+            if (tween != null)
+            {
+                tween.TweenIn();
+                if (_canvasGroup != null)
+                {
+                    _canvasGroup.interactable = true;
+                    _canvasGroup.blocksRaycasts = true;
+                }
+            }
+            else { gameObject.SetActive(true); }
+
+            if(backButton != null)
+            {
+                if(manager.historyCount > 1)
+                    backButton.gameObject.SetActive(true);
+                else
+                    backButton.gameObject.SetActive(false);
+            }
+        }
+
+        public virtual void ShowScreen<T>(T data = default)
         {
             if (tween != null)
             {

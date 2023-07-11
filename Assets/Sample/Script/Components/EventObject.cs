@@ -1,5 +1,5 @@
 using System;
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using Newtonsoft.Json;
 using SimpleScreen;
 using UnityEngine;
@@ -24,14 +24,15 @@ public class EventObject : MonoBehaviour
 
     public void InitializeObject(SuiTransactionBlockResponse eventPage, SimpleScreenManager screenManager)
     {
+        Debug.Log(JsonConvert.SerializeObject(eventPage));
         this.screenManager = screenManager;
         transactionButton = GetComponent<Button>();
+        this.eventPage = eventPage;
         transactionButton.onClick.AddListener(() =>
         {
             this.screenManager.ShowScreen("TransactionInfo", this.eventPage);
         });
 
-        this.eventPage = eventPage;
         if(eventPage.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
             nameTxt.text = "Transaction";
         else
@@ -51,6 +52,11 @@ public class EventObject : MonoBehaviour
             statusImage.sprite = successImage;
         else
             statusImage.sprite = failImage;
+    }
+
+    private void OnDestroy()
+    {
+        transactionButton.onClick.RemoveAllListeners();
     }
 
 }

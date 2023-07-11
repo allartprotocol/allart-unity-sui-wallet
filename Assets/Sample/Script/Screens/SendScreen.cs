@@ -1,4 +1,4 @@
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using SimpleScreen;
 using System;
 using System.Collections;
@@ -36,10 +36,24 @@ public class SendScreen : BaseScreen
         closeButton.onClick.AddListener(OnClose);
         scanButton.onClick.AddListener(OnScan);
         max.onClick.AddListener(OnMax);
+        amount.onValueChanged.AddListener(OnAmountChanged);
 
         
         qrReader = FindObjectOfType<QRReader>();
         qrReader.OnQRRead += OnQRCodeFound;
+    }
+
+    private void OnAmountChanged(string arg0)
+    {
+        if(string.IsNullOrEmpty(arg0))
+        {
+            return;
+        }
+        float ammount = float.Parse(arg0);
+        if(ammount > GetMaxBalance())
+        {
+            amount.text = GetMaxBalance().ToString();
+        }
     }
 
     private void OnQRCodeFound(string obj)
@@ -86,6 +100,7 @@ public class SendScreen : BaseScreen
     public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+        to.text = "";
         amount.text = "0";
         tokenName.text = WalletComponent.Instance.currentCoinMetadata.name;
         var coinType = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault().Key;

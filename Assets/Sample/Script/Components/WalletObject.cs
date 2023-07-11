@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;

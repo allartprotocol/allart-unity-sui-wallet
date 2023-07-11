@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AllArt.SUI.RPC;
 using AllArt.SUI.RPC.Filter.Types;
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using AllArt.SUI.Wallets;
 using UnityEngine;
 
@@ -53,8 +53,11 @@ public class WalletComponent : MonoBehaviour
         get { return _password; }
         private set
         {
-            _password = value;
-            StartTimer();
+            if(value != null && value != string.Empty)
+            {
+                _password = value;
+                StartTimer();
+            }
         }
     }
 
@@ -129,7 +132,7 @@ public class WalletComponent : MonoBehaviour
         var manager = FindObjectOfType<SimpleScreen.SimpleScreenManager>();
         manager?.ShowScreen("SplashScreen");
         InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Warning, "Connection timed out. Please try again.");
-
+        timeoutTimer = null;
     }
 
     #endregion
@@ -164,18 +167,18 @@ public class WalletComponent : MonoBehaviour
     /// <summary>
     /// Checks if the given password is valid by attempting to restore all wallets with the given password.
     /// </summary>
-    /// <param name="password">The password to check for validity.</param>
+    /// <param name="passwordString">The password to check for validity.</param>
     /// <returns>True if the password is valid and can be used to restore wallets, false otherwise.</returns>
-    public bool CheckPasswordValidity(string password)
+    public bool CheckPasswordValidity(string passwordString)
     {
-        if (password.Length < 1 || password.Contains(" ") || string.IsNullOrEmpty(password))
+        if (passwordString.Length < 1 || passwordString.Contains(" ") || string.IsNullOrEmpty(passwordString))
         {
             return false;
         }
 
         try
         {
-            RestoreAllWallets(password);
+            RestoreAllWallets(passwordString);
         }
         catch (Exception e)
         {
@@ -723,6 +726,7 @@ public class WalletComponent : MonoBehaviour
 
     internal void LockWallet()
     {
-        password = null;
+        password = "";
+        wallets.Clear();
     }
 }

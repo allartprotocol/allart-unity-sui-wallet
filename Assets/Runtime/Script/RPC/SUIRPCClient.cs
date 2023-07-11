@@ -1,7 +1,7 @@
 using AllArt.SUI.Requests;
 using AllArt.SUI.RPC.Filter.Types;
 using AllArt.SUI.RPC.Response;
-using AllArt.SUI.RPC.Response.Types;
+using AllArt.SUI.RPC.Response;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;

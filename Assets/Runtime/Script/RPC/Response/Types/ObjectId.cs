@@ -1,4 +1,4 @@
-namespace AllArt.SUI.RPC.Response.Types {
+namespace AllArt.SUI.RPC.Response {
 
     public class ObjectId {
 

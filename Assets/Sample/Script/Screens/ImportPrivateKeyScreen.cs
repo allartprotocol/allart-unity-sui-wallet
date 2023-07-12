@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using AllArt.SUI.Wallets;
+using Chaos.NaCl;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;
@@ -11,7 +13,7 @@ public class ImportPrivateKeyScreen : BaseScreen
     public TMP_InputField mnemonicField;
 
     public Button continueBtn;
-    private string mnemonic;
+    private string privateKey;
 
     void Start()
     {
@@ -20,41 +22,25 @@ public class ImportPrivateKeyScreen : BaseScreen
 
     private void OnContinue()
     {
-        string mnemonic = mnemonicField.text;
+        string privateKey = mnemonicField.text;
 
-        if (string.IsNullOrEmpty(mnemonic))
+        if (string.IsNullOrEmpty(privateKey))
         {
             Debug.Log("Please enter private key");
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please enter private key");
             return;
         }
 
-        mnemonic = Mnemonics.SanitizeMnemonic(mnemonic);
-        Debug.Log(mnemonic);
+        this.privateKey = privateKey.Trim();
 
-        if (!Mnemonics.IsValidMnemonic(mnemonicField.text))
-        {
-            Debug.Log("Invalid mnemonic");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid mnemonic");
-            return;
-        }
+        Wallet wal = CreateAndEncryptWallet(this.privateKey, WalletComponent.Instance.password);
 
-        if(WalletComponent.Instance.DoesWalletWithMnemonicExists(mnemonic))
-        {
-            Debug.Log("Wallet already exist");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
-            return;
-        }
-
-        this.mnemonic = mnemonic;
-
-        
-
-        Wallet wal = CreateAndEncryptMnemonic(WalletComponent.Instance.password);
         if(wal != null)
         {
             WalletComponent.Instance.SetCurrentWallet(wal);
             WalletComponent.Instance.RestoreAllWallets(WalletComponent.Instance.password);
+            Debug.Log(wal.publicKey);
+            Debug.Log(wal.privateKey);
         }
         else
         {
@@ -72,10 +58,9 @@ public class ImportPrivateKeyScreen : BaseScreen
         base.InitScreen();
     }
 
-    public Wallet CreateAndEncryptMnemonic(string password)
+    public Wallet CreateAndEncryptWallet(string privateKey, string password)
     {
-        Debug.Log(mnemonic + " " + password);
-        return WalletComponent.Instance.CreateWallet(this.mnemonic, password);
+        return WalletComponent.Instance.CreateWallet(privateKey, password);
     }
 
     public override void ShowScreen(object data = null)

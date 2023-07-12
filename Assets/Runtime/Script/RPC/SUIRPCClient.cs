@@ -2,6 +2,7 @@ using AllArt.SUI.Requests;
 using AllArt.SUI.RPC.Filter.Types;
 using AllArt.SUI.RPC.Response;
 using AllArt.SUI.RPC.Response;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -164,6 +165,15 @@ namespace AllArt.SUI.RPC
             rpcRequest.AddParameter(requestType);
             var rpcResponse = await SendRequestAsync<SuiTransactionBlockResponse>(rpcRequest);
             return rpcResponse.result;
+        }
+
+        public async Task<JsonRpcResponse<SuiTransactionBlockResponse>> DryRunTransactionBlock(string txBytes)
+        {
+            RPCRequestBase rpcRequest = new("sui_dryRunTransactionBlock");
+            rpcRequest.AddParameter(txBytes);
+            var rpcResponse = await SendRequestAsync<SuiTransactionBlockResponse>(rpcRequest);
+            Debug.LogError(JsonConvert.SerializeObject(rpcResponse));
+            return rpcResponse;
         }
 
         public async Task<TransactionBlockBytes> PaySui(AllArt.SUI.Wallets.Wallet signer, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)

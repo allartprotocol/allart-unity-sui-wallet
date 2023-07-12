@@ -2,6 +2,7 @@ using Chaos.NaCl;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace AllArt.SUI.Wallets
@@ -23,6 +24,16 @@ namespace AllArt.SUI.Wallets
                 var hash = BitConverter.ToString(first32Bytes).Replace("-", "").ToLowerInvariant();
                 return hash[..64];
             }
+        }
+
+        public static bool IsSuiAddressInCorrectFormat(string address){
+            if(address.Length != 66){
+                return false;
+            }
+            if(!address.StartsWith("0x")){
+                return false;
+            }
+            return true;
         }
 
         public KeyPair(byte[] publicKey, byte[] privateKey)
@@ -49,6 +60,41 @@ namespace AllArt.SUI.Wallets
             string hashString = BitConverter.ToString(result);
             hashString = hashString.Replace("-", "").ToLowerInvariant();
             return "0x" + hashString.Substring(0, 64);
+        }
+
+
+        public static byte[] GetPrivateKeyFromSuiSecret(string suiSecret)
+        {
+            // Convert the suiSecret string to a byte array
+            suiSecret = suiSecret.Replace("0x", "");
+            byte[] hashBytes = new byte[32];
+            for (int i = 0; i < 32; i++)
+            {
+                hashBytes[i] = Convert.ToByte(suiSecret.Substring(i * 2, 2), 16);
+            }
+
+            // Create a new byte array to hold the full private key
+            byte[] privateKey = new byte[64];
+
+            // Copy the first 32 bytes of the hash to the first 32 bytes of the private key
+            Array.Copy(hashBytes, 0, privateKey, 0, 32);
+
+            // Generate the second 32 bytes of the private key using a random number generator
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(privateKey, 32, 32);
+            }
+
+            return privateKey;
+        }
+
+        internal static KeyPair GenerateKeyPairFromPrivateKey(string privateKey)
+        {
+            privateKey = privateKey.Replace("0x", "");
+            byte[] privateKeyBytes = CryptoBytes.FromHexString(privateKey);
+            byte[] publicKey = Ed25519.PublicKeyFromSeed(privateKeyBytes);
+
+            return new KeyPair(publicKey, privateKeyBytes);
         }
     }
 

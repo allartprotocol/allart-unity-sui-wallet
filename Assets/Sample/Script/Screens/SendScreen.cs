@@ -1,4 +1,5 @@
 using AllArt.SUI.RPC.Response;
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System;
 using System.Collections;
@@ -129,6 +130,12 @@ public class SendScreen : BaseScreen
         if(float.Parse(amount.text) <= 0)
         {
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Amount must be greater than 0");
+            return;
+        }
+
+        if(KeyPair.IsSuiAddressInCorrectFormat(to.text) == false)
+        {
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid address");
             return;
         }
         

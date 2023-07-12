@@ -97,7 +97,7 @@ namespace AllArt.SUI.RPC.Response {
     public class ObjectRef
     {
         public string objectId;
-        public int version;
+        public string version;
         public string digest;
     }
 

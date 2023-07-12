@@ -160,21 +160,23 @@ public class MainWalletScreen : BaseScreen
         percentageText.text = "0%";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
+        sendBtn.interactable = balances.Count > 0;
+        foreach (var obj in loadedObjects)
+        {
+            Destroy(obj.gameObject);
+        }
+        loadedObjects.Clear();
 
         if(balances.Count == 0)
         {
             noBalanceText.gameObject.SetActive(true);
+            return;
         }
         else
         {
             noBalanceText.gameObject.SetActive(false);
         }
 
-        foreach (var obj in loadedObjects)
-        {
-            Destroy(obj.gameObject);
-        }
-        loadedObjects.Clear();
         foreach (var balance in balances)
         {
             var obj = Instantiate(objectListItemPrefab, objectListContent);
@@ -182,8 +184,6 @@ public class MainWalletScreen : BaseScreen
             wo.Init(balance, manager);
             loadedObjects.Add(wo);
         }
-
-        sendBtn.interactable = balances.Count > 0;
     }
 
     public override async void ShowScreen(object data = null)
@@ -230,7 +230,7 @@ public class MainWalletScreen : BaseScreen
         if (!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
             return;
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
-        if (balance != null)
+        if (balance != null && balance.totalBalance > 0)
         {
             var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
             if (geckoData != null)

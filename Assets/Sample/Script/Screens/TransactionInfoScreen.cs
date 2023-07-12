@@ -81,13 +81,14 @@ public class TransactionInfoScreen : BaseScreen {
         Application.OpenURL($"https://suiexplorer.com/txblock/{suiTransactionBlockResponse.digest}?network={network}");
     }
 
-    public override void ShowScreen(object data) {
+    public override void ShowScreen(object data)
+    {
         base.ShowScreen(data);
         Debug.Log(data.GetType());
 
         suiTransactionBlockResponse = data as SuiTransactionBlockResponse;
 
-        if(suiTransactionBlockResponse.effects.status.status == "success")
+        if (suiTransactionBlockResponse.effects.status.status == "success")
             statusImage.sprite = successImage;
         else
             statusImage.sprite = failImage;
@@ -95,38 +96,43 @@ public class TransactionInfoScreen : BaseScreen {
         DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)ulong.Parse(suiTransactionBlockResponse.timestampMs));
         date.text = dateTime.ToString("MMMM d, yyyy 'at' h:mm tt");
 
-        if(suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
+        if (suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
             type.text = "Transaction";
         else
             type.text = "Receive";
-
-        var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
-
-        Debug.Log(JsonUtility.ToJson(gasUsed));
-        float gasUsedFloat = 0;
-        if(gasUsed != null && gasUsed != default ){
-            if(gasUsed.computationCost != null)
-                gasUsedFloat += float.Parse(gasUsed.computationCost);
-            if(gasUsed.storageCost != null)
-                gasUsedFloat += float.Parse(gasUsed.storageCost);
-            if(gasUsed.storageRebate != null)
-                gasUsedFloat -= float.Parse(gasUsed.storageRebate);
-            if(gasUsed.nonRefundableStorageFees != null)
-                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFees);
-        }
-        gasUsedFloat += float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price);
+        float gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
 
         status.text = suiTransactionBlockResponse.effects.status.status;
         sender.text = suiTransactionBlockResponse.transaction.data.sender;
         network.text = "SUI";
-        var feeText = (gasUsedFloat / Mathf.Pow(10,9)).ToString("0.############");
+        var feeText = (gasUsedFloat / Mathf.Pow(10, 9)).ToString("0.############");
         fee.text = $"~{feeText} SUI";
-        try{
+        try
+        {
             balanceChange.text = GetBalanceChange();
         }
-        catch(Exception e){
+        catch (Exception e)
+        {
             Debug.LogError(e);
         }
     }
 
+    private float CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
+    {
+        var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
+        float gasUsedFloat = 0;
+        if (gasUsed != null && gasUsed != default)
+        {
+            if (gasUsed.computationCost != null)
+                gasUsedFloat += float.Parse(gasUsed.computationCost);
+            if (gasUsed.storageCost != null)
+                gasUsedFloat += float.Parse(gasUsed.storageCost);
+            if (gasUsed.storageRebate != null)
+                gasUsedFloat -= float.Parse(gasUsed.storageRebate);
+            if (gasUsed.nonRefundableStorageFees != null)
+                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFees);
+        }
+        gasUsedFloat += float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price);
+        return gasUsedFloat;
+    }
 }

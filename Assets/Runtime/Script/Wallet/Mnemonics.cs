@@ -183,17 +183,6 @@ namespace AllArt.SUI.Wallets {
         {
             return StringCipher.Decrypt(encryptedMnemonic, mnemonic);
         }
-
-        internal static KeyPair GenerateKeyPairFromPrivateKey(byte[] privateKey)
-        { 
-            Ed25519.KeyPairFromSeed(out byte[] restoredPublicKey, out byte[] extended, privateKey);
-            return new KeyPair(restoredPublicKey, privateKey);
-        }
-
-        public static byte[] GetPublicKeyFromPrivateKey(string privateKey)
-        {
-            return GenerateKeyPairFromPrivateKey(StringToByteArrayFastest(privateKey)).publicKey;
-        }
     }
 
 }

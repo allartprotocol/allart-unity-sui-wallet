@@ -32,6 +32,8 @@ public class WalletSettingsScreen : BaseScreen
         }
         wallet = data as Wallet;
         walletPubKey.text = wallet.publicKey;
+
+        exportPhrase.gameObject.SetActive(!string.IsNullOrEmpty(WalletComponent.Instance.currentWallet.mnemonic));
     }
 
     private void OnRemoveWallets()

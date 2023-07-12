@@ -35,6 +35,13 @@ namespace AllArt.SUI.Wallets
         {
         }
 
+        public Wallet(KeyPair keyPair, string password = "", string walletName = "")
+        {
+            this.keyPair = keyPair;
+            this.walletName = walletName;
+            this.password = password;
+        }
+
         public Wallet(string mnemonic, string password = "", string walletName = "")
         {
             this.walletName = walletName;
@@ -88,7 +95,11 @@ namespace AllArt.SUI.Wallets
                 PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
             }
 
-            Debug.Log($"Mnemonic {mnemonic}");
+            Debug.Log($"Name {walletName}");
+            if(string.IsNullOrEmpty(mnemonic))
+            {
+                mnemonic = privateKey;
+            }
             string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, password);
             Debug.Log($"Encoded {encodedKeyPair}");
             PlayerPrefs.SetString(walletName, encodedKeyPair);
@@ -108,7 +119,10 @@ namespace AllArt.SUI.Wallets
                 wallets.Add(walletName);
                 PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
             }
-
+            if(string.IsNullOrEmpty(mnemonic))
+            {
+                mnemonic = privateKey;
+            }
             string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, newPassword);
             PlayerPrefs.SetString(walletName, encodedKeyPair);
         }
@@ -121,12 +135,23 @@ namespace AllArt.SUI.Wallets
             {
                 return new Wallet(mnemonic, password, walletName);
             }
+            else{
+                try
+                {
+                    KeyPair keyPair = KeyPair.GenerateKeyPairFromPrivateKey(mnemonic);
+                    return new Wallet(keyPair);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e.Message);
+                }
+            }
             return null;
         }
 
-        public void RestoreWalletFromPrivateKey(byte[] privateKey)
+        public void RestoreWalletFromPrivateKey(string privateKey)
         {
-            keyPair = Mnemonics.GenerateKeyPairFromPrivateKey(privateKey);
+            keyPair = KeyPair.GenerateKeyPairFromPrivateKey(privateKey);
         }
 
         private static bool IsValid(string mnemonic)

@@ -6,6 +6,7 @@ using AllArt.SUI.RPC;
 using AllArt.SUI.RPC.Filter.Types;
 using AllArt.SUI.RPC.Response;
 using AllArt.SUI.Wallets;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public enum ENodeType
@@ -30,7 +31,7 @@ public class WalletComponent : MonoBehaviour
     public Dictionary<string, Sprite> coinImages {get; private set;} = new();
 
     // currently selected wallet
-    public Wallet currentWallet;
+    public Wallet currentWallet {get; private set;}
     public CoinMetadata currentCoinMetadata;
 
     public string nodeAddress
@@ -217,7 +218,7 @@ public class WalletComponent : MonoBehaviour
         var fromFilter = new FromAddressFilter(wallet.publicKey);
         await GetTransactionsForSelectedWallet();
         websocketController.UnsubscribeCurrent();
-        await websocketController.Subscribe(fromFilter);
+        await websocketController.Subscribe(fromOrToFilter);
     }
 
     #region Wallet Management
@@ -242,6 +243,20 @@ public class WalletComponent : MonoBehaviour
     public Wallet CreateWallet(string mnemonic, string password = "password", string walletName = "")
     {
         Wallet wallet = new(mnemonic, password, walletName);
+        wallet.SaveWallet();
+        return wallet;
+    }
+
+    public Wallet CreateWallet(string privateKey, string password = "password")
+    {
+        KeyPair walletKeyPair;
+        try{
+            walletKeyPair = KeyPair.GenerateKeyPairFromPrivateKey(privateKey);
+        }catch(Exception e){
+            Debug.Log(e.Message);
+            return null;
+        }
+        Wallet wallet = new(walletKeyPair, password);
         wallet.SaveWallet();
         return wallet;
     }
@@ -401,51 +416,64 @@ public class WalletComponent : MonoBehaviour
 
         if (coins != null)
         {
-            foreach (var coin in coins.data)
-            {
-                if (!coinPages.ContainsKey(coin.coinType))
-                {
-                    coinPages.TryAdd(coin.coinType, coin);
-                }
-            }
+            await GetCoins(coins);
+            await GetCoinMetadatas();
+            await GetCoinGeckoData();
+        }
+    }
 
-            foreach (var coinType in coinPages.Keys)
+    private async Task GetCoins(PageForCoinAndObjectID coins)
+    {
+        foreach (var coin in coins.data)
+        {
+            if (!coinPages.ContainsKey(coin.coinType))
             {
-                if (coinMetadatas.ContainsKey(coinType))
+                coinPages.TryAdd(coin.coinType, coin);
+            }
+        }
+
+        foreach (var coinType in coinPages.Keys)
+        {
+            if (coinMetadatas.ContainsKey(coinType))
+                continue;
+            var coinMetadata = await GetCoinMetadata(coinType);
+            if (coinMetadata != null)
+            {
+                coinMetadatas.TryAdd(coinType, coinMetadata);
+            }
+        }
+    }
+
+    private async Task GetCoinMetadatas()
+    {
+        foreach (var coin in coinMetadatas.Keys)
+        {
+            var coinMetadata = coinMetadatas[coin];
+            if (this.coinGeckoData.ContainsKey(coinMetadata.symbol))
+                continue;
+            var coinData = await GetUSDPrice(coinMetadata);
+            if (coinData != null)
+            {
+                this.coinGeckoData.TryAdd(coinMetadata.symbol, coinData);
+            }
+        }
+    }
+
+    private async Task GetCoinGeckoData()
+    {
+        foreach (var dataKey in coinGeckoData.Keys)
+        {
+            var coin = coinGeckoData[dataKey];
+            if (coin.image != null && coin.image.thumb != null)
+            {
+                if (coinImages.ContainsKey(dataKey))
+                {
                     continue;
-                var coinMetadata = await GetCoinMetadata(coinType);
-                if (coinMetadata != null)
-                {
-                    coinMetadatas.TryAdd(coinType, coinMetadata);
                 }
-            }
-
-            foreach (var coin in coinMetadatas.Keys)
-            {
-                var coinMetadata = coinMetadatas[coin];
-                if (this.coinGeckoData.ContainsKey(coinMetadata.symbol))
-                    continue;
-                var coinData = await GetUSDPrice(coinMetadata);
-                if (coinData != null)
+                var image = await GetImage(coin.image.small);
+                if (image != null)
                 {
-                    this.coinGeckoData.TryAdd(coinMetadata.symbol, coinData);
-                }
-            }
-
-            foreach (var dataKey in coinGeckoData.Keys)
-            {
-                var coin = coinGeckoData[dataKey];
-                if (coin.image != null && coin.image.thumb != null)
-                {
-                    if (coinImages.ContainsKey(dataKey))
-                    {
-                        continue;
-                    }
-                    var image = await GetImage(coin.image.thumb);
-                    if (image != null)
-                    {
-                        coinImages.TryAdd(dataKey, image);
-                    }
+                    coinImages.TryAdd(dataKey, image);
                 }
             }
         }
@@ -665,6 +693,13 @@ public class WalletComponent : MonoBehaviour
         {
             wallet.SaveWallet(newPassword);
         }
+    }
+
+    public async Task<JsonRpcResponse<SuiTransactionBlockResponse>> DryRunTransaction(string transactionBlockBytes)
+    {
+        var request = await client.DryRunTransactionBlock(transactionBlockBytes);
+        
+        return request;
     }
 
     /// <summary>

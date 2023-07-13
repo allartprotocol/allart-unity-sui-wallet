@@ -16,10 +16,7 @@ public class CreatePasswordScreen : BaseScreen
     void Start()
     {
         continueBtn.onClick.AddListener(OnContinue);
-        
     }
-
-    
 
     private void OnContinue()
     {
@@ -103,9 +100,9 @@ public class CreatePasswordScreen : BaseScreen
     public override void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
-        if(data is Func<string, bool>)
+        if(data is Func<string, bool> func)
         {
-            encryptMnem = (Func<string, bool>)data;
+            encryptMnem = func;
         }
         else
         {
@@ -123,5 +120,6 @@ public class CreatePasswordScreen : BaseScreen
     {
         passwordField.text = "";
         confirmPasswordField.text = "";
+        termsToggle.isOn = false;
     }
 }

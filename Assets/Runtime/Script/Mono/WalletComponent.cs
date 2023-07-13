@@ -598,7 +598,7 @@ public class WalletComponent : MonoBehaviour
     /// <param name="gas">The gas price to use for the transaction.</param>
     /// <param name="gasBudget">The maximum gas budget for the transaction.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="TransactionBlockBytes"/> object representing the transaction bytes for the payment transaction.</returns>
-    public async Task<TransactionBlockBytes> Pay(Wallet wallet, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
+    public async Task<JsonRpcResponse<TransactionBlockBytes>> Pay(Wallet wallet, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
     {
 
         var request = await client.Pay(wallet, inputCoins, recipients, amounts, gas, gasBudget);
@@ -614,7 +614,7 @@ public class WalletComponent : MonoBehaviour
     /// <param name="amounts">The amounts to send to each recipient.</param>
     /// <param name="gasBudget">The maximum gas budget for the transaction.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="TransactionBlockBytes"/> object representing the transaction bytes for the payment transaction.</returns>
-    public async Task<TransactionBlockBytes> PaySui(Wallet wallet, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
+    public async Task<JsonRpcResponse<TransactionBlockBytes>> PaySui(Wallet wallet, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
     {
         var request = await client.PaySui(wallet, inputCoins, recipients, amounts, gasBudget);
         return request;

@@ -38,7 +38,11 @@ public class WalletObject : MonoBehaviour
 
     private void DisplayData(Balance balance)
     {
-        coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
+        coinMetadata = null;
+        if(WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
+        {
+            coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];           
+        }
 
         coin_name.text = "";
         coin_balance.text = balance.totalBalance.ToString();

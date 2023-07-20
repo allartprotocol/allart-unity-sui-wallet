@@ -85,7 +85,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3792067916457792382}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -166,8 +166,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4285953654
+  m_fontColor: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -289,15 +289,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8adc22720d99fb345bf45dbc85dac055, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: e801060890c5064448a44fe126ce20f3, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -366,7 +366,44 @@ MonoBehaviour:
   failImage: {fileID: 21300000, guid: 4d1344d9780f70a4f9fa6e734aeaca8c, type: 3}
   statusImage: {fileID: 5333017989999674121}
   eventPage:
+    digest: 
+    transaction:
+      data:
+        messageVersion: 
+        transaction:
+          kind: 
+          inputs: []
+          sender: 
+        sender: 
+        gasData:
+          owner: 
+          price: 
+          budget: 
+      txSignatures: []
+    rawTransaction: 
+    effects:
+      messageVersion: 
+      status:
+        status: 
+      executedEpoch: 
+      gas: 
+      gasUsed:
+        computationCost: 
+        storageCost: 
+        storageRebate: 
+        nonRefundableStorageFees: 
+      mutated: []
+      gasObject:
+        owner:
+          AddressOwner: 
+    balanceChanges: []
     timestampMs: 
+    checkpoint: 
+    error:
+      code: 0
+      objectId: 
+      message: 
+    errors: []
   nameTxt: {fileID: 5333017990700327261}
   amount: {fileID: 5333017989026144538}
   date: {fileID: 9057571323415747276}
@@ -587,8 +624,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281216558
+  m_fontColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -722,8 +759,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4285953654
+  m_fontColor: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

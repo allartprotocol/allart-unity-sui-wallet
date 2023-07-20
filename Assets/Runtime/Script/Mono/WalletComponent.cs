@@ -210,7 +210,7 @@ public class WalletComponent : MonoBehaviour
     public async void SetCurrentWallet(Wallet wallet)
     {
         currentWallet = wallet;
-
+        Debug.Log(wallet.publicKey);
         var fromOrToFilter = new FromOrToAddressFilter(new FromOrObject(wallet.publicKey));
         var fromAndToFilter = new FromAndToAddressFilter(new FromToObject(wallet.publicKey, wallet.publicKey));
         var filterOr = new FilterOr(new List<object>() { new FromAddresObject(new FromAddressFilter(wallet.publicKey)), new ToAddresObject( new ToAddressFilter(wallet.publicKey)) });
@@ -247,7 +247,7 @@ public class WalletComponent : MonoBehaviour
         return wallet;
     }
 
-    public Wallet CreateWallet(string privateKey, string password = "password")
+    public Wallet CreateWalletFromPrivateKey(string privateKey, string password = "password")
     {
         KeyPair walletKeyPair;
         try{

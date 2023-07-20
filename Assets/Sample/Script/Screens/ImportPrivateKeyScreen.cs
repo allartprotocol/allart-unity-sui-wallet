@@ -60,7 +60,7 @@ public class ImportPrivateKeyScreen : BaseScreen
 
     public Wallet CreateAndEncryptWallet(string privateKey, string password)
     {
-        return WalletComponent.Instance.CreateWallet(privateKey, password);
+        return WalletComponent.Instance.CreateWalletFromPrivateKey(privateKey, password);
     }
 
     public override void ShowScreen(object data = null)

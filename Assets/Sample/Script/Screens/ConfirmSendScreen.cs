@@ -84,7 +84,7 @@ public class ConfirmSendScreen : BaseScreen {
             }
 
             var res_pay = await WalletComponent.Instance.PaySui(wallet, objects, new List<string>() {TransferData.to},
-                new List<string>() {amount.ToString()}, "1000000000");
+                new List<string>() {amount.ToString()}, "100000000");
 
             if(res_pay == null || res_pay.result == null)
             {
@@ -158,7 +158,7 @@ public class ConfirmSendScreen : BaseScreen {
             }
 
             var res_pay = await WalletComponent.Instance.PaySui(wallet, objects, new List<string>() {TransferData.to},
-                new List<string>() {amount.ToString()}, "1000000000");
+                new List<string>() {amount.ToString()}, "100000000");
             return res_pay.result.txBytes;
 
         }
@@ -319,9 +319,15 @@ public class ConfirmSendScreen : BaseScreen {
         }
 
         var res = await WalletComponent.Instance.DryRunTransaction(transactionBytes);
-        if(res == null || res.error != null)
+        if(res == null || res.error != null || res.result.effects.status.status == "failure")
         {
-            string msg = res != null ? res.error.message : "Transaction failed";
+            string msg = "";
+            if(res != null && res.error != null)
+                msg = res.error.message;
+            else if(res != null && res.result != null && res.result.effects != null && res.result.effects.status != null)
+                msg = "Transaction failed";
+            else
+                msg = "Transaction failed";
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, msg);
             return null;
         }

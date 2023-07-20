@@ -68,15 +68,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: SUI
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aed8e46f8317dc54b8b4faafad2c588f, type: 2}
-  m_sharedMaterial: {fileID: 4161381200436365346, guid: aed8e46f8317dc54b8b4faafad2c588f, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59ef883a0475c9545aee2d1d0bff781b, type: 2}
+  m_sharedMaterial: {fileID: 3402827731369959215, guid: 59ef883a0475c9545aee2d1d0bff781b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4283914071
+  m_fontColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -248,7 +248,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 466.28, y: 68.6}
+  m_SizeDelta: {x: 328.47, y: 68.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3025496630763357739
 MonoBehaviour:
@@ -340,16 +340,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8adc22720d99fb345bf45dbc85dac055, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: e801060890c5064448a44fe126ce20f3, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 20
+    m_Left: 61
     m_Right: 20
     m_Top: 0
     m_Bottom: 0
@@ -515,8 +515,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0.000 SUI
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 878d8690a2a616d4b95ba8617245a0be, type: 2}
-  m_sharedMaterial: {fileID: -477595258803401680, guid: 878d8690a2a616d4b95ba8617245a0be, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 037f1c73b19ab8c41908533b6d244275, type: 2}
+  m_sharedMaterial: {fileID: -8435131566116626612, guid: 037f1c73b19ab8c41908533b6d244275, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

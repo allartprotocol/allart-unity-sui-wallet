@@ -1,0 +1,262 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.25f1 (68ef2c4f8861) revision 6876972'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 11  (10.0.22621) 64bit Professional' Language: 'en' Physical Memory: 32640 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.3.25f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+55930
+Successfully changed project path to: C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
+C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [70652] Host "[IP] 192.168.100.2 [Port] 0 [Flags] 2 [Guid] 3698185000 [EditorId] 3698185000 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [70652] Host "[IP] 192.168.100.2 [Port] 0 [Flags] 2 [Guid] 3698185000 [EditorId] 3698185000 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+Refreshing native plugins compatible for Editor in 74.79 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.25f1 (68ef2c4f8861)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 3070 Laptop GPU (ID=0x249d)
+    Vendor:   NVIDIA
+    VRAM:     8033 MB
+    Driver:   31.0.15.3640
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56928
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.006763 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Android Extension - Scanning For ADB Devices 450 ms
+Refreshing native plugins compatible for Editor in 76.95 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.271 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1271ms)
+		BeginReloadAssembly (125ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (1022ms)
+			LoadAssemblies (126ms)
+			RebuildTransferFunctionScriptingTraits (1ms)
+			SetupTypeCache (144ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (30ms)
+			SetupLoadedEditorAssemblies (791ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (565ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (77ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (94ms)
+				ProcessInitializeOnLoadMethodAttributes (54ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.010169 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\Administrator\Documents\Projects\AllArt\opensource\allart-sui-wallet\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\Administrator\Documents\Projects\AllArt\opensource\allart-sui-wallet\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory is not a mono symbol file
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 87.07 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.368 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1369ms)
+		BeginReloadAssembly (128ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (19ms)
+		EndReloadAssembly (1117ms)
+			LoadAssemblies (127ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (434ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (57ms)
+			SetupLoadedEditorAssemblies (424ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (20ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (87ms)
+				BeforeProcessingInitializeOnLoad (86ms)
+				ProcessInitializeOnLoadAttributes (204ms)
+				ProcessInitializeOnLoadMethodAttributes (19ms)
+				AfterProcessingInitializeOnLoad (7ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (15ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.10 seconds
+Refreshing native plugins compatible for Editor in 0.79 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3241 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 32 unused Assets / (341.8 KB). Loaded Objects now: 3697.
+Memory consumption went from 122.6 MB to 122.3 MB.
+Total: 2.905700 ms (FindLiveObjects: 0.326300 ms CreateObjectMapping: 0.242400 ms MarkObjects: 2.240400 ms  DeleteObjects: 0.095900 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 67053.935658 seconds.
+  path: Assets/Sample/Sprites/Theme/activity-ico-1.png
+  artifactKey: Guid(3f4d7b080c3422e4cbab624bb16bbb59) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/activity-ico-1.png using Guid(3f4d7b080c3422e4cbab624bb16bbb59) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4dff6db182a415b680d3bb79ad88f2e2') in 0.107093 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.055045 seconds.
+  path: Assets/Sample/Sprites/Theme/activity-ico.png
+  artifactKey: Guid(b309098af778f7c4f9aaa37b63db9284) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/activity-ico.png using Guid(b309098af778f7c4f9aaa37b63db9284) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4d8770676b4118565103c2790dfc82b8') in 0.007714 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.991287 seconds.
+  path: Assets/Sample/Sprites/Theme/arrow-left-ico.png
+  artifactKey: Guid(497c6295ccdcb1342a6c39f6d11622a1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/arrow-left-ico.png using Guid(497c6295ccdcb1342a6c39f6d11622a1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '31100d91cae3f84f64296700f894bfb0') in 0.009217 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7.909306 seconds.
+  path: Assets/Sample/Sprites/Theme/dropdown-ico.png
+  artifactKey: Guid(bd419d80c34273d4baa60a711e15471d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/dropdown-ico.png using Guid(bd419d80c34273d4baa60a711e15471d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5ee4e74e7b1c5793f643d3c79185b1c0') in 0.008597 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 16.596075 seconds.
+  path: Assets/Sample/Sprites/Theme/dropdown-ico.png
+  artifactKey: Guid(bd419d80c34273d4baa60a711e15471d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/dropdown-ico.png using Guid(bd419d80c34273d4baa60a711e15471d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1e7a32c9da798c008a451dd177213707') in 0.024286 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1670.170233 seconds.
+  path: Assets/Sample/Sprites/Theme/assets-ico.svg
+  artifactKey: Guid(c0265601477a49744b1b675ca0b4fda2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/assets-ico.svg using Guid(c0265601477a49744b1b675ca0b4fda2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a34e1860dbf4fe0b0ea9b4a17a789749') in 0.060506 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Sample/Sprites/Theme/Button-remove.png
+  artifactKey: Guid(49312c6035da180469f0011853d8df2c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/Button-remove.png using Guid(49312c6035da180469f0011853d8df2c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '15648e3d93e057fe6762a1b8338dc29a') in 0.041967 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/Sample/Sprites/Theme/Button-primary.png
+  artifactKey: Guid(ef69d9b463050c34f96e9443a7a78348) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/Button-primary.png using Guid(ef69d9b463050c34f96e9443a7a78348) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd726b6de4627d399bb801a3f1ced80ea') in 0.057655 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000067 seconds.
+  path: Assets/Sample/Sprites/Theme/background gradient.svg
+  artifactKey: Guid(a3d0a89aa229fd74a9643c5ba9e259ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/background gradient.svg using Guid(a3d0a89aa229fd74a9643c5ba9e259ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dc56c2826f0fabfb312d8b55e2bee06f') in 0.096698 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Sample/Sprites/Theme/Button-remove.svg
+  artifactKey: Guid(030394b93f769cb42bc644c8b382eb1b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/Button-remove.svg using Guid(030394b93f769cb42bc644c8b382eb1b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ec03b11ec01bebb6c4698a2e704df178') in 0.010167 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Sample/Sprites/Theme/Button-primary.svg
+  artifactKey: Guid(a7b82b4c7dde24545ac9f444ad0300ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/Button-primary.svg using Guid(a7b82b4c7dde24545ac9f444ad0300ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f9846e1c3e66965cd436d3e7858aa4f6') in 0.012750 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.239530 seconds.
+  path: Assets/Sample/Sprites/Theme/assets-ico-1.png
+  artifactKey: Guid(e615c641fbf7d784aa8797b032a35199) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/assets-ico-1.png using Guid(e615c641fbf7d784aa8797b032a35199) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e0d54c96348bb5a44711bc36acfde9f1') in 0.012508 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 10.022182 seconds.
+  path: Assets/Sample/Sprites/Theme/activity-ico-1.svg
+  artifactKey: Guid(02cfae22a1a57fa429862dae49ea2c50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/activity-ico-1.svg using Guid(02cfae22a1a57fa429862dae49ea2c50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a4c845995c6f45664eed0ba96f477477') in 0.013115 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.745672 seconds.
+  path: Assets/Sample/Sprites/Theme/arrow-left-ico.svg
+  artifactKey: Guid(51336bc80cae24d4abfb8d4e7fd039ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/arrow-left-ico.svg using Guid(51336bc80cae24d4abfb8d4e7fd039ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '24da6c822f8018dcede082c7c9c01048') in 0.009937 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.055057 seconds.
+  path: Assets/Sample/Sprites/Theme/assets-ico.png
+  artifactKey: Guid(be400cf53a9830c468124e4ae2fb385b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/assets-ico.png using Guid(be400cf53a9830c468124e4ae2fb385b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2608ae86f9fb17b681b62025626783a4') in 0.008955 seconds 
+Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
+AssetImportWorker is now disconnected from the server
+Process exiting
+Exiting without the bug reporter. Application will terminate with return code 0

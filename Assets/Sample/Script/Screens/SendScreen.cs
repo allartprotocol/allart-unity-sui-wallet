@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -138,12 +139,15 @@ public class SendScreen : BaseScreen
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid address");
             return;
         }
+        float balance = GetMaxBalance();
+        bool maxBalance = float.Parse(amount.text) == balance;
         
         GoTo("SendConfirmScreen", new TransferData()
         {
             to = to.text,
             amount = amount.text,
-            coin = WalletComponent.Instance.currentCoinMetadata
+            coin = WalletComponent.Instance.currentCoinMetadata,
+            transferAll = maxBalance
         });
     }
 }

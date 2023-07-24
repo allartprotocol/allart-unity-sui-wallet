@@ -8,4 +8,5 @@ public class SUIConstantVars {
     public const string devNetNode = "https://fullnode.devnet.sui.io:443";
     public const string mainNetNode = "https://fullnode.mainnet.sui.io:443";//"https://sui-mainnet-rpc.allthatnode.com";
     public const string coingeckoApi = "https://api.coingecko.com/api/v3/coins/";
+    public const string GAS_BUDGET = "20000000";
 }

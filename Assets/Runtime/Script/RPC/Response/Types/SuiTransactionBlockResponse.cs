@@ -111,6 +111,7 @@ namespace AllArt.SUI.RPC.Response {
     public class TransactionStatus
     {
         public string status;
+        public string error;
     }
 
     [System.Serializable]

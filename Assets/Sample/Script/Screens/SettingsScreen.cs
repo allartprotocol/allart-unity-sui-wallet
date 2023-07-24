@@ -19,7 +19,7 @@ public class SettingsScreen : BaseScreen
 
     private void OnRemoveWallets()
     {
-        GoTo("RemoveWalletsScreen");
+        GoTo("RemoveAccountScreen");
     }
 
     private void OnNetwork()

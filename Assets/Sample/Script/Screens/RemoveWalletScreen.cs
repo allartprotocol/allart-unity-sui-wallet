@@ -2,6 +2,7 @@ using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +23,7 @@ public class RemoveWalletScreen : BaseScreen
         base.ShowScreen(data);
         if (data == null) return;
         wallet = (Wallet)data;
-        walletName.text = wallet.publicKey;
+        walletName.text = wallet.displayAddress;
     }
 
     private void OnRemoveWallets()
@@ -32,6 +33,10 @@ public class RemoveWalletScreen : BaseScreen
         {
             GoTo("SplashScreen");
             return;
+        }
+        else{
+            var wallets = WalletComponent.Instance.GetAllWallets();
+            WalletComponent.Instance.SetCurrentWallet(wallets[wallets.Keys.First()]);
         }
         GoTo("MainScreen");
     }

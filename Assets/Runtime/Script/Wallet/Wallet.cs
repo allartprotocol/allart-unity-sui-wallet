@@ -11,6 +11,14 @@ namespace AllArt.SUI.Wallets
     {
         public string walletName { get; private set; }
         public string mnemonic { get; private set; }
+
+        public string displayAddress {
+            get
+            {
+                return publicKey[..6] + "..." + publicKey[^4..];
+            }
+        }
+
         public string publicKey
         {
             get
@@ -49,6 +57,11 @@ namespace AllArt.SUI.Wallets
             this.password = password;
 
             keyPair = RestoreAccount(mnemonic);
+        }
+
+        public static string DisplaySuiAddress(string suiAddress)
+        {
+            return suiAddress[..6] + "..." + suiAddress[^4..];
         }
 
         public KeyPair CreateAccount()

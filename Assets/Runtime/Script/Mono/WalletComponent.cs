@@ -218,7 +218,7 @@ public class WalletComponent : MonoBehaviour
         var fromFilter = new FromAddressFilter(wallet.publicKey);
         await GetTransactionsForSelectedWallet();
         websocketController.UnsubscribeCurrent();
-        await websocketController.Subscribe(fromOrToFilter);
+        await websocketController.Subscribe(fromAndToFilter);
     }
 
     #region Wallet Management
@@ -414,12 +414,9 @@ public class WalletComponent : MonoBehaviour
     {
         var coins = await GetAllCoins(owner);
 
-        if (coins != null)
-        {
-            await GetCoins(coins);
-            await GetCoinMetadatas();
-            await GetCoinGeckoData();
-        }
+        await GetCoins(coins);
+        await GetCoinMetadatas();
+        await GetCoinGeckoData();
     }
 
     private async Task GetCoins(PageForCoinAndObjectID coins)
@@ -617,6 +614,12 @@ public class WalletComponent : MonoBehaviour
     public async Task<JsonRpcResponse<TransactionBlockBytes>> PaySui(Wallet wallet, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
     {
         var request = await client.PaySui(wallet, inputCoins, recipients, amounts, gasBudget);
+        return request;
+    }
+
+    public async Task<JsonRpcResponse<TransactionBlockBytes>> PayAllSui(Wallet wallet, List<string> inputCoins, string recipients, string gasBudget)
+    {
+        var request = await client.PayAllSui(wallet, inputCoins, recipients, gasBudget);
         return request;
     }
 

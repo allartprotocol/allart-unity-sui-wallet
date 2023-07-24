@@ -179,10 +179,16 @@ public class MainWalletScreen : BaseScreen
 
         foreach (var balance in balances)
         {
+            if(balance.totalBalance == 0)
+            {
+                noBalanceText.gameObject.SetActive(true);
+                continue;
+            }
             var obj = Instantiate(objectListItemPrefab, objectListContent);
             WalletObject wo = obj.GetComponent<WalletObject>();
             wo.Init(balance, manager);
             loadedObjects.Add(wo);
+            noBalanceText.gameObject.SetActive(false);
         }
     }
 

@@ -32,7 +32,7 @@ namespace AllArt.SUI.RPC {
                 await Task.Yield();
             }
 
-            // Debug.Log(uwr.downloadHandler.text);
+            Debug.Log(uwr.downloadHandler.text);
             var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
             return response;
         }

@@ -54,13 +54,25 @@ public class WalletObject : MonoBehaviour
             coin_name.text = coinMetadata.name;
             coin_balance.text = $"{coinMetadata.symbol} {WalletComponent.ApplyDecimals(balance, coinMetadata)}";
         }
+        else { 
+            return;
+        }
 
         var tokenImage = GetComponentInChildren<TokenImage>();
-        WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
-        tokenImage.Init(image, coinMetadata.name);
+        if(WalletComponent.Instance.coinImages != null)
+        {
+            if(WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image)){
+                tokenImage.Init(image, coinMetadata.name);
+            }
+        }
+
+        if(WalletComponent.Instance.coinGeckoData == null){
+            return;
+        }
 
         var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
         geckoCoinData = geckoData;
+
         if (geckoData != null && geckoData.market_data != null) { 
             if(geckoData.market_data.current_price == null)
             {
@@ -69,8 +81,6 @@ public class WalletObject : MonoBehaviour
             var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);
             coin_usd.text = $"${usdValue:0.00}";
             coin_change.text = $"{geckoData.market_data.price_change_percentage_24h.ToString("0.00")}%";
-
-
         }
     }
 

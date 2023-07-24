@@ -189,6 +189,18 @@ namespace AllArt.SUI.RPC
             return rpcResponse;
         }
 
+        public async Task<JsonRpcResponse<TransactionBlockBytes>> PayAllSui(AllArt.SUI.Wallets.Wallet signer, List<string> inputCoins, string recipients, string gasBudget)
+        {
+
+            RPCRequestBase rpcRequest = new("unsafe_payAllSui");
+            rpcRequest.AddParameter(signer.publicKey);
+            rpcRequest.AddParameter(inputCoins);
+            rpcRequest.AddParameter(recipients);
+            rpcRequest.AddParameter(gasBudget);
+            var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);
+            return rpcResponse;
+        }
+
         public async Task<TransactionBlockBytes> Pay(AllArt.SUI.Wallets.Wallet signer, ObjectId[] inputCoins, SUIAddress[] recipients, BigInteger[] amounts, ObjectId gas, BigInteger gasBudget)
         {
             RPCRequestBase rpcRequest = new RPCRequestBase("unsafe_pay");

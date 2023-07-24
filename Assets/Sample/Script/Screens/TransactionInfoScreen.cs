@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AllArt.SUI.RPC.Response;
+using AllArt.SUI.Wallets;
 using Newtonsoft.Json;
 using SimpleScreen;
 using TMPro;
@@ -103,7 +104,7 @@ public class TransactionInfoScreen : BaseScreen {
         float gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
 
         status.text = suiTransactionBlockResponse.effects.status.status;
-        sender.text = suiTransactionBlockResponse.transaction.data.sender;
+        sender.text = Wallet.DisplaySuiAddress(suiTransactionBlockResponse.transaction.data.sender);
         network.text = "SUI";
         var feeText = (gasUsedFloat / Mathf.Pow(10, 9)).ToString("0.############");
         fee.text = $"~{feeText} SUI";

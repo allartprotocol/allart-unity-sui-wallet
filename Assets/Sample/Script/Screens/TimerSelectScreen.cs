@@ -43,6 +43,7 @@ public class TimerSelectScreen : BaseScreen {
     {
         Debug.Log(i);
         PlayerPrefs.SetFloat("timeout", times[i]);
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Autolock timer updated");
         WalletComponent.Instance.StartTimer();
         manager.GoBack();
     }

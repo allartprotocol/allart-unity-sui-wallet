@@ -68,11 +68,8 @@ public class MainWalletScreen : BaseScreen
     {
 
         walletsDropdown.ClearOptions();
-
         var wallets = WalletComponent.Instance.GetAllWallets();
-
         List<string> options = new();
-
         foreach (var wallet in wallets)
         {
             options.Add(wallet.Value.publicKey);

@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using AllArt.SUI.RPC.Response;
 using SimpleScreen;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TokenInfoScreen : BaseScreen {
 
+    public TextMeshProUGUI titleText;
     public Button receiveBtn;
     public Button sendBtn;
 
@@ -71,6 +73,7 @@ public class TokenInfoScreen : BaseScreen {
 
         coinPrice.text = "0 $";
         coinSymbol.text = coinMetadata.symbol;
+        titleText.text = coinMetadata.name;
 
         if (geckoData != null && geckoData.market_data != null) { 
             if(geckoData.market_data.current_price == null)

@@ -20,6 +20,14 @@ public class ChangePassword : BaseScreen
         change.onClick.AddListener(PasswordChange);
     }
 
+    override public void ShowScreen(object data = null)
+    {
+        base.ShowScreen(data);
+        oldPassword.text = "";
+        newPassword.text = "";
+        confirmPassword.text = "";
+    }
+
     private void PasswordChange()
     {
         if(string.IsNullOrEmpty(oldPassword.text) || string.IsNullOrEmpty(newPassword.text) || string.IsNullOrEmpty(confirmPassword.text))
@@ -55,9 +63,9 @@ public class ChangePassword : BaseScreen
             return;
         }
 
-        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Password changed successfully");
         WalletComponent.Instance.ChangePassword(oldPassword.text, newPassword.text);
         WalletComponent.Instance.SetPassword(newPassword.text);
-        GoTo("MainScreen");
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Password updated");
+        manager.GoBack();
     }
 }

@@ -21,6 +21,7 @@ public class ConfirmSendScreen : BaseScreen {
     public TextMeshProUGUI amount;
 
     public Button confirmBtn;
+    public Button cancelBtn;
     private TransferData TransferData;
 
     public Transform loaderScreen;
@@ -28,6 +29,12 @@ public class ConfirmSendScreen : BaseScreen {
     private void Start()
     {
         confirmBtn.onClick.AddListener(OnConfirm);
+        cancelBtn.onClick.AddListener(OnCancel);
+    }
+
+    private void OnCancel()
+    {
+        GoTo("MainScreen");
     }
 
     private async void OnConfirm()

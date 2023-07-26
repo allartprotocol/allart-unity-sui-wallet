@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class TransactionDoneScreen : BaseScreen
 {
     public Button done;
+    public Button viewTransactionbtn;
     public Image statusImage;
 
     public Sprite success;
@@ -20,6 +21,12 @@ public class TransactionDoneScreen : BaseScreen
     void Start()
     {
         done.onClick.AddListener(OnDone);
+        viewTransactionbtn.onClick.AddListener(OnViewTransaction);
+    }
+
+    private void OnViewTransaction()
+    {
+        throw new NotImplementedException();
     }
 
     private void OnDone()

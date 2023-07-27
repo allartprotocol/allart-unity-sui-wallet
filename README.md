@@ -1,4 +1,4 @@
-# SUI Blockchain Wallet Implementation for Unity
+# AllArt SUI Blockchain Wallet Implementation for Unity
 
 ![GitHub](https://img.shields.io/github/license/allartprotocol/allart-unity-sui-wallet)
 ![GitHub issues](https://img.shields.io/github/issues-raw/allartprotocol/allart-unity-sui-wallet)

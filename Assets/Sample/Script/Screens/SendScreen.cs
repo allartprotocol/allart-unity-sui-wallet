@@ -17,6 +17,7 @@ public class SendScreen : BaseScreen
 
     public TMP_InputField to;
     public TMP_InputField amount;
+    public TextMeshProUGUI maxAmmount;
 
     public Button continueBtn;
     public Button tokenSelectBtn;
@@ -102,11 +103,14 @@ public class SendScreen : BaseScreen
     {
         base.ShowScreen(data);
         to.text = "";
-        amount.text = "0";
-        tokenName.text = WalletComponent.Instance.currentCoinMetadata.symbol;
+        amount.text = "";
+        maxAmmount.text = "";
+        tokenName.text = $"Send {WalletComponent.Instance.currentCoinMetadata.symbol}";
         var coinType = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault().Key;
         balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, 
             coinType);
+
+        maxAmmount.text = $"Available {GetMaxBalance()} Tokens";
 
         var tokenImgComponent = GetComponentInChildren<TokenImage>();
         WalletComponent.Instance.coinImages.TryGetValue(WalletComponent.Instance.currentCoinMetadata.symbol, out Sprite image);

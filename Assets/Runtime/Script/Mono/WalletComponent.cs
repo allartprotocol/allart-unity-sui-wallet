@@ -30,6 +30,8 @@ public class WalletComponent : MonoBehaviour
     public Dictionary<string, CoinPage> coinPages {get; private set;} = new();
     public Dictionary<string, Sprite> coinImages {get; private set;} = new();
 
+    public DateTime lastUpdated {get; private set;} = DateTime.Now;
+
     // currently selected wallet
     public Wallet currentWallet {get; private set;}
     public CoinMetadata currentCoinMetadata;
@@ -446,13 +448,17 @@ public class WalletComponent : MonoBehaviour
         foreach (var coin in coinMetadatas.Keys)
         {
             var coinMetadata = coinMetadatas[coin];
-            if (this.coinGeckoData.ContainsKey(coinMetadata.symbol))
+            if (this.coinGeckoData.ContainsKey(coinMetadata.symbol) && lastUpdated.AddMinutes(5) > DateTime.Now)
                 continue;
+
+            Debug.Log("GET DATA");
+
             var coinData = await GetUSDPrice(coinMetadata);
             if (coinData != null)
             {
                 this.coinGeckoData.TryAdd(coinMetadata.symbol, coinData);
             }
+            lastUpdated = DateTime.Now;
         }
     }
 

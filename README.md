@@ -1,11 +1,11 @@
 # SUI Blockchain Wallet Implementation for Unity
 
-![GitHub](https://img.shields.io/github/license/<username>/sui-blockchain-wallet-unity)
-![GitHub issues](https://img.shields.io/github/issues-raw/<username>/sui-blockchain-wallet-unity)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/<username>/sui-blockchain-wallet-unity)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/<username>/sui-blockchain-wallet-unity)
+![GitHub](https://img.shields.io/github/license/allartprotocol/allart-unity-sui-wallet)
+![GitHub issues](https://img.shields.io/github/issues-raw/allartprotocol/allart-unity-sui-wallet)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/allartprotocol/allart-unity-sui-wallet)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/allartprotocol/allart-unity-sui-wallet)
 
-Welcome to the SUI Blockchain Wallet Implementation for Unity. This Unity package provides a wallet implementation for the SUI Blockchain, enabling straightforward integration of the SUI Blockchain into your Unity projects.
+Welcome to the AllArt SUI Blockchain Wallet Implementation for Unity. This Unity package provides a wallet implementation for the SUI Blockchain, enabling straightforward integration of the SUI Blockchain into your Unity projects.
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ To install this package, follow these steps:
 1. Open your Unity project.
 2. Open the package manager `Window -> Package Manager`
 3. Click on `+` and then `Add package from git URL...`
-4. Enter `https://github.com/<username>/sui-blockchain-wallet-unity.git`
+4. Enter `https://github.com/allartprotocol/allart-unity-sui-wallet.git`
 
 Unity should download and import the package automatically.
 

@@ -65,7 +65,6 @@ namespace AllArt.SUI.Wallets
 
         public static byte[] GetPrivateKeyFromSuiSecret(string suiSecret)
         {
-            // Convert the suiSecret string to a byte array
             suiSecret = suiSecret.Replace("0x", "");
             byte[] hashBytes = new byte[32];
             for (int i = 0; i < 32; i++)
@@ -73,13 +72,9 @@ namespace AllArt.SUI.Wallets
                 hashBytes[i] = Convert.ToByte(suiSecret.Substring(i * 2, 2), 16);
             }
 
-            // Create a new byte array to hold the full private key
             byte[] privateKey = new byte[64];
-
-            // Copy the first 32 bytes of the hash to the first 32 bytes of the private key
             Array.Copy(hashBytes, 0, privateKey, 0, 32);
 
-            // Generate the second 32 bytes of the private key using a random number generator
             using (var rng = new RNGCryptoServiceProvider())
             {
                 rng.GetBytes(privateKey, 32, 32);

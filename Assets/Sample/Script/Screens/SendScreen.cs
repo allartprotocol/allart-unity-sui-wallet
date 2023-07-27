@@ -103,14 +103,14 @@ public class SendScreen : BaseScreen
         base.ShowScreen(data);
         to.text = "";
         amount.text = "0";
-        tokenName.text = WalletComponent.Instance.currentCoinMetadata.name;
+        tokenName.text = WalletComponent.Instance.currentCoinMetadata.symbol;
         var coinType = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault().Key;
         balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, 
             coinType);
 
         var tokenImgComponent = GetComponentInChildren<TokenImage>();
         WalletComponent.Instance.coinImages.TryGetValue(WalletComponent.Instance.currentCoinMetadata.symbol, out Sprite image);
-        tokenImgComponent.Init(image, WalletComponent.Instance.currentCoinMetadata.name);
+        tokenImgComponent.Init(image, WalletComponent.Instance.currentCoinMetadata.symbol);
     }
 
     override public void HideScreen()

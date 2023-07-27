@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class MainWalletScreen : BaseScreen
 {
-    public TextMeshProUGUI walletPubText;
+    public CopyButton walletPubText;
     public TextMeshProUGUI walletBalanceText;
     public TextMeshProUGUI percentageText;
 
@@ -66,16 +66,22 @@ public class MainWalletScreen : BaseScreen
 
     void PopulateWalletsDropdown()
     {
-
+        int selectedIndex = 0;
         walletsDropdown.ClearOptions();
         var wallets = WalletComponent.Instance.GetAllWallets();
         List<string> options = new();
         foreach (var wallet in wallets)
         {
-            options.Add(wallet.Value.publicKey);
+            if (wallet.Value.publicKey == WalletComponent.Instance.currentWallet.publicKey)
+            {
+                Debug.Log("Found current wallet: " + wallet.Value.publicKey + " at index: " + options.Count);
+                selectedIndex = options.Count;
+            }
+            options.Add($"{options.Count + 1}. {wallet.Value.displayAddress}");
         }
 
         walletsDropdown.AddOptions(options);
+        walletsDropdown.value = selectedIndex;
     }
 
     // <summary>
@@ -129,6 +135,7 @@ public class MainWalletScreen : BaseScreen
     private async void OnWalletSelected(int value)
     {
         WalletComponent.Instance.SetWalletByIndex(value);
+        Debug.Log("Selected wallet: " + WalletComponent.Instance.currentWallet.publicKey);
         await UpdateWalletData();
     }
 
@@ -151,10 +158,10 @@ public class MainWalletScreen : BaseScreen
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
 
-        walletPubText.text = wallet.publicKey;
+        walletPubText.SetText(wallet.publicKey, wallet.displayAddress);
 
-        walletBalanceText.text = "0";
-        percentageText.text = "0%";
+        walletBalanceText.text = "$0";
+        percentageText.text = "";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
         sendBtn.interactable = balances.Count > 0;
@@ -228,8 +235,8 @@ public class MainWalletScreen : BaseScreen
     private async void UpdateBalance()
     {
         Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet, "0x2::sui::SUI");
-        percentageText.text = "0%";
-        walletBalanceText.text = "0";
+        percentageText.text = "";
+        walletBalanceText.text = "$0";
         if (!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
             return;
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];

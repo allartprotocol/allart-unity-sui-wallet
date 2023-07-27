@@ -97,7 +97,6 @@ namespace SimpleScreen {
 
         public void ShowScreen(string name, object data = default)
         {
-            Debug.Log(JsonConvert.SerializeObject(data as SuiTransactionBlockResponse));
             currentScreen?.HideScreen();
             previousScreen = currentScreen;
             currentScreen = screensDict[name];

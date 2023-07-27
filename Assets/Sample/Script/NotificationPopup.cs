@@ -9,11 +9,16 @@ public class NotificationPopup : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
 
-    internal void SetInfo(Color color, string message)
+    internal void SetInfo(Color color, string message, Sprite sprite = null)
     {
         titleText.text = message;
-        GetComponentInChildren<Image>().color = color;
-        //GetComponentInChildren<UITween>().TweenPosition(Vector2.zero);
+        if(sprite != null)
+        {
+            GetComponentInChildren<Image>().sprite = sprite;
+        }
+        else{
+            GetComponentInChildren<Image>().color = color;
+        }
         SetDestroyTimer();
     }
 
@@ -23,8 +28,6 @@ public class NotificationPopup : MonoBehaviour
 
     IEnumerator DestroyAfter() {
         yield return new WaitForSeconds(4);
-        //GetComponentInChildren<UITween>().TweenPosition(GetComponentInChildren<UITween>().startPosition);
-        //yield return new WaitForSeconds(0.2f);
         Destroy(gameObject);
     }
 }

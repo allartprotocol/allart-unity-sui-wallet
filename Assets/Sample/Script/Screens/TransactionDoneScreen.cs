@@ -1,3 +1,5 @@
+using AllArt.SUI.RPC.Response;
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System;
 using System.Collections;
@@ -16,6 +18,9 @@ public class TransactionDoneScreen : BaseScreen
     public Sprite fail;
 
     public TextMeshProUGUI statusText;
+    public TextMeshProUGUI messageText;
+
+    private TransferData status;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +31,19 @@ public class TransactionDoneScreen : BaseScreen
 
     private void OnViewTransaction()
     {
-        throw new NotImplementedException();
+        if(status == null)
+        {
+            return;
+        }
+        string network = WalletComponent.Instance.nodeType switch
+        {
+            ENodeType.MainNet => "mainnet",
+            ENodeType.TestNet => "testnet",
+            _ => "devnet",
+        };
+
+        //open browser with the transaction hash
+        Application.OpenURL($"https://suiexplorer.com/txblock/{status.response.result.digest}?network={network}");
     }
 
     private void OnDone()
@@ -37,18 +54,40 @@ public class TransactionDoneScreen : BaseScreen
     public override void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
-        var status = (bool)data;
-
-        if(status)
-        {
-            statusImage.sprite = success;
-            statusText.text = "Sent";
+        status = (TransferData)data;
+        viewTransactionbtn.gameObject.SetActive(true);
+        try{
+            if(status == null)
+            {
+                statusText.text = "Failed";
+                statusImage.sprite = fail;
+                // messageText.text = $"An error occured while trying to send {status.amount} {status.coin.symbol} to {status.to}";
+                viewTransactionbtn.gameObject.SetActive(false);
+                return;
+            }
+            else
+            {
+                if(status.response.result.effects.status.status == "failure")
+                {
+                    statusImage.sprite = fail;
+                    statusText.text = "Failed";
+                    messageText.text = $"An error occured while trying to send {status.amount} {status.coin.symbol} to {Wallet.DisplaySuiAddress(status.to)}";
+                    return;
+                }
+                else{
+                    statusImage.sprite = success;
+                    statusText.text = "Sent";
+                    messageText.text = $"{status.amount} {status.coin.symbol} was successfully sent to {Wallet.DisplaySuiAddress(status.to)}";
+                }                
+            }
         }
-        else
+        catch(Exception e)
         {
-            statusText.text = "Failed";
             statusImage.sprite = fail;
+            statusText.text = "Failed";
+            messageText.text = $"An error occured while trying to send {status.amount} {status.coin.symbol} to {Wallet.DisplaySuiAddress(status.to)}";
         }
+        
     }
 
 }

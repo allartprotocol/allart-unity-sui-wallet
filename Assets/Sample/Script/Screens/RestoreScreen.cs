@@ -103,7 +103,7 @@ public class RestoreScreen : BaseScreen
 
     private void OnContinue()
     {
-        string mnemonic = GetMnemonic();
+        string mnemonic = mnemonicField.text;
 
         if(string.IsNullOrEmpty(mnemonic))
         {

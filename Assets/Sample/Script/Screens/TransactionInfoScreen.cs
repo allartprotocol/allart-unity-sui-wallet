@@ -98,9 +98,9 @@ public class TransactionInfoScreen : BaseScreen {
         date.text = dateTime.ToString("MMMM d, yyyy 'at' h:mm tt");
 
         if (suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
-            type.text = "Transaction";
+            type.text = "Sent";
         else
-            type.text = "Receive";
+            type.text = "Transaction";
         float gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
 
         status.text = suiTransactionBlockResponse.effects.status.status;

@@ -47,12 +47,12 @@ public class WebsocketController: MonoBehaviour
         {
             // Reading a plain text message
             var message = System.Text.Encoding.UTF8.GetString(bytes);
-            Debug.Log("OnMessage! " + message);
+            // Debug.Log("OnMessage! " + message);
             var response = JsonConvert.DeserializeObject<JsonRpcResponse<string>>(message);
             if(response.result != null)
             {
                 subId = ulong.TryParse(response.result, out ulong id) ? id : 0;
-                Debug.Log(subId);
+                // Debug.Log(subId);
             }
             onWSEvent?.Invoke();
         };
@@ -80,7 +80,7 @@ public class WebsocketController: MonoBehaviour
             EventFilter filter = new("suix_subscribeTransaction", new List<object>{filterParams}); //{filterParams}
 
             string filterString = JsonConvert.SerializeObject(filter);
-            Debug.Log(filterString);
+            // Debug.Log(filterString);
             await websocket.SendText(filterString);
         }
     }
@@ -89,7 +89,6 @@ public class WebsocketController: MonoBehaviour
     {
         if (websocket.State == WebSocketState.Open)
         {
-            Debug.Log(subId);
             if(subId != 0)
                 Unsubscribe(subId.ToString());
         }

@@ -21,6 +21,10 @@ public class InfoPopupManager : MonoBehaviour
     public Color errorColor;
     public Color infoColor;
 
+    public Sprite warningSprite;
+    public Sprite errorSprite;
+    public Sprite infoSprite;
+
     private void Awake()
     {
         if (instance == null)
@@ -40,13 +44,13 @@ public class InfoPopupManager : MonoBehaviour
         switch (type)
         {
             case InfoType.Info:
-                notif.GetComponent<NotificationPopup>().SetInfo(infoColor, message);
+                notif.GetComponent<NotificationPopup>().SetInfo(infoColor, message, infoSprite);
                 break;
             case InfoType.Warning:
-                notif.GetComponent<NotificationPopup>().SetInfo(warningColor, message);
+                notif.GetComponent<NotificationPopup>().SetInfo(warningColor, message, warningSprite);
                 break;
             case InfoType.Error:
-                notif.GetComponent<NotificationPopup>().SetInfo(errorColor, message);
+                notif.GetComponent<NotificationPopup>().SetInfo(errorColor, message, errorSprite);
                 break;
             default:
                 break;

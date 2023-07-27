@@ -193,9 +193,9 @@ namespace AllArt.SUI.Wallets
             var signature = Sign(digest);
 
             var list = new List<byte>
-        {
-            0x00
-        };
+            {
+                0x00
+            };
             list.AddRange(signature);
             list.AddRange(keyPair.publicKey);
 

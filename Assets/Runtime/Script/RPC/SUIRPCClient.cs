@@ -156,7 +156,7 @@ namespace AllArt.SUI.RPC
             return rpcResponse.result;
         }
 
-        public async Task<JsonRpcResponse<SuiTransactionBlockResponse>> ExecuteTransactionBlock(string txBytes, IEnumerable<string> serializedSignatures, ObjectDataOptions options, ExecuteTransactionRequestType requestType)
+        public async Task<JsonRpcResponse<SuiTransactionBlockResponse>> ExecuteTransactionBlock(string txBytes, IEnumerable<string> serializedSignatures, TransactionBlockResponseOptions options, ExecuteTransactionRequestType requestType)
         {
             RPCRequestBase rpcRequest = new("sui_executeTransactionBlock");
             rpcRequest.AddParameter(txBytes);
@@ -178,7 +178,6 @@ namespace AllArt.SUI.RPC
 
         public async Task<JsonRpcResponse<TransactionBlockBytes>> PaySui(AllArt.SUI.Wallets.Wallet signer, List<string> inputCoins, List<string> recipients, List<string> amounts, string gasBudget)
         {
-
             RPCRequestBase rpcRequest = new("unsafe_paySui");
             rpcRequest.AddParameter(signer.publicKey);
             rpcRequest.AddParameter(inputCoins);

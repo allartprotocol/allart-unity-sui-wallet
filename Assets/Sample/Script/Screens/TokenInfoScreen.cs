@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AllArt.SUI.RPC.Response;
+using Newtonsoft.Json;
 using SimpleScreen;
 using TMPro;
 using UnityEngine;
@@ -63,6 +64,7 @@ public class TokenInfoScreen : BaseScreen {
             return;
         }
 
+
         coinMetadata = coinData.Item1;
         geckoData = coinData.Item2;
         balance = coinData.Item3;
@@ -70,6 +72,7 @@ public class TokenInfoScreen : BaseScreen {
         this.coinMetadata = coinMetadata;
         this.balance = balance;
         this.manager = manager;
+        Debug.Log(JsonConvert.SerializeObject(coinMetadata));
 
         coinPrice.text = "0 $";
         coinSymbol.text = coinMetadata.symbol;
@@ -86,11 +89,12 @@ public class TokenInfoScreen : BaseScreen {
 
         var tokenImage = GetComponentInChildren<TokenImage>();
         WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
-        tokenImage.Init(image, coinMetadata.name);
+        tokenImage.Init(image, coinMetadata.symbol);
     }
 
     private void OnSend()
     {
+        WalletComponent.Instance.currentCoinMetadata = coinMetadata;
         GoTo("SendScreen");
     }
 

@@ -24,7 +24,6 @@ public class EventObject : MonoBehaviour
 
     public void InitializeObject(SuiTransactionBlockResponse eventPage, SimpleScreenManager screenManager)
     {
-        Debug.Log(JsonConvert.SerializeObject(eventPage));
         this.screenManager = screenManager;
         transactionButton = GetComponent<Button>();
         this.eventPage = eventPage;
@@ -34,9 +33,9 @@ public class EventObject : MonoBehaviour
         });
 
         if(eventPage.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
-            nameTxt.text = "Transaction";
+            nameTxt.text = "Sent";
         else
-            nameTxt.text = "Receive";
+            nameTxt.text = "Transaction";
 
         if(eventPage.transaction.data.transaction.kind == null)
             date.text = "Unknown";

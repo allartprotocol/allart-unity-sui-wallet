@@ -5,5 +5,6 @@ namespace AllArt.SUI.RPC.Response {
         public string amount;
         public CoinMetadata coin;
         public bool transferAll;
+        public JsonRpcResponse<SuiTransactionBlockResponse> response;
     }
 }

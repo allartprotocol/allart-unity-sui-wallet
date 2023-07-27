@@ -7,10 +7,11 @@ using UnityEngine.UI;
 public class CopyButton : MonoBehaviour
 {
     public TextMeshProUGUI text;
+    private string textValue;
     private Button btn;
     public void Copy()
     {
-        GUIUtility.systemCopyBuffer = text.text;
+        GUIUtility.systemCopyBuffer = textValue;
         InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Copied to clipboard");
     }
     
@@ -20,9 +21,9 @@ public class CopyButton : MonoBehaviour
         btn.onClick.AddListener(Copy);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetText(string text, string displayText)
     {
-        
+        this.textValue = text;
+        this.text.text = displayText;
     }
 }

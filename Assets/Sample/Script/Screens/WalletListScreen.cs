@@ -60,6 +60,8 @@ public class WalletListScreen : BaseScreen
             walletListObject.SetWallet(wallet.Value, wallet.Key, manager);
             walletListObjects.Add(walletListObject);
         }
+
+        addWallet.transform.SetAsLastSibling();
     }
 
     public override void ShowScreen(object data = null)

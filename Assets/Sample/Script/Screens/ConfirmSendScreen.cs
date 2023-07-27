@@ -39,27 +39,115 @@ public class ConfirmSendScreen : BaseScreen {
 
     private async void OnConfirm()
     {
-        bool done = false;
-        if(WalletComponent.Instance.currentCoinMetadata.symbol == "SUI")
-        {
-            if(TransferData.transferAll)
-                done = await PayAllSui();
+        loaderScreen.gameObject.SetActive(true);
+        JsonRpcResponse<SuiTransactionBlockResponse> completedTransaction = null;
+        try{
+            if(WalletComponent.Instance.currentCoinMetadata.symbol == "SUI")
+            {
+                if(TransferData.transferAll)
+                    completedTransaction = await PayAllSui();
+                else
+                    completedTransaction = await PaySui();
+            }
             else
-                done = await PaySui();
+            {
+                completedTransaction = await PayOtherCurrency();
+            }
         }
-        else
+        catch(Exception e)
         {
-            done = await PayOtherCurrency();
+            Debug.Log(e);
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction was not successful ");
         }
-        GoTo("TransactionDone", done);
+        loaderScreen.gameObject.SetActive(false);
+
+        TransferData finalData = TransferData;
+        finalData.response = completedTransaction;
+
+        Debug.Log(JsonConvert.SerializeObject(completedTransaction));
+        GoTo("TransactionDone", TransferData);
     }
 
     /// <summary>
     /// Sends a payment in SUI currency.
     /// </summary>
     /// <returns>A task that represents the asynchronous payment operation.</returns>
-    private async System.Threading.Tasks.Task<bool> PaySui()
+    private async System.Threading.Tasks.Task<JsonRpcResponse<SuiTransactionBlockResponse>> PaySui()
     {
+        JsonRpcResponse<SuiTransactionBlockResponse> transaction = null;
+        try {
+            var res_pay = await CreatePaySuiTransaction();
+
+            if(res_pay == null || res_pay.result == null)
+            {
+                string msg = res_pay != null ? res_pay.error.message : "Transaction failed";
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, msg);
+            }
+
+            if(res_pay.error != null)
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + res_pay.error.message);
+            }
+
+            var signature = WalletComponent.Instance.currentWallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.result.txBytes)));
+
+            transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.result.txBytes,
+                new string[] { signature }, new TransactionBlockResponseOptions(), ExecuteTransactionRequestType.WaitForLocalExecution);
+
+            if(transaction.error != null && transaction.error.code != 0)
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
+            }
+        }
+        catch(Exception e)
+        {
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
+        }
+
+        return transaction;
+    }
+
+    private async System.Threading.Tasks.Task<JsonRpcResponse<SuiTransactionBlockResponse>> PayAllSui()
+    {        
+        JsonRpcResponse<SuiTransactionBlockResponse> transaction = null;
+        try {
+
+            JsonRpcResponse<TransactionBlockBytes> res_pay = await CreatePayAllSuiTransaction();
+
+            if(res_pay == null || res_pay.result == null)
+            {
+                string msg = res_pay != null ? res_pay.error.message : "Transaction failed";
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, msg);
+            }
+
+            if(res_pay.error != null)
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + res_pay.error.message);
+            }
+
+            var signature = WalletComponent.Instance.currentWallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.result.txBytes)));
+
+            transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.result.txBytes,
+                new string[] { signature }, new TransactionBlockResponseOptions(), ExecuteTransactionRequestType.WaitForLocalExecution);
+
+            if(transaction.error != null && transaction.error.code != 0)
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
+        }
+
+        
+        loaderScreen.gameObject.SetActive(false);
+        return transaction;
+    }
+
+    public async Task<JsonRpcResponse<TransactionBlockBytes>> CreatePaySuiTransaction(){
+
         var wallet = WalletComponent.Instance.currentWallet;
 
         ObjectResponseQuery query = new ObjectResponseQuery();
@@ -76,14 +164,12 @@ public class ConfirmSendScreen : BaseScreen {
         query.options = options;
         ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
 
-        loaderScreen.gameObject.SetActive(true);
         try {
             var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
 
             if(res == null || res.data.Count == 0)
             {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-                return false;
+                return null;
             }
 
             List<string> objects = new();
@@ -95,46 +181,17 @@ public class ConfirmSendScreen : BaseScreen {
 
             var res_pay = await WalletComponent.Instance.PaySui(wallet, objects, new List<string>() {TransferData.to},
                 new List<string>() {amount.ToString()}, SUIConstantVars.GAS_BUDGET);
+            return res_pay;
 
-            if(res_pay == null || res_pay.result == null)
-            {
-                string msg = res_pay != null ? res_pay.error.message : "Transaction failed";
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, msg);
-                loaderScreen.gameObject.SetActive(false);
-                return false;
-            }
-
-            if(res_pay.error != null)
-            {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + res_pay.error.message);
-                loaderScreen.gameObject.SetActive(false);
-                return false;
-            }
-
-            var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.result.txBytes)));
-
-            var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.result.txBytes,
-                new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
-
-            if(transaction.error != null && transaction.error.code != 0)
-            {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
-                loaderScreen.gameObject.SetActive(false);
-                return false;
-            }
         }
         catch(Exception e)
         {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
+            return null;
         }
-
-        
-        loaderScreen.gameObject.SetActive(false);
-        return true;
     }
 
-    private async System.Threading.Tasks.Task<bool> PayAllSui()
-    {
+    public async Task<JsonRpcResponse<TransactionBlockBytes>> CreatePayAllSuiTransaction(){
+
         var wallet = WalletComponent.Instance.currentWallet;
 
         ObjectResponseQuery query = new ObjectResponseQuery();
@@ -151,14 +208,12 @@ public class ConfirmSendScreen : BaseScreen {
         query.options = options;
         ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
 
-        loaderScreen.gameObject.SetActive(true);
         try {
             var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
 
             if(res == null || res.data.Count == 0)
             {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-                return false;
+                return null;
             }
 
             List<string> objects = new();
@@ -169,132 +224,11 @@ public class ConfirmSendScreen : BaseScreen {
             }
 
             var res_pay = await WalletComponent.Instance.PayAllSui(wallet, objects, TransferData.to, SUIConstantVars.GAS_BUDGET);
-
-            if(res_pay == null || res_pay.result == null)
-            {
-                string msg = res_pay != null ? res_pay.error.message : "Transaction failed";
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, msg);
-                loaderScreen.gameObject.SetActive(false);
-                return false;
-            }
-
-            if(res_pay.error != null)
-            {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + res_pay.error.message);
-                loaderScreen.gameObject.SetActive(false);
-                return false;
-            }
-
-            var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.result.txBytes)));
-
-            var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.result.txBytes,
-                new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
-
-            if(transaction.error != null && transaction.error.code != 0)
-            {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
-                loaderScreen.gameObject.SetActive(false);
-                return false;
-            }
+            return res_pay;
         }
         catch(Exception e)
         {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-        }
-
-        
-        loaderScreen.gameObject.SetActive(false);
-        return true;
-    }
-
-    public async Task<string> CreatePaySuiTransaction(){
-
-        var wallet = WalletComponent.Instance.currentWallet;
-
-        ObjectResponseQuery query = new ObjectResponseQuery();
-
-        var filter = new MatchAllDataFilter();
-        filter.MatchAll = new List<ObjectDataFilter>
-        {
-            new StructTypeDataFilter() { StructType = "0x2::coin::Coin<0x2::sui::SUI>" },
-            new OwnerDataFilter() { AddressOwner = wallet.publicKey }
-        };
-        query.filter = filter;
-
-        ObjectDataOptions options = new();
-        query.options = options;
-        ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
-
-        try {
-            var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
-
-            if(res == null || res.data.Count == 0)
-            {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-                return "";
-            }
-
-            List<string> objects = new();
-
-            foreach(var data in res.data)
-            {
-                objects.Add(data.data.objectId);
-            }
-
-            var res_pay = await WalletComponent.Instance.PaySui(wallet, objects, new List<string>() {TransferData.to},
-                new List<string>() {amount.ToString()}, SUIConstantVars.GAS_BUDGET);
-            return res_pay.result.txBytes;
-
-        }
-        catch(Exception e)
-        {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-            return "";
-        }
-    }
-
-    public async Task<string> CreatePayAllSuiTransaction(){
-
-        var wallet = WalletComponent.Instance.currentWallet;
-
-        ObjectResponseQuery query = new ObjectResponseQuery();
-
-        var filter = new MatchAllDataFilter();
-        filter.MatchAll = new List<ObjectDataFilter>
-        {
-            new StructTypeDataFilter() { StructType = "0x2::coin::Coin<0x2::sui::SUI>" },
-            new OwnerDataFilter() { AddressOwner = wallet.publicKey }
-        };
-        query.filter = filter;
-
-        ObjectDataOptions options = new();
-        query.options = options;
-        ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
-
-        try {
-            var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
-
-            if(res == null || res.data.Count == 0)
-            {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-                return "";
-            }
-
-            List<string> objects = new();
-
-            foreach(var data in res.data)
-            {
-                objects.Add(data.data.objectId);
-            }
-
-            var res_pay = await WalletComponent.Instance.PayAllSui(wallet, objects, TransferData.to, SUIConstantVars.GAS_BUDGET);
-            return res_pay.result.txBytes;
-
-        }
-        catch(Exception e)
-        {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-            return "";
+            return null;
         }
     }
 
@@ -302,62 +236,19 @@ public class ConfirmSendScreen : BaseScreen {
     /// Sends a payment in a currency other tokens.
     /// </summary>
     /// <returns>A task that represents the asynchronous payment operation.</returns>
-    private async System.Threading.Tasks.Task<bool> PayOtherCurrency()
+    private async System.Threading.Tasks.Task<JsonRpcResponse<SuiTransactionBlockResponse>> PayOtherCurrency()
     {
-        var wallet = WalletComponent.Instance.currentWallet;
+        var res_pay = await CreatePayOtherCurrenciesTransaction();
 
-        string type = WalletComponent.Instance.coinMetadatas.FirstOrDefault(x => x.Value == WalletComponent.Instance.currentCoinMetadata).Key;
-        Page_for_SuiObjectResponse_and_ObjectID ownedCoins = await WalletComponent.Instance.GetOwnedObjectsOfType(wallet, type);
+        var signature = WalletComponent.Instance.currentWallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.result.txBytes)));
 
-        if (ownedCoins == null || ownedCoins.data.Count == 0)
-        {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-            return false;
-        }
+        JsonRpcResponse<SuiTransactionBlockResponse> transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.result.txBytes,
+            new string[] { signature }, new TransactionBlockResponseOptions(), ExecuteTransactionRequestType.WaitForLocalExecution);
 
-        List<string> ownedCoinObjectIds = new();
-
-        foreach (var data in ownedCoins.data)
-        {
-            ownedCoinObjectIds.Add(data.data.objectId);
-        }
-
-        ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
-        var res_pay = await WalletComponent.Instance.Pay(wallet,
-            ownedCoinObjectIds.ToArray(),
-            new string[] { TransferData.to },
-            new string[] { amount.ToString() },
-            null,
-            SUIConstantVars.GAS_BUDGET);
-
-        if (res_pay == null || res_pay.result == null)
-        {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-            loaderScreen.gameObject.SetActive(false);
-            return false;
-        }
-
-        if(res_pay.error != null)
-        {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + res_pay.error.message);
-            return false;
-        }
-
-        var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.result.txBytes)));
-
-        var transaction = await WalletComponent.Instance.client.ExecuteTransactionBlock(res_pay.result.txBytes,
-            new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
-
-        if(transaction.error != null && transaction.error.code != 0)
-        {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed: " + transaction.error.message);
-            return false;
-        }
-        loaderScreen.gameObject.SetActive(false);
-        return true;
+        return transaction;
     }
 
-    public async Task<string> CreatePayOtherCurrenciesTransaction(){
+    public async Task<JsonRpcResponse<TransactionBlockBytes>> CreatePayOtherCurrenciesTransaction(){
             
             var wallet = WalletComponent.Instance.currentWallet;
     
@@ -366,8 +257,7 @@ public class ConfirmSendScreen : BaseScreen {
     
             if (ownedCoins == null || ownedCoins.data.Count == 0)
             {
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-                return "";
+                return null;
             }
     
             List<string> ownedCoinObjectIds = new();
@@ -388,37 +278,44 @@ public class ConfirmSendScreen : BaseScreen {
                     SUIConstantVars.GAS_BUDGET);
             }
             catch (Exception e){
-                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
-                return "";
+                return null;
             }
 
-            return res_pay != null ? res_pay.result.txBytes : "";
+            return res_pay;
     }
 
     public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+        loaderScreen.gameObject.SetActive(true);
         confirmBtn.interactable = false;
+
         string feeAmount = await WalletComponent.Instance.GetReferenceGasPrice();
         float feeAmountFloat = float.Parse(feeAmount) / Mathf.Pow(10, 9);
         if (data is TransferData confirmSendData)
         {
             TransferData = confirmSendData;
-            to.text = confirmSendData.to;
+            to.text = Wallet.DisplaySuiAddress(confirmSendData.to);
             amount.text = $"{confirmSendData.amount} {confirmSendData.coin.symbol}";
             fee.text = $"{feeAmountFloat:0.#########} SUI";
         }
-        var res = await TryRunTransaction(TransferData.transferAll);
 
-        if(res != null){
-            float gasUsed = CalculateGasUsed(res);
-            float gasUsedInSUI = gasUsed / Mathf.Pow(10, 9);
-            fee.text = $"{gasUsedInSUI:0.#########} SUI";
+        SuiTransactionBlockResponse res = null;
+        try{
+            res = await TryRunTransaction(TransferData.transferAll);
+
+            if(res != null){
+                float gasUsed = CalculateGasUsed(res);
+                float gasUsedInSUI = gasUsed / Mathf.Pow(10, 9);
+                fee.text = $"{gasUsedInSUI:0.#########} SUI";
+            }
         }
-        else{
-            GoTo("MainScreen");
+        catch(Exception e){
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction simulation failed");
         }
-        confirmBtn.interactable = res != null;        
+
+        confirmBtn.interactable = res != null;  
+        loaderScreen.gameObject.SetActive(false);      
     }
 
     private float CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
@@ -440,15 +337,23 @@ public class ConfirmSendScreen : BaseScreen {
     }
 
     async  Task<SuiTransactionBlockResponse> TryRunTransaction(bool sendMax = false){
-        string transactionBytes;
+        JsonRpcResponse<TransactionBlockBytes> transaction;
         if (WalletComponent.Instance.currentCoinMetadata.symbol == "SUI"){
             if(sendMax)
-                transactionBytes = await CreatePayAllSuiTransaction();
+                transaction = await CreatePayAllSuiTransaction();
             else
-                transactionBytes = await CreatePaySuiTransaction();
+                transaction = await CreatePaySuiTransaction();
         }
         else{
-            transactionBytes = await CreatePayOtherCurrenciesTransaction();
+            transaction = await CreatePayOtherCurrenciesTransaction();
+        }
+
+        string transactionBytes = transaction.result.txBytes;
+
+        if(transactionBytes == null)
+        {
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
+            return null;
         }
 
         var res = await WalletComponent.Instance.DryRunTransaction(transactionBytes);
@@ -457,8 +362,17 @@ public class ConfirmSendScreen : BaseScreen {
             string msg;
             if (res != null && res.error != null)
                 msg = res.error.message;
-            else if(res != null && res.result != null && res.result.effects != null && res.result.effects.status.error != null)
-                msg = res.result.effects.status.error;
+            else if(res != null && res.result != null && res.result.effects != null && res.result.effects.status.error != null){
+                string error = res.result.effects.status.error;
+                if(error.Contains("InsufficientCoinBalance")){
+                    msg = "Insufficient SUI to cover transaction fee";
+                }
+                else{
+                    msg = res.result.effects.status.error;
+                }
+
+
+            }
             else
                 msg = "Transaction simulation failed";
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, msg);

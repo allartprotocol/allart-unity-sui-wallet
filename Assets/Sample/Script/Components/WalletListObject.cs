@@ -24,7 +24,7 @@ public class WalletListObject : MonoBehaviour
         this.wallet = wallet;
         this.walletName = walletName;
         walletNameTxt.text = walletName;
-        walletAddressTxt.text = wallet.publicKey;
+        walletAddressTxt.text = wallet.displayAddress;
         button.onClick.AddListener(OnClick);
     }
 

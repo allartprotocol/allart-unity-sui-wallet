@@ -31,13 +31,29 @@ To install this package, follow these steps:
 1. Open your Unity project.
 2. Open the package manager `Window -> Package Manager`
 3. Click on `+` and then `Add package from git URL...`
-4. Enter `https://github.com/allartprotocol/allart-unity-sui-wallet.git`
+4. Enter `https://github.com/allartprotocol/allart-unity-sui-wallet.git#upm`
 
 Unity should download and import the package automatically.
 
 ## Usage
 
-_To be filled_
+After package has been imported, import prefabs from samples by following these steps:
+
+1. Go to Package Manager
+2. Find AllArt Unity SUI Wallet in the list of packages added to your project.
+3. Under Samples you will find Wallet Implementation sample.
+4. Import it.
+5. After that you can simply drag wallet prefab into your scene.
+
+Wallet implementation has all the features you can expect from any wallet and is more than enough for kick start your project.
+Most of the functionalities are easily accessible from the WalletComponent.cs. Even if you do not want to use provided interface you can create you implementation around it.
+
+Wallets are saved localy by saving its mnemonic phrase encrypted with provided password. If you Want to add new wallet you can do that through interface or externaly:
+
+```c#
+WalletComponent.Instance.CreateWallet(this.mnemonic, password);
+
+```
 
 ## Development
 
@@ -63,4 +79,7 @@ This project is licensed under the Open Source License - see the [LICENSE.md](LI
 
 ## Acknowledgments
 
-_To be filled_
+Packages used for this project:
+1. https://www.bouncycastle.org/
+2. https://github.com/somdoron/NaCl.net.git
+3. https://github.com/endel/NativeWebSocket.git

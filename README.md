@@ -60,8 +60,37 @@ Restoring saved wallets:
 ```c#
 string password = "1234";
 WalletComponent.Instance.RestoreAllWallets(password);
-Wallet = WalletComponent.Instance.GetWalletByIndex(0);
+Wallet wallet = WalletComponent.Instance.GetWalletByIndex(0);
 ```
+Most used RPC methods are implemented and accessible from the WalletComponent script as well as the websocket subscriptios for currently active wallet.
+
+If you are in need of extending wallet with new screen it is simple as:
+
+1. Creating user interface for the page
+2. Creating MonoBehaviour script that inherits BaseScreen class and attaching it to the parent of the UI.
+
+```c#
+public class ChangePassword : BaseScreen
+{
+    override public void ShowScreen(object data = null)
+    {
+        base.ShowScreen(data);
+    }
+
+    public override void HideScreen()
+    {
+        base.HideScreen();
+    }
+}
+```
+   
+3. Add new screen to the list of screens in SimpleScreenManager.
+4. To go to the next page you simply call GoTo method and pass screen name. Screen name is the name of the game object that the new script is attached to.
+   ```c#
+     GoTo("ImportPrivateKeyScreen");
+   ```
+
+
 
 ## Development
 

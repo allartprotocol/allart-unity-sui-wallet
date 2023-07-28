@@ -1,0 +1,17 @@
+{
+	"name": "com.allart.unity_sui_wallet",
+	"version": "1.0.0",
+	"unity": "2019.4",
+	"displayName": "AllArt Unity SUI Wallet",    	
+	"description": "Unity SUI Wallet",
+	"samples": [
+       	{
+            "displayName": "Wallet Implementation",
+            "description": "Contains simple implementation of Unity SUI Wallet",
+            "path": "Samples~/WalletImplementation"
+        }],
+	"dependencies":{
+		"com.unity.nuget.newtonsoft-json": "3.2.1",
+		"com.unity.textmeshpro": "3.0.6"
+	}
+}

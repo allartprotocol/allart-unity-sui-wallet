@@ -37,7 +37,31 @@ Unity should download and import the package automatically.
 
 ## Usage
 
-_To be filled_
+After package has been imported, import prefabs from samples by following these steps:
+
+1. Go to Package Manager
+2. Find AllArt Unity SUI Wallet in the list of packages added to your project.
+3. Under Samples you will find Wallet Implementation sample.
+4. Import it.
+5. After that you can simply drag wallet prefab into your scene.
+
+Wallet implementation has all the features you can expect from any wallet and is more than enough for kick start your project.
+Most of the functionalities are easily accessible from the WalletComponent.cs. Even if you do not want to use provided interface you can create you implementation around it.
+
+Wallets are saved localy by saving its mnemonic phrase encrypted with provided password. If you Want to add new wallet you can do that through interface or externaly:
+
+```c#
+WalletComponent.Instance.CreateWallet(this.mnemonic, password);
+
+```
+
+Restoring saved wallets:
+
+```c#
+string password = "1234";
+WalletComponent.Instance.RestoreAllWallets(password);
+Wallet = WalletComponent.Instance.GetWalletByIndex(0);
+```
 
 ## Development
 

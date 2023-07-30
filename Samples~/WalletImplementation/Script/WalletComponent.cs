@@ -7,6 +7,7 @@ using AllArt.SUI.RPC.Filter.Types;
 using AllArt.SUI.RPC.Response;
 using AllArt.SUI.Wallets;
 using Newtonsoft.Json;
+using SimpleScreen;
 using UnityEngine;
 
 public enum ENodeType
@@ -35,6 +36,8 @@ public class WalletComponent : MonoBehaviour
     // currently selected wallet
     public Wallet currentWallet {get; private set;}
     public CoinMetadata currentCoinMetadata;
+
+    private SimpleScreenManager screenManager;
 
     public string nodeAddress
     {
@@ -66,7 +69,9 @@ public class WalletComponent : MonoBehaviour
 
     public ENodeType nodeType { get; private set; }
 
-    Coroutine timeoutTimer;
+    bool isLocked = true;
+
+    DateTime timeoutTimer;
 
     #region Mono
 
@@ -95,15 +100,27 @@ public class WalletComponent : MonoBehaviour
         client = new SUIRPCClient(nodeAddress);
         websocketController = WebsocketController.instance;
         websocketController.SetupConnection(nodeAddress);
+        screenManager = FindObjectOfType<SimpleScreenManager>();
     }
 
     private void OnDisable()
     {
         password = null;
-        if (timeoutTimer != null)
-            StopCoroutine(timeoutTimer);
+        timeoutTimer = DateTime.Now;
     }
 
+    #endregion
+
+    #region UI
+        public void ShowWalletInterface()
+        {
+            screenManager?.Show();
+        }
+
+        public void HideWalletInterface()
+        {
+            screenManager?.Hide();
+        }
     #endregion
 
     #region Timer 
@@ -113,29 +130,27 @@ public class WalletComponent : MonoBehaviour
     /// </summary>
     public void StartTimer()
     {
-        if (timeoutTimer != null)
-            StopCoroutine(timeoutTimer);
-        timeoutTimer = StartCoroutine(Timer());
-    }
-
-    private IEnumerator Timer()
-    {
-        float time = -1;
+        float time = 10000000;
         if (PlayerPrefs.HasKey("timeout"))
         {
             time = PlayerPrefs.GetFloat("timeout");
         }
-        if (time == -1)
+
+        timeoutTimer = DateTime.Now.AddSeconds(time);     
+        isLocked = false;   
+    }
+    
+
+    private void Update() {
+        if(timeoutTimer < DateTime.Now && isLocked == false)
         {
-            time = 10000000;
+            websocketController?.Stop();
+            password = null;
+            screenManager?.ShowScreen("SplashScreen");
+            currentWallet = null;
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Warning, "Connection timed out. Please try again.");
+            isLocked = true;
         }
-        yield return new WaitForSeconds(time);
-        websocketController?.Stop();
-        password = null;
-        var manager = FindObjectOfType<SimpleScreen.SimpleScreenManager>();
-        manager?.ShowScreen("SplashScreen");
-        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Warning, "Connection timed out. Please try again.");
-        timeoutTimer = null;
     }
 
     #endregion
@@ -408,6 +423,32 @@ public class WalletComponent : MonoBehaviour
     }
     #endregion
 
+    public void RequestSignMessage(byte[] message){
+        if(currentWallet == null)
+        {
+            screenManager.ShowScreen("LoginScreen", message);
+            return;
+        }
+
+        screenManager.ShowScreen("SignScreen", message);
+    }
+
+    public byte[] SignMessageWithCurrentWallet(byte[] message)
+    {
+        if(currentWallet == null)
+        {
+            return new byte[0];
+        }
+        var signature = currentWallet.Sign(message);
+        return signature;
+    }
+
+    public byte[] SignMessageWithWallet(Wallet wallet, byte[] message)
+    {
+        var signature = wallet.Sign(message);
+        return signature;
+    }
+
     /// <summary>
     /// Retrieves all coin data for an owner.  
     /// </summary>
@@ -450,8 +491,6 @@ public class WalletComponent : MonoBehaviour
             var coinMetadata = coinMetadatas[coin];
             if (this.coinGeckoData.ContainsKey(coinMetadata.symbol) && lastUpdated.AddMinutes(5) > DateTime.Now)
                 continue;
-
-            Debug.Log("GET DATA");
 
             var coinData = await GetUSDPrice(coinMetadata);
             if (coinData != null)
@@ -772,5 +811,10 @@ public class WalletComponent : MonoBehaviour
     {
         password = "";
         wallets.Clear();
+    }
+
+    internal void ToggleWallet()
+    {
+        screenManager?.ToggleAllScreens();
     }
 }

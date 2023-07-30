@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using AllArt.SUI.RPC.Response;
-using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.X509;
 using UnityEngine;
 
 namespace SimpleScreen { 
@@ -8,7 +7,9 @@ namespace SimpleScreen {
     {
         public BaseScreen[] screens;
         private Dictionary<string, BaseScreen> screensDict = new Dictionary<string, BaseScreen>();
+        [HideInInspector]
         public BaseScreen currentScreen;
+        [HideInInspector]
         public BaseScreen previousScreen;
 
         public static SimpleScreenManager instance;
@@ -16,6 +17,7 @@ namespace SimpleScreen {
         private Stack<BaseScreen> _screenQueue = new Stack<BaseScreen>();        
 
         public int historyCount => _screenQueue.Count;
+        public Transform mainHolder;
 
         private void Awake()
         {
@@ -23,6 +25,19 @@ namespace SimpleScreen {
             {
                 instance = this;
             }
+        }
+
+        public void Hide(){
+            mainHolder?.gameObject.SetActive(false);
+        }
+
+        public void Show(){
+            mainHolder?.gameObject.SetActive(true);
+        }
+
+        public void ToggleAllScreens()
+        {
+            mainHolder?.gameObject.SetActive(!mainHolder.gameObject.activeSelf);
         }
 
         public void GoBack() { 

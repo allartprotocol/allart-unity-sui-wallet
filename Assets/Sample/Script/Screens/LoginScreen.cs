@@ -9,6 +9,7 @@ public class LoginScreen : BaseScreen
     public TMP_InputField password;
 
     public Button forgotPasswordBtn;
+    private byte[] messageToSign;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class LoginScreen : BaseScreen
     public override void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+        messageToSign = (byte[])data;
         password.text = "";
     }
 
@@ -51,6 +53,12 @@ public class LoginScreen : BaseScreen
         if (valid)
         {
             WalletComponent.Instance.SetPassword(password.text);
+            if(messageToSign != null)
+            {
+                WalletEvents.onRequestSignMessageResponse?.Invoke(messageToSign);
+                GoTo("SignScreen");
+                return;
+            }
             GoTo("MainScreen");
         }
         else

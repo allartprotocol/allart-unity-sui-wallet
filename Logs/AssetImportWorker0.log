@@ -1,0 +1,280 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.25f1 (68ef2c4f8861) revision 6876972'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 11  (10.0.22621) 64bit Professional' Language: 'en' Physical Memory: 32640 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.3.25f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+51791
+Successfully changed project path to: C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
+C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [121960] Host "[IP] 192.168.100.2 [Port] 0 [Flags] 2 [Guid] 157512394 [EditorId] 157512394 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [121960] Host "[IP] 192.168.100.2 [Port] 0 [Flags] 2 [Guid] 157512394 [EditorId] 157512394 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+Refreshing native plugins compatible for Editor in 71.59 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.25f1 (68ef2c4f8861)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 3070 Laptop GPU (ID=0x249d)
+    Vendor:   NVIDIA
+    VRAM:     8033 MB
+    Driver:   31.0.15.3640
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56000
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.006925 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Android Extension - Scanning For ADB Devices 352 ms
+Refreshing native plugins compatible for Editor in 68.15 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.019 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1019ms)
+		BeginReloadAssembly (87ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (831ms)
+			LoadAssemblies (86ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (103ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (26ms)
+			SetupLoadedEditorAssemblies (653ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (449ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (68ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (82ms)
+				ProcessInitializeOnLoadMethodAttributes (52ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.010258 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\Administrator\Documents\Projects\AllArt\opensource\allart-sui-wallet\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\Administrator\Documents\Projects\AllArt\opensource\allart-sui-wallet\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Symbol file LoadedFromMemory is not a mono symbol file
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 66.61 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.122 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1123ms)
+		BeginReloadAssembly (118ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (21ms)
+		EndReloadAssembly (897ms)
+			LoadAssemblies (98ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (307ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (53ms)
+			SetupLoadedEditorAssemblies (382ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (18ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (67ms)
+				BeforeProcessingInitializeOnLoad (75ms)
+				ProcessInitializeOnLoadAttributes (200ms)
+				ProcessInitializeOnLoadMethodAttributes (16ms)
+				AfterProcessingInitializeOnLoad (7ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (14ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
+Refreshing native plugins compatible for Editor in 0.55 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3241 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 30 unused Assets / (284.7 KB). Loaded Objects now: 3699.
+Memory consumption went from 122.5 MB to 122.3 MB.
+Total: 3.593500 ms (FindLiveObjects: 0.293100 ms CreateObjectMapping: 0.210100 ms MarkObjects: 2.987100 ms  DeleteObjects: 0.102000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 640271.162481 seconds.
+  path: Assets/Scenes/SampleScene.unity
+  artifactKey: Guid(9fc0d4010bbf28b4594072e72b8655ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scenes/SampleScene.unity using Guid(9fc0d4010bbf28b4594072e72b8655ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7eb60790fbc1f6bc9ee9855d9067a0ea') in 0.006977 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.530784 seconds.
+  path: Assets/Sample/Prefab/Wallet.prefab
+  artifactKey: Guid(04da6b6f01b93ff4f94dbf88a18868e6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Prefab/Wallet.prefab using Guid(04da6b6f01b93ff4f94dbf88a18868e6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2bf71b832777b82d92ff2c5e35a33ab9') in 0.484539 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.025856 seconds.
+  path: Assets/Sample/Prefab/Wallet.prefab
+  artifactKey: Guid(04da6b6f01b93ff4f94dbf88a18868e6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Prefab/Wallet.prefab using Guid(04da6b6f01b93ff4f94dbf88a18868e6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '30c1e5eb972f3d7a0b6139ae7f1a6282') in 0.371079 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 227.338551 seconds.
+  path: Assets/Sample/Sprites/Theme/activity-ico.png
+  artifactKey: Guid(b309098af778f7c4f9aaa37b63db9284) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/activity-ico.png using Guid(b309098af778f7c4f9aaa37b63db9284) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a49dcb2e7d023570acffdc11ed36781f') in 0.123620 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Sample/Sprites/Dark/allart-sui-logo-small - Copy.png
+  artifactKey: Guid(fa84b066023ebdc4a863a0ff864a01a2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Dark/allart-sui-logo-small - Copy.png using Guid(fa84b066023ebdc4a863a0ff864a01a2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0ece117baceda235d9699404cdea4604') in 0.022193 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000022 seconds.
+  path: Assets/Sample/Sprites/Dark/allart-sui-logo-small.png
+  artifactKey: Guid(3a128963d733f6a4da2423edd7bf6142) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Dark/allart-sui-logo-small.png using Guid(3a128963d733f6a4da2423edd7bf6142) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b528d7ce55cfad1c4cad9a1994bf3596') in 0.018575 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000025 seconds.
+  path: Assets/Sample/Sprites/Unity SUI wallet 4x/arrow-left-ico.png
+  artifactKey: Guid(ddc2c469a6fbbc541be5ff5d923cac5e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Unity SUI wallet 4x/arrow-left-ico.png using Guid(ddc2c469a6fbbc541be5ff5d923cac5e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cce61fbd1e2f1c8a0bf80cabcb02c079') in 0.014472 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000016 seconds.
+  path: Assets/Sample/Sprites/Unity SUI wallet 4x/activity-ico.png
+  artifactKey: Guid(38f3052385e6b1144a23eb95fd9ee8e5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Unity SUI wallet 4x/activity-ico.png using Guid(38f3052385e6b1144a23eb95fd9ee8e5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2148b5395b4db733088bbcd54ba37ce5') in 0.015176 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Sample/Sprites/Theme/activity-ico-1.png
+  artifactKey: Guid(3f4d7b080c3422e4cbab624bb16bbb59) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/activity-ico-1.png using Guid(3f4d7b080c3422e4cbab624bb16bbb59) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '10606a5de68a3fdb770bd5fae88d1956') in 0.016616 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000021 seconds.
+  path: Assets/Sample/Sprites/Unity SUI wallet icons 512w/arrow-left-ico.png
+  artifactKey: Guid(3906f07e2a5c4344d80c290b0b2d52f7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Unity SUI wallet icons 512w/arrow-left-ico.png using Guid(3906f07e2a5c4344d80c290b0b2d52f7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f669fb5937412450a8df1e8faba9a4c8') in 0.033259 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000017 seconds.
+  path: Assets/Sample/Sprites/Dark/allart-sui-logo.png
+  artifactKey: Guid(21fdb0a4877e71f4f9c3e147f335ac79) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Dark/allart-sui-logo.png using Guid(21fdb0a4877e71f4f9c3e147f335ac79) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '66621ed4f07197897caa450198c29c4e') in 0.017550 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000016 seconds.
+  path: Assets/Sample/Sprites/Theme/activity-ico.svg
+  artifactKey: Guid(cafe5ee8447211648b95c4d119213850) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/activity-ico.svg using Guid(cafe5ee8447211648b95c4d119213850) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '99522e90fdcfd8c8a2669ad2314ff7e6') in 0.107642 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.462170 seconds.
+  path: Assets/Sample/Sprites/Dark/Token-card.png
+  artifactKey: Guid(882bf9c6dc983b9479d66e7e747410f9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Dark/Token-card.png using Guid(882bf9c6dc983b9479d66e7e747410f9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '413330d4210e75a109f386205eef073e') in 0.014944 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000019 seconds.
+  path: Assets/Sample/Sprites/Theme/Token-card.svg
+  artifactKey: Guid(addae3afc460e984d8bc1c290026304a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Theme/Token-card.svg using Guid(addae3afc460e984d8bc1c290026304a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6fa96c96b4731a7d494dc8682d6a162c') in 0.016849 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Sample/Sprites/Unity SUI wallet 4x/Token-card.png
+  artifactKey: Guid(8aa84457e8294cb4291fe86d9bece1e1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Sprites/Unity SUI wallet 4x/Token-card.png using Guid(8aa84457e8294cb4291fe86d9bece1e1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '73be1f54000d287110af659f8d0daf1a') in 0.029605 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 47.643199 seconds.
+  path: Assets/Sample/Fonts/Inter/Inter-ExtraBold.asset
+  artifactKey: Guid(d704bc14a6b883d419722ffe1a743074) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Fonts/Inter/Inter-ExtraBold.asset using Guid(d704bc14a6b883d419722ffe1a743074) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4eced2714437d854123d454b85671017') in 0.109366 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000028 seconds.
+  path: Assets/Sample/Fonts/Jost-VariableFont_wght.asset
+  artifactKey: Guid(878d8690a2a616d4b95ba8617245a0be) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Fonts/Jost-VariableFont_wght.asset using Guid(878d8690a2a616d4b95ba8617245a0be) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '57092517407a67f57521a7aaf73e22d9') in 0.076640 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/Sample/Fonts/Jost-Bold.asset
+  artifactKey: Guid(aed8e46f8317dc54b8b4faafad2c588f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sample/Fonts/Jost-Bold.asset using Guid(aed8e46f8317dc54b8b4faafad2c588f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '70a1660bd4e58576e36a66d2b066d16d') in 0.081459 seconds 
+Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
+AssetImportWorker is now disconnected from the server
+Process exiting
+Exiting without the bug reporter. Application will terminate with return code 0

@@ -15,7 +15,7 @@ C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
 -logFile
 Logs/AssetImportWorker1.log
 -srvPort
-51791
+56815
 Successfully changed project path to: C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
 C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -47,11 +47,11 @@ C:/Users/Administrator/Documents/Projects/AllArt/opensource/allart-sui-wallet
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [87476] Host "[IP] 192.168.100.2 [Port] 0 [Flags] 2 [Guid] 3676185013 [EditorId] 3676185013 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+Player connection [8792] Host "[IP] 192.168.0.159 [Port] 0 [Flags] 2 [Guid] 3911409256 [EditorId] 3911409256 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
 
-Player connection [87476] Host "[IP] 192.168.100.2 [Port] 0 [Flags] 2 [Guid] 3676185013 [EditorId] 3676185013 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [8792] Host "[IP] 192.168.0.159 [Port] 0 [Flags] 2 [Guid] 3911409256 [EditorId] 3911409256 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-KFD2SMN) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
 
-Refreshing native plugins compatible for Editor in 71.60 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 67.66 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2021.3.25f1 (68ef2c4f8861)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/Resources/UnitySubsystems
@@ -67,94 +67,97 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56368
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56956
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.006573 seconds.
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.25f1/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.UWP.Extensions.dll
+Registered in 0.007255 seconds.
+Native extension for UWP target not found
 Native extension for WindowsStandalone target not found
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 345 ms
-Refreshing native plugins compatible for Editor in 68.18 ms, found 3 plugins.
+Android Extension - Scanning For ADB Devices 323 ms
+Refreshing native plugins compatible for Editor in 78.27 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.019 seconds
+- Completed reload, in  1.002 seconds
 Domain Reload Profiling:
-	ReloadAssembly (1020ms)
-		BeginReloadAssembly (87ms)
+	ReloadAssembly (1002ms)
+		BeginReloadAssembly (85ms)
 			ExecutionOrderSort (0ms)
 			DisableScriptedObjects (0ms)
 			BackupInstance (0ms)
 			ReleaseScriptingObjects (0ms)
 			CreateAndSetChildDomain (1ms)
-		EndReloadAssembly (831ms)
-			LoadAssemblies (85ms)
+		EndReloadAssembly (814ms)
+			LoadAssemblies (84ms)
 			RebuildTransferFunctionScriptingTraits (0ms)
-			SetupTypeCache (111ms)
+			SetupTypeCache (106ms)
 			ReleaseScriptCaches (0ms)
-			RebuildScriptCaches (26ms)
-			SetupLoadedEditorAssemblies (646ms)
+			RebuildScriptCaches (27ms)
+			SetupLoadedEditorAssemblies (630ms)
 				LogAssemblyErrors (0ms)
-				InitializePlatformSupportModulesInManaged (442ms)
+				InitializePlatformSupportModulesInManaged (426ms)
 				SetLoadedEditorAssemblies (0ms)
-				RefreshPlugins (68ms)
+				RefreshPlugins (78ms)
 				BeforeProcessingInitializeOnLoad (1ms)
-				ProcessInitializeOnLoadAttributes (83ms)
-				ProcessInitializeOnLoadMethodAttributes (51ms)
+				ProcessInitializeOnLoadAttributes (78ms)
+				ProcessInitializeOnLoadMethodAttributes (46ms)
 				AfterProcessingInitializeOnLoad (0ms)
 				EditorAssembliesLoaded (0ms)
 			ExecutionOrderSort2 (0ms)
 			AwakeInstancesAfterBackupRestoration (0ms)
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
-Registered in 0.010116 seconds.
+Registered in 0.007533 seconds.
 Begin MonoManager ReloadAssembly
 Symbol file LoadedFromMemory doesn't match image C:\Users\Administrator\Documents\Projects\AllArt\opensource\allart-sui-wallet\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
 Symbol file LoadedFromMemory doesn't match image C:\Users\Administrator\Documents\Projects\AllArt\opensource\allart-sui-wallet\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
 Symbol file LoadedFromMemory is not a mono symbol file
+Native extension for UWP target not found
 Native extension for WindowsStandalone target not found
 Native extension for Android target not found
-Refreshing native plugins compatible for Editor in 66.79 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 66.06 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Mono: successfully reloaded assembly
-- Completed reload, in  1.128 seconds
+- Completed reload, in  1.078 seconds
 Domain Reload Profiling:
-	ReloadAssembly (1129ms)
-		BeginReloadAssembly (116ms)
+	ReloadAssembly (1079ms)
+		BeginReloadAssembly (113ms)
 			ExecutionOrderSort (0ms)
-			DisableScriptedObjects (6ms)
+			DisableScriptedObjects (5ms)
 			BackupInstance (0ms)
 			ReleaseScriptingObjects (0ms)
-			CreateAndSetChildDomain (20ms)
-		EndReloadAssembly (904ms)
-			LoadAssemblies (97ms)
+			CreateAndSetChildDomain (18ms)
+		EndReloadAssembly (864ms)
+			LoadAssemblies (91ms)
 			RebuildTransferFunctionScriptingTraits (0ms)
-			SetupTypeCache (308ms)
+			SetupTypeCache (273ms)
 			ReleaseScriptCaches (1ms)
-			RebuildScriptCaches (52ms)
-			SetupLoadedEditorAssemblies (387ms)
+			RebuildScriptCaches (45ms)
+			SetupLoadedEditorAssemblies (406ms)
 				LogAssemblyErrors (0ms)
 				InitializePlatformSupportModulesInManaged (18ms)
 				SetLoadedEditorAssemblies (0ms)
-				RefreshPlugins (67ms)
-				BeforeProcessingInitializeOnLoad (74ms)
-				ProcessInitializeOnLoadAttributes (205ms)
-				ProcessInitializeOnLoadMethodAttributes (16ms)
+				RefreshPlugins (66ms)
+				BeforeProcessingInitializeOnLoad (79ms)
+				ProcessInitializeOnLoadAttributes (219ms)
+				ProcessInitializeOnLoadMethodAttributes (15ms)
 				AfterProcessingInitializeOnLoad (7ms)
 				EditorAssembliesLoaded (0ms)
 			ExecutionOrderSort2 (0ms)
-			AwakeInstancesAfterBackupRestoration (14ms)
+			AwakeInstancesAfterBackupRestoration (17ms)
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
-Refreshing native plugins compatible for Editor in 0.66 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 0.51 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 3241 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 30 unused Assets / (284.7 KB). Loaded Objects now: 3699.
-Memory consumption went from 122.5 MB to 122.3 MB.
-Total: 3.129100 ms (FindLiveObjects: 0.382300 ms CreateObjectMapping: 0.230400 ms MarkObjects: 2.451800 ms  DeleteObjects: 0.063700 ms)
+Unloading 3245 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 30 unused Assets / (284.7 KB). Loaded Objects now: 3703.
+Memory consumption went from 122.6 MB to 122.3 MB.
+Total: 3.405800 ms (FindLiveObjects: 0.282300 ms CreateObjectMapping: 0.254000 ms MarkObjects: 2.801200 ms  DeleteObjects: 0.067400 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
@@ -166,79 +169,3 @@ AssetImportParameters requested are different than current active one (requested
   custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
   custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
   custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-========================================================================
-Received Import Request.
-  Time since last request: 640505.941818 seconds.
-  path: Assets/Sample/Sprites/Dark/activity-ico.png
-  artifactKey: Guid(e42c14e763b6f61488e70617e8777c61) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Dark/activity-ico.png using Guid(e42c14e763b6f61488e70617e8777c61) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ef6b2eb8eb8f425df50b5a0a04fd5f69') in 0.123184 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Sample/Sprites/Dark/allart-sui-logo-small.svg
-  artifactKey: Guid(4f39fb1e474d2f74991964df43e04f4c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Dark/allart-sui-logo-small.svg using Guid(4f39fb1e474d2f74991964df43e04f4c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4b6ce9870180c9cc6171b458815ba8d4') in 0.142494 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Sample/Sprites/Theme/activity-ico-1.svg
-  artifactKey: Guid(02cfae22a1a57fa429862dae49ea2c50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Theme/activity-ico-1.svg using Guid(02cfae22a1a57fa429862dae49ea2c50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1ff1e01b63e7af64473324d895211748') in 0.018487 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000015 seconds.
-  path: Assets/Sample/Sprites/Unity SUI wallet icons 512w/activity-ico.png
-  artifactKey: Guid(1228f74e806840c4abb8020719b9b304) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Unity SUI wallet icons 512w/activity-ico.png using Guid(1228f74e806840c4abb8020719b9b304) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9b41ffffa9432e22496a5a0b71233e16') in 0.028465 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000015 seconds.
-  path: Assets/Sample/Sprites/Dark/allart-sui-logo.svg
-  artifactKey: Guid(034a28be1a209ee469bf17fd8a63581f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Dark/allart-sui-logo.svg using Guid(034a28be1a209ee469bf17fd8a63581f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7f46217d95505fb6c05e9d1a496b3cd9') in 0.018554 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000018 seconds.
-  path: Assets/Sample/Sprites/Dark/activity-ico.svg
-  artifactKey: Guid(4c520625e430c82448c506e6cd8739c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Dark/activity-ico.svg using Guid(4c520625e430c82448c506e6cd8739c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3b621290bf728aaa1b5b6f9c0aa3eeaa') in 0.014412 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Sample/Sprites/Dark/allart-sui-logo - Copy.png
-  artifactKey: Guid(4c20d2c5e68db0d479712d5df1751065) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Dark/allart-sui-logo - Copy.png using Guid(4c20d2c5e68db0d479712d5df1751065) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a6100bdfe18124d2368db2e8d64e7d60') in 0.030745 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 3.462385 seconds.
-  path: Assets/Sample/Sprites/Theme/Token-card.png
-  artifactKey: Guid(e801060890c5064448a44fe126ce20f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Theme/Token-card.png using Guid(e801060890c5064448a44fe126ce20f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6f8fdfbb4bd084432d8aa62e01c14c2b') in 0.032092 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Sample/Sprites/Dark/Token-card.svg
-  artifactKey: Guid(df34d3a4cc1cdb949909799484eaaf24) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Sprites/Dark/Token-card.svg using Guid(df34d3a4cc1cdb949909799484eaaf24) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f790bd4b535ffe8e3296fbf0502655f3') in 0.017066 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 47.660464 seconds.
-  path: Assets/Sample/Fonts/Inter/Inter-Medium.asset
-  artifactKey: Guid(89fe2af5abd8ee74b80d33b52cf336e8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Fonts/Inter/Inter-Medium.asset using Guid(89fe2af5abd8ee74b80d33b52cf336e8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fd3177e4a7227ce2b00635ac27ea43c5') in 0.128016 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Sample/Fonts/Inter/Inter-SemiBold.asset
-  artifactKey: Guid(eae40b677d3468543affe896c10fbb6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Sample/Fonts/Inter/Inter-SemiBold.asset using Guid(eae40b677d3468543affe896c10fbb6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1f7c9804ffffeb5a5ef132f7209dc5ae') in 0.093049 seconds 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
-  artifactKey: Guid(8f586378b4e144a9851e7b34d9b748ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset using Guid(8f586378b4e144a9851e7b34d9b748ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '007425405e2f4fef13b63816c7a4cdee') in 0.048764 seconds 
-Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
-AssetImportWorker is now disconnected from the server
-Process exiting
-Exiting without the bug reporter. Application will terminate with return code 0

@@ -33,9 +33,14 @@ public class EventObject : MonoBehaviour
         });
 
         if(eventPage.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
+        {
             nameTxt.text = "Sent";
-        else
+            amount.text = "To " + WalletUtility.ShortenAddress(eventPage.transaction.data.sender);
+        }
+        else{
             nameTxt.text = "Transaction";
+            amount.text = "From " + WalletUtility.ShortenAddress(eventPage.transaction.data.sender);
+        }
 
         if(eventPage.transaction.data.transaction.kind == null)
             date.text = "Unknown";
@@ -43,9 +48,7 @@ public class EventObject : MonoBehaviour
             date.text = eventPage.transaction.data.transaction.kind;
 
         DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)ulong.Parse(eventPage.timestampMs));
-        date.text = dateTime.ToString("MMMM d, yyyy 'at' h:mm tt");
-
-        amount.text = eventPage.digest;
+        date.text = dateTime.ToString("dd/MM/yyyy hh:mm:ss");
 
         if(eventPage.effects.status.status == "success")
             statusImage.sprite = successImage;

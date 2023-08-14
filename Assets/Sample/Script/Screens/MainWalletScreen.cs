@@ -164,6 +164,10 @@ public class MainWalletScreen : BaseScreen
         percentageText.text = "";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
+        if(balances == null)
+        {
+            return;
+        }
         sendBtn.interactable = balances.Count > 0;
         foreach (var obj in loadedObjects)
         {
@@ -216,10 +220,10 @@ public class MainWalletScreen : BaseScreen
     private async Task UpdateWalletData()
     {
         loadingScreen.gameObject.SetActive(true);
-        await LoadWalletData();
-        UpdateBalance();
         try
         {
+            await LoadWalletData();
+            UpdateBalance();
         }
         catch (System.Exception e)
         {

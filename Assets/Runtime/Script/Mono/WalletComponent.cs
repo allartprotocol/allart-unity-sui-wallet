@@ -136,7 +136,13 @@ public class WalletComponent : MonoBehaviour
             time = PlayerPrefs.GetFloat("timeout");
         }
 
-        timeoutTimer = DateTime.Now.AddSeconds(time);     
+        if(time == -1)
+        {
+            timeoutTimer = DateTime.MaxValue;
+        }
+        else{
+            timeoutTimer = DateTime.Now.AddSeconds(time);     
+        }
         isLocked = false;   
     }
     
@@ -464,6 +470,12 @@ public class WalletComponent : MonoBehaviour
 
     private async Task GetCoins(PageForCoinAndObjectID coins)
     {
+        if(coins == null)
+            return;
+
+        if (coins.data == null)
+            return;
+            
         foreach (var coin in coins.data)
         {
             if (!coinPages.ContainsKey(coin.coinType))
@@ -492,6 +504,7 @@ public class WalletComponent : MonoBehaviour
             if (this.coinGeckoData.ContainsKey(coinMetadata.symbol) && lastUpdated.AddMinutes(5) > DateTime.Now)
                 continue;
 
+            Debug.Log(JsonConvert.SerializeObject(coinMetadata));
             var coinData = await GetUSDPrice(coinMetadata);
             if (coinData != null)
             {
@@ -506,13 +519,14 @@ public class WalletComponent : MonoBehaviour
         foreach (var dataKey in coinGeckoData.Keys)
         {
             var coin = coinGeckoData[dataKey];
+            Debug.Log(JsonConvert.SerializeObject(coin));
             if (coin.image != null && coin.image.thumb != null)
             {
                 if (coinImages.ContainsKey(dataKey))
                 {
                     continue;
                 }
-                var image = await GetImage(coin.image.small);
+                var image = await GetImage(coin.image.large);
                 if (image != null)
                 {
                     coinImages.TryAdd(dataKey, image);
@@ -566,6 +580,7 @@ public class WalletComponent : MonoBehaviour
     public async Task<Sprite> GetImage(string url)
     {
         var rpc = new RPCClient(SUIConstantVars.coingeckoApi);
+        Debug.Log(url);
         var data = await rpc.DownloadImage(url);
         return data;
     }

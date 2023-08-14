@@ -12,6 +12,7 @@ public class WalletSettingsScreen : BaseScreen
     public Button exportPhrase;
     public Button exportPrivate;
     public Button removeWallets;
+    public CopyButton copyButton;
 
     public TextMeshProUGUI walletPubKey;
     private Wallet wallet;
@@ -31,9 +32,16 @@ public class WalletSettingsScreen : BaseScreen
             return;
         }
         wallet = data as Wallet;
-        walletPubKey.text = wallet.publicKey;
+        walletPubKey.text = wallet.displayAddress;
 
         exportPhrase.gameObject.SetActive(!string.IsNullOrEmpty(WalletComponent.Instance.currentWallet.mnemonic));
+
+        copyButton.SetText(wallet.publicKey, wallet.displayAddress);
+    }
+
+    private void OnCopy()
+    {
+        GUIUtility.systemCopyBuffer = wallet.publicKey;
     }
 
     private void OnRemoveWallets()

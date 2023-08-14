@@ -37,9 +37,29 @@ public class ChangePassword : BaseScreen
             return;
         }
 
+        if(oldPassword.text.Length < 3 || newPassword.text.Length < 3 || confirmPassword.text.Length < 3)
+        {
+            Debug.Log("Password must be at least 3 characters long");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Password must be at least 3 characters long");
+            return;
+        }
+
+        if(oldPassword.text == newPassword.text)
+        {
+            Debug.Log("New password must be different from old password");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "New password must be different from old password");
+            return;
+        }
+
+        if(newPassword.text != confirmPassword.text)
+        {
+            Debug.Log("New password and confirm password does not match");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "New password and confirm password does not match");
+            return;
+        }
+
         try
         {
-
             if(!WalletComponent.Instance.CheckPasswordValidity(oldPassword.text))
             {
                 //manager.ShowPopup("Error", "Password is not valid");

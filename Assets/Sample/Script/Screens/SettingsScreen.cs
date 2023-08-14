@@ -25,11 +25,11 @@ public class SettingsScreen : BaseScreen
     override public void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
-        var time = PlayerPrefs.GetFloat("timeout", 0);
+        var time = PlayerPrefs.GetFloat("timeout", -1);
         var network = (ENodeType)PlayerPrefs.GetInt("nodeType", 0);
         var timestring = ConvertSecondsToMinutesOrHours((int)time);
         Debug.Log(time);
-        timeText.text = time == 0 ? "Never" : timestring;
+        timeText.text = time == -1 ? "Never" : timestring;
         networkText.text = network.ToString();
     }
 

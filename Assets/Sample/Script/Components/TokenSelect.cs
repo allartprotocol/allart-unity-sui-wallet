@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class TokenSelect : MonoBehaviour
 {
     private CoinMetadata _coinMetadata;
-    private GeckoCoinData _coinData;
+    private SUIMarketData _coinData;
     private Balance _balance;
 
     private SimpleScreenManager manager;
@@ -28,7 +28,7 @@ public class TokenSelect : MonoBehaviour
         }
     }
     
-    public GeckoCoinData coinData
+    public SUIMarketData coinData
     {
         get { return _coinData; }
         set
@@ -59,7 +59,7 @@ public class TokenSelect : MonoBehaviour
 
     public Button go;
 
-    public void InitComponent(CoinMetadata coinMetadata, GeckoCoinData coinData, Balance balance, SimpleScreenManager manager)
+    public void InitComponent(CoinMetadata coinMetadata, SUIMarketData coinData, Balance balance, SimpleScreenManager manager)
     {
         go = GetComponent<Button>();
         this.coinMetadata = coinMetadata;

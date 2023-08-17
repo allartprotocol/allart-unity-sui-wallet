@@ -14,10 +14,11 @@ public class WalletObject : MonoBehaviour
     public TextMeshProUGUI coin_change;
 
     public Image coinImage;
+    public bool overrideImage = false;
 
     private Balance balance;
     private CoinMetadata coinMetadata;
-    private GeckoCoinData geckoCoinData;
+    private SUIMarketData geckoCoinData;
     private SimpleScreenManager manager;
 
     private void Start() {
@@ -26,7 +27,7 @@ public class WalletObject : MonoBehaviour
 
     private void OnSelect()
     {
-        manager.ShowScreen("TokenInfoScreen", new Tuple<CoinMetadata, GeckoCoinData, Balance>(coinMetadata, geckoCoinData, balance));
+        manager.ShowScreen("TokenInfoScreen", new Tuple<CoinMetadata, SUIMarketData, Balance>(coinMetadata, geckoCoinData, balance));
     }
 
     public void Init(Balance balance, SimpleScreenManager manager)
@@ -59,28 +60,50 @@ public class WalletObject : MonoBehaviour
         }
 
         var tokenImage = GetComponentInChildren<TokenImage>();
-        if(WalletComponent.Instance.coinImages != null)
+        if(!overrideImage)
         {
-            if(WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image)){
-                tokenImage.Init(image, coinMetadata.name);
-            }
+            if(WalletComponent.Instance.coinImages != null)
+            {
+                if(WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image)){
+                    tokenImage.Init(image, coinMetadata.name);
+                }
+            }            
         }
 
         if(WalletComponent.Instance.coinGeckoData == null){
             return;
         }
-
+        
+        if(!WalletComponent.Instance.coinGeckoData.ContainsKey(coinMetadata.symbol))
+        {
+            return;
+        }
         var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
         geckoCoinData = geckoData;
 
-        if (geckoData != null && geckoData.market_data != null) { 
-            if(geckoData.market_data.current_price == null)
-            {
-                return;
+        coin_usd.text = "$0";
+        coin_change.text = $"{0.00}%";
+        if (geckoData != null) { 
+            if(geckoData.current_price != null){
+                try{
+                    float.TryParse(geckoData.current_price.ToString(), out float price);
+                    var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
+                    coin_usd.text = $"${usdValue:0.00}";
+                }
+                catch(Exception e){
+                    Debug.Log(e);
+                }
             }
-            var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);
-            coin_usd.text = $"${usdValue:0.00}";
-            coin_change.text = $"{geckoData.market_data.price_change_percentage_24h.ToString("0.00")}%";
+
+            try{
+                if(geckoData.price_change_percentage_24h != null)
+                {
+                    float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
+                    coin_change.text = $"{priceChange.ToString("0.00")}%";
+                }
+            }catch(Exception e){
+                Debug.Log(e);
+            }
         }
     }
 

@@ -26,8 +26,9 @@ public class WalletComponent : MonoBehaviour
     private WebsocketController websocketController {get; set;}
 
     // cached coin data
+    public List<SUIMarketData> suiMarketData = new();
     public Dictionary<string, CoinMetadata> coinMetadatas {get; private set;} = new();
-    public Dictionary<string, GeckoCoinData> coinGeckoData {get; private set;} = new();
+    public Dictionary<string, SUIMarketData> coinGeckoData {get; private set;} = new();
     public Dictionary<string, CoinPage> coinPages {get; private set;} = new();
     public Dictionary<string, Sprite> coinImages {get; private set;} = new();
 
@@ -101,6 +102,12 @@ public class WalletComponent : MonoBehaviour
         websocketController = WebsocketController.instance;
         websocketController.SetupConnection(nodeAddress);
         screenManager = FindObjectOfType<SimpleScreenManager>();
+        GetSUIMarketDataForCoins();
+    }
+
+    public async void GetSUIMarketDataForCoins()
+    {
+        suiMarketData = await GetCoinGeckoIDs();
     }
 
     private void OnDisable()
@@ -464,7 +471,7 @@ public class WalletComponent : MonoBehaviour
         var coins = await GetAllCoins(owner);
 
         await GetCoins(coins);
-        await GetCoinMetadatas();
+        GetCoinMetadatas();
         await GetCoinGeckoData();
     }
 
@@ -496,7 +503,7 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
-    private async Task GetCoinMetadatas()
+    private void GetCoinMetadatas()
     {
         foreach (var coin in coinMetadatas.Keys)
         {
@@ -504,12 +511,12 @@ public class WalletComponent : MonoBehaviour
             if (this.coinGeckoData.ContainsKey(coinMetadata.symbol) && lastUpdated.AddMinutes(5) > DateTime.Now)
                 continue;
 
-            Debug.Log(JsonConvert.SerializeObject(coinMetadata));
-            var coinData = await GetUSDPrice(coinMetadata);
-            if (coinData != null)
-            {
-                this.coinGeckoData.TryAdd(coinMetadata.symbol, coinData);
-            }
+            Debug.Log(coinMetadata.symbol);
+            var coinMarketData = GetCoinMarketData(coinMetadata.symbol);
+            if(coinMarketData == null)
+                continue;
+            this.coinGeckoData.TryAdd(coinMetadata.symbol, coinMarketData);
+            
             lastUpdated = DateTime.Now;
         }
     }
@@ -519,20 +526,33 @@ public class WalletComponent : MonoBehaviour
         foreach (var dataKey in coinGeckoData.Keys)
         {
             var coin = coinGeckoData[dataKey];
-            Debug.Log(JsonConvert.SerializeObject(coin));
-            if (coin.image != null && coin.image.thumb != null)
+            // Debug.Log(JsonConvert.SerializeObject(coin));
+            if (!string.IsNullOrEmpty(coin.image))
             {
                 if (coinImages.ContainsKey(dataKey))
                 {
                     continue;
                 }
-                var image = await GetImage(coin.image.large);
+                var image = await GetImage(coin.image);
                 if (image != null)
                 {
                     coinImages.TryAdd(dataKey, image);
                 }
             }
         }
+    }
+
+    private SUIMarketData GetCoinMarketData(string symbol)
+    {
+        Debug.Log(symbol);
+        foreach (var coin in suiMarketData)
+        {
+            if (coin.symbol.ToLower() == symbol.ToLower())
+            {
+                return coin;
+            }
+        }
+        return null;
     }
 
     /// <summary>
@@ -559,15 +579,23 @@ public class WalletComponent : MonoBehaviour
         return data;
     }
 
+    public async Task<List<SUIMarketData>> GetCoinGeckoIDs()
+    {
+        var rpc = new RPCClient("");
+        string reqUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bonk%2Cbluemove%2Cturbos-finance%2Csuipad%2Cusdcet%2Csuia%2Csuifloki-inu%2Cusd-coin-wormhole-bnb%2Cseapad%2Csuipepe%2Csuitizen%2Cusdtet%2Cusd-coin-wormhole-arb%2Creleap%2Cflame-protocol%2Csui%2Ccetus-protocol%2Cusd-coin%2Cwrapped-solana%2c&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en";
+        var data = await rpc.Get<List<SUIMarketData>>(reqUrl);
+        return data;
+    }
+
     /// <summary>
     /// Retrieves the current USD price for a given coin symbol from the CoinGecko API.
     /// </summary>
-    /// <param name="coinSymbol">The symbol of the coin to retrieve the price for.</param>
+    /// <param name="coinId">The symbol of the coin to retrieve the price for.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="GeckoCoinData"/> object representing the current USD price for the specified coin symbol.</returns>
-    public async Task<GeckoCoinData> GetUSDPrice(string coinSymbol)
+    public async Task<GeckoCoinData> GetUSDPrice(string coinId)
     {
         var rpc = new RPCClient("");
-        string reqUrl = $"{SUIConstantVars.coingeckoApi}{coinSymbol.ToLower()}?localization=false";
+        string reqUrl = $"{SUIConstantVars.coingeckoApi}{coinId.ToLower()}?localization=false";
         var data = await rpc.Get<GeckoCoinData>(reqUrl);
         return data;
     }
@@ -580,7 +608,7 @@ public class WalletComponent : MonoBehaviour
     public async Task<Sprite> GetImage(string url)
     {
         var rpc = new RPCClient(SUIConstantVars.coingeckoApi);
-        Debug.Log(url);
+        // Debug.Log(url);
         var data = await rpc.DownloadImage(url);
         return data;
     }

@@ -41,6 +41,9 @@ public class MainWalletScreen : BaseScreen
     public Transform noBalanceText;
     public Transform noActivityText;
 
+    public WalletObject suiPrimaryWalletObject;
+    public WalletObject suiSecondaryWalletObject;
+
     private void Start()
     {
         receiveBtn.onClick.AddListener(OnReceive);
@@ -187,6 +190,8 @@ public class MainWalletScreen : BaseScreen
 
         foreach (var balance in balances)
         {
+            Debug.Log(balance.coinType);
+            
             if(balance.totalBalance == 0)
             {
                 noBalanceText.gameObject.SetActive(true);
@@ -220,10 +225,10 @@ public class MainWalletScreen : BaseScreen
     private async Task UpdateWalletData()
     {
         loadingScreen.gameObject.SetActive(true);
+        await LoadWalletData();
+        UpdateBalance();
         try
         {
-            await LoadWalletData();
-            UpdateBalance();
         }
         catch (System.Exception e)
         {
@@ -246,12 +251,32 @@ public class MainWalletScreen : BaseScreen
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
         if (balance != null && balance.totalBalance > 0)
         {
+            if(!WalletComponent.Instance.coinGeckoData.ContainsKey(coinMetadata.symbol))
+            {
+                return;
+            }
             var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
             if (geckoData != null)
             {
-                var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);
-                walletBalanceText.text = $"${usdValue.ToString("0.00")}";
-                percentageText.text = $"{geckoData.market_data.price_change_percentage_24h.ToString("0.00")}%";
+                percentageText.text = $"{0.00}%";
+                if(geckoData.current_price != null){
+                    Debug.Log(geckoData.current_price.ToString());
+                    double.TryParse(geckoData.current_price.ToString(), out double price);
+                    var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
+                    walletBalanceText.text = $"${usdValue.ToString("0.00")}";
+                }
+                else{
+                    walletBalanceText.text = "$0";
+                }
+                try{
+                    if(geckoData.price_change_percentage_24h != null)
+                    {
+                        float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
+                        percentageText.text = $"{priceChange.ToString("0.00")}%";
+                    }
+                }catch(Exception e){
+                    Debug.Log(e);
+                }
             }
         }
 

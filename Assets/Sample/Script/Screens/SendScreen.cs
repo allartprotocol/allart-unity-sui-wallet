@@ -79,11 +79,11 @@ public class SendScreen : BaseScreen
 
     private void OnMax()
     {
-        float balance = GetMaxBalance();
+        double balance = GetMaxBalance();
         amount.text = balance.ToString();
     }
 
-    private float GetMaxBalance(){
+    private double GetMaxBalance(){
         var meta = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault();
         if(meta.Value == null)
         {
@@ -142,8 +142,11 @@ public class SendScreen : BaseScreen
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid address");
             return;
         }
-        float balance = GetMaxBalance();
-        bool maxBalance = float.Parse(amount.text) == balance;
+        double balance = GetMaxBalance();
+        Debug.Log($"Balance: {balance}");
+        Debug.Log($"Amount: {double.Parse(amount.text)}");
+        bool maxBalance = double.Parse(amount.text) >= balance;
+        Debug.Log($"Max Balance: {maxBalance}");
         
         GoTo("SendConfirmScreen", new TransferData()
         {

@@ -35,6 +35,15 @@ public class ImportPrivateKeyScreen : BaseScreen
 
         Wallet wal = CreateAndEncryptWallet(this.privateKey, WalletComponent.Instance.password);
 
+        if(WalletComponent.Instance.DoesWalletWithPublicKeyAlreadyExists(wal.publicKey))
+        {            
+            Debug.Log("Wallet already exist");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
+            return;
+        }
+
+        wal.SaveWallet();
+
         if(wal != null)
         {
             WalletComponent.Instance.SetCurrentWallet(wal);

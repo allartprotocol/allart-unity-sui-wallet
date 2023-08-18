@@ -40,6 +40,9 @@ public class WalletComponent : MonoBehaviour
 
     private SimpleScreenManager screenManager;
 
+    public Sprite suiIcon;
+    public Sprite bonkIcon;
+
     public string nodeAddress
     {
         get
@@ -103,6 +106,7 @@ public class WalletComponent : MonoBehaviour
         websocketController.SetupConnection(nodeAddress);
         screenManager = FindObjectOfType<SimpleScreenManager>();
         GetSUIMarketDataForCoins();
+
     }
 
     public async void GetSUIMarketDataForCoins()
@@ -248,7 +252,7 @@ public class WalletComponent : MonoBehaviour
         var fromFilter = new FromAddressFilter(wallet.publicKey);
         await GetTransactionsForSelectedWallet();
         websocketController.UnsubscribeCurrent();
-        await websocketController.Subscribe(fromAndToFilter);
+        await websocketController.Subscribe(fromOrToFilter);
     }
 
     #region Wallet Management
@@ -286,8 +290,8 @@ public class WalletComponent : MonoBehaviour
             Debug.Log(e.Message);
             return null;
         }
-        Wallet wallet = new(walletKeyPair, password);
-        wallet.SaveWallet();
+        Wallet wallet = new(walletKeyPair, password);        
+
         return wallet;
     }
 
@@ -326,12 +330,30 @@ public class WalletComponent : MonoBehaviour
     public bool DoesWalletWithMnemonicExists(string mnemonic)
     {
         var walletNames = Wallet.GetWalletSavedKeys();
+        
         foreach (var walletName in walletNames)
         {
             Wallet wallet = Wallet.RestoreWallet(walletName, password);
             if (wallet != null)
             {
                 if (wallet.mnemonic == mnemonic)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool DoesWalletWithPublicKeyAlreadyExists(string publicKey){
+        var walletNames = Wallet.GetWalletSavedKeys();
+        
+        foreach (var walletName in walletNames)
+        {
+            Wallet wallet = Wallet.RestoreWallet(walletName, password);
+            if (wallet != null)
+            {
+                if (wallet.publicKey == publicKey)
                 {
                     return true;
                 }
@@ -511,7 +533,6 @@ public class WalletComponent : MonoBehaviour
             if (this.coinGeckoData.ContainsKey(coinMetadata.symbol) && lastUpdated.AddMinutes(5) > DateTime.Now)
                 continue;
 
-            Debug.Log(coinMetadata.symbol);
             var coinMarketData = GetCoinMarketData(coinMetadata.symbol);
             if(coinMarketData == null)
                 continue;
@@ -527,6 +548,17 @@ public class WalletComponent : MonoBehaviour
         {
             var coin = coinGeckoData[dataKey];
             // Debug.Log(JsonConvert.SerializeObject(coin));
+
+            if(coin.symbol == "sui")
+            {
+                coinImages.TryAdd(dataKey, suiIcon);
+                continue;
+            }
+            if(coin.symbol == "bonk")
+            {
+                coinImages.TryAdd(dataKey, bonkIcon);
+                continue;
+            }
             if (!string.IsNullOrEmpty(coin.image))
             {
                 if (coinImages.ContainsKey(dataKey))
@@ -544,7 +576,6 @@ public class WalletComponent : MonoBehaviour
 
     private SUIMarketData GetCoinMarketData(string symbol)
     {
-        Debug.Log(symbol);
         foreach (var coin in suiMarketData)
         {
             if (coin.symbol.ToLower() == symbol.ToLower())

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AllArt.SUI.RPC.Response;
 using AllArt.SUI.Wallets;
 using Newtonsoft.Json;
@@ -33,25 +34,32 @@ public class TransactionInfoScreen : BaseScreen {
         suiExplorerBtn.onClick.AddListener(OnSuiExplorer);
     }
 
-    string GetBalanceChange() {
+    async Task<string> GetBalanceChange() {
         long balanceChange = 0;
         string type = "";
+
+        if(suiTransactionBlockResponse.balanceChanges == null)
+            return "0";
+
         foreach (var effect in suiTransactionBlockResponse.balanceChanges)
         {
             Debug.Log(JsonConvert.SerializeObject(effect));
             if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
             {
                 Debug.Log(effect.amount);
-                balanceChange += long.Parse(effect.amount);
+                balanceChange = long.Parse(effect.amount);
                 type = effect.coinType;
             }
         }
-        
-        string change = "0 SUI";
+
+        string change = $"0";
 
         CoinMetadata coinMetadata = null;
         if(WalletComponent.Instance.coinMetadatas.ContainsKey(type))
             coinMetadata = WalletComponent.Instance.coinMetadatas[type];
+        else{
+            coinMetadata = await WalletComponent.Instance.GetCoinMetadata(type);
+        }
 
         if(coinMetadata == null)
             return change;
@@ -62,11 +70,23 @@ public class TransactionInfoScreen : BaseScreen {
             return change;
 
         if(balanceChange > 0)
-            change = "+" + decimalChange.ToString("0.############") + " SUI";
+            change = $"+{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
         else if(balanceChange < 0)
-            change = decimalChange.ToString("0.############") + " SUI";
+            change = $"{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
 
         return change;
+    }
+
+    private string GetReceiver()
+    {
+        foreach (var input in suiTransactionBlockResponse.transaction.data.transaction.inputs)
+        {
+            if(input.valueType == "address")
+            {
+                return input.value;
+            }
+        }
+        return "Unknown Receiver";
     }
 
     private void OnSuiExplorer()
@@ -82,15 +102,18 @@ public class TransactionInfoScreen : BaseScreen {
         Application.OpenURL($"https://suiexplorer.com/txblock/{suiTransactionBlockResponse.digest}?network={network}");
     }
 
-    public override void ShowScreen(object data)
+    public async override void ShowScreen(object data)
     {
         base.ShowScreen(data);
-        Debug.Log(data.GetType());
 
         suiTransactionBlockResponse = data as SuiTransactionBlockResponse;
+        
+        Debug.Log(JsonConvert.SerializeObject(suiTransactionBlockResponse));
 
-        if (suiTransactionBlockResponse.effects.status.status == "success")
+        if (suiTransactionBlockResponse.effects.status.status == "success"){
+
             statusImage.sprite = successImage;
+        }
         else
             statusImage.sprite = failImage;
 
@@ -100,17 +123,17 @@ public class TransactionInfoScreen : BaseScreen {
         if (suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
             type.text = "Sent";
         else
-            type.text = "Transaction";
+            type.text = "Receive";
         float gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
 
         status.text = suiTransactionBlockResponse.effects.status.status;
-        sender.text = Wallet.DisplaySuiAddress(suiTransactionBlockResponse.transaction.data.sender);
+        sender.text = Wallet.DisplaySuiAddress(GetReceiver());
         network.text = "SUI";
         var feeText = (gasUsedFloat / Mathf.Pow(10, 9)).ToString("0.############");
         fee.text = $"~{feeText} SUI";
         try
         {
-            balanceChange.text = GetBalanceChange();
+            balanceChange.text = await GetBalanceChange();
         }
         catch (Exception e)
         {

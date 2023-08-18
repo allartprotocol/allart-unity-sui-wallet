@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 39148c4362585fd48904764ac90a4084
+guid: 5ee328dcd1a074a44b2db218ab17e877
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
-    mipMapMode: 0
-    enableMipMap: 1
+    mipMapMode: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -34,7 +34,7 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 2
-    aniso: 6
+    aniso: 2
     mipBias: 0
     wrapU: 1
     wrapV: 1
@@ -48,7 +48,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 41, y: 41, z: 40, w: 33}
+  spriteBorder: {x: 714, y: 661, z: 722, w: 619}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -61,7 +61,7 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  ignorePngGamma: 0
+  ignorePngGamma: 1
   applyGammaDecoding: 0
   cookieLightType: 0
   platformSettings:

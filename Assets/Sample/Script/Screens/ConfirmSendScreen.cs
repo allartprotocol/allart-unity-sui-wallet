@@ -17,8 +17,11 @@ using UnityEngine.UI;
 public class ConfirmSendScreen : BaseScreen {
 
     public TextMeshProUGUI to;
+    public TextMeshProUGUI toHeader;
     public TextMeshProUGUI fee;
     public TextMeshProUGUI amount;
+
+    public TokenImage tokenImage;
 
     public Button confirmBtn;
     public Button cancelBtn;
@@ -206,7 +209,6 @@ public class ConfirmSendScreen : BaseScreen {
 
         ObjectDataOptions options = new();
         query.options = options;
-        ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
 
         try {
             var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
@@ -267,7 +269,7 @@ public class ConfirmSendScreen : BaseScreen {
                 ownedCoinObjectIds.Add(data.data.objectId);
             }
     
-            ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
+            ulong amount = (ulong)(double.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
             JsonRpcResponse<TransactionBlockBytes> res_pay = null;
             try{
                 res_pay = await WalletComponent.Instance.Pay(wallet,
@@ -296,8 +298,12 @@ public class ConfirmSendScreen : BaseScreen {
         {
             TransferData = confirmSendData;
             to.text = Wallet.DisplaySuiAddress(confirmSendData.to);
+            toHeader.text = $"To {Wallet.DisplaySuiAddress(confirmSendData.to)}";
             amount.text = $"{confirmSendData.amount} {confirmSendData.coin.symbol}";
             fee.text = $"{feeAmountFloat:0.#########} SUI";
+
+            WalletComponent.Instance.coinImages.TryGetValue(confirmSendData.coin.symbol, out Sprite image);
+            tokenImage.Init(image, confirmSendData.coin.symbol);
         }
 
         SuiTransactionBlockResponse res = null;

@@ -44,7 +44,9 @@ public class TokenSelectScreen : BaseScreen
             var tokenSelectComponent = tokenSelect.GetComponent<TokenSelect>();
             var coinMetadata = WalletComponent.Instance.coinMetadatas[coin.Key];
 
-            tokenSelectComponent.InitComponent(coin.Value, WalletComponent.Instance.coinGeckoData[coinMetadata.symbol], balance, manager);
+            WalletComponent.Instance.coinGeckoData.TryGetValue(coinMetadata.symbol, out SUIMarketData coinGeckoData);
+
+            tokenSelectComponent.InitComponent(coin.Value, coinGeckoData, balance, manager);
             tokenSelects.Add(tokenSelectComponent);
         }
     }

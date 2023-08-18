@@ -28,6 +28,7 @@ public class NotificationPopup : MonoBehaviour
 
     IEnumerator DestroyAfter() {
         yield return new WaitForSeconds(4);
+        InfoPopupManager.instance.RemoveNotif(this);
         Destroy(gameObject);
     }
 }

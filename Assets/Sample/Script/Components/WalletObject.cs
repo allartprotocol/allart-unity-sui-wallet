@@ -27,6 +27,10 @@ public class WalletObject : MonoBehaviour
 
     private void OnSelect()
     {
+        if(balance == null)
+        {
+            return;
+        }
         manager.ShowScreen("TokenInfoScreen", new Tuple<CoinMetadata, SUIMarketData, Balance>(coinMetadata, geckoCoinData, balance));
     }
 
@@ -39,25 +43,30 @@ public class WalletObject : MonoBehaviour
 
     private void DisplayData(Balance balance)
     {
+        coin_usd.text = "$0";
+        coin_change.text = "+0%";
+        coin_balance.text = "";
+        if(balance == null)
+        {
+            return;
+        }
+
         coinMetadata = null;
         if(WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
         {
             coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];           
         }
 
-        coin_name.text = "";
         coin_balance.text = balance.totalBalance.ToString();
-        coin_usd.text = "$0";
-        coin_change.text = "+0%";
 
-        if (coinMetadata != null)
+        if (coinMetadata == null)
         {
-            coin_name.text = coinMetadata.name;
-            coin_balance.text = $"{coinMetadata.symbol} {WalletComponent.ApplyDecimals(balance, coinMetadata)}";
-        }
-        else { 
             return;
         }
+
+        if(!overrideImage)
+            coin_name.text = coinMetadata.name;
+        coin_balance.text = $"{WalletComponent.ApplyDecimals(balance, coinMetadata)} {coinMetadata.symbol}";
 
         var tokenImage = GetComponentInChildren<TokenImage>();
         if(!overrideImage)

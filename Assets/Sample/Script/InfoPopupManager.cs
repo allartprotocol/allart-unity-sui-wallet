@@ -25,6 +25,9 @@ public class InfoPopupManager : MonoBehaviour
     public Sprite errorSprite;
     public Sprite infoSprite;
 
+    public List<NotificationPopup> notifQueue = new List<NotificationPopup>();
+    public Transform underlay;
+
     private void Awake()
     {
         if (instance == null)
@@ -39,6 +42,12 @@ public class InfoPopupManager : MonoBehaviour
 
     public void AddNotif(InfoType type, string message)
     {
+
+        if (notifQueue.Count > 0 && notifQueue[notifQueue.Count - 1].titleText.text == message)
+        {
+            return;
+        }
+
         GameObject notif = Instantiate(notifPrefab, contentHolder);
 
         switch (type)
@@ -54,6 +63,33 @@ public class InfoPopupManager : MonoBehaviour
                 break;
             default:
                 break;
+        }
+
+        notifQueue.Add(notif.GetComponent<NotificationPopup>());
+
+        if(notifQueue.Count > 3)
+        {
+            Destroy(notifQueue[0].gameObject);
+            notifQueue.Remove(notifQueue[0]);
+        }
+        underlay.gameObject.SetActive(true);
+    }
+
+    public void ClearNotif()
+    {
+        foreach (var notif in notifQueue)
+        {
+            Destroy(notif.gameObject);
+        }
+        notifQueue.Clear();
+    }
+
+    public void RemoveNotif(NotificationPopup notif)
+    {
+        notifQueue.Remove(notif);
+        if(notifQueue.Count == 0)
+        {
+            underlay.gameObject.SetActive(false);
         }
     }
 }

@@ -117,6 +117,10 @@ public class MainWalletScreen : BaseScreen
 
         foreach (var eventPage in history)
         {
+            if(eventPage == null)
+            {
+                continue;
+            }
             var obj = Instantiate(historyObjectPrefab, historyContent);
             var eventObject = obj.GetComponent<EventObject>();
             eventObject.InitializeObject(eventPage, manager);
@@ -158,6 +162,12 @@ public class MainWalletScreen : BaseScreen
         if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
 
+        if (WalletComponent.Instance.currentWallet == null)
+            return;
+
+        suiSecondaryWalletObject.Init(null, manager);
+        suiPrimaryWalletObject.Init(null, manager);
+        
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
 
@@ -183,31 +193,59 @@ public class MainWalletScreen : BaseScreen
             noBalanceText.gameObject.SetActive(true);
             return;
         }
-        else
-        {
-            noBalanceText.gameObject.SetActive(false);
-        }
+        
+        noBalanceText.gameObject.SetActive(false);
+        
+        bool suiPrimary = false;
+        bool suiSecondary = false;
 
-        foreach (var balance in balances)
+        foreach (Balance balance in balances)
         {
-            Debug.Log(balance.coinType);
-            
-            if(balance.totalBalance == 0)
+            var meta = WalletComponent.Instance.coinMetadatas[balance.coinType];
+            if(meta.symbol == "SUI")
             {
-                noBalanceText.gameObject.SetActive(true);
+                suiPrimaryWalletObject.Init(balance, manager);
+                suiPrimary = true;
                 continue;
             }
+            else if(meta.symbol == "Bonk")
+            {
+                suiSecondaryWalletObject.Init(balance, manager);
+                suiSecondary = true;
+                continue;
+            }
+
             var obj = Instantiate(objectListItemPrefab, objectListContent);
             WalletObject wo = obj.GetComponent<WalletObject>();
             wo.Init(balance, manager);
             loadedObjects.Add(wo);
-            noBalanceText.gameObject.SetActive(false);
+        }
+
+        if(!suiPrimary)
+        {
+            Debug.Log("SUI Primary not found");
+            suiPrimaryWalletObject.Init(null, manager);
+        }
+
+        if(!suiSecondary)
+        {
+            suiSecondaryWalletObject.Init(null, manager);
         }
     }
 
     public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
+
+        if(manager.previousScreen != null)
+        {
+            Debug.Log("Previous screen: " + manager.previousScreen.name);
+            if(manager.previousScreen.name == "TransactionInfo")
+            {
+                OnHistory();
+                return;
+            }
+        }
 
         string password = WalletComponent.Instance.password;
         WalletComponent.Instance.RestoreAllWallets(password);
@@ -260,7 +298,6 @@ public class MainWalletScreen : BaseScreen
             {
                 percentageText.text = $"{0.00}%";
                 if(geckoData.current_price != null){
-                    Debug.Log(geckoData.current_price.ToString());
                     double.TryParse(geckoData.current_price.ToString(), out double price);
                     var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
                     walletBalanceText.text = $"${usdValue.ToString("0.00")}";

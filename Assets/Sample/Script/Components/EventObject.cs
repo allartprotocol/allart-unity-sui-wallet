@@ -24,6 +24,10 @@ public class EventObject : MonoBehaviour
 
     public void InitializeObject(SuiTransactionBlockResponse eventPage, SimpleScreenManager screenManager)
     {
+        nameTxt.text = "Transaction";
+        amount.text = "";
+        date.text = "";
+
         this.screenManager = screenManager;
         transactionButton = GetComponent<Button>();
         this.eventPage = eventPage;
@@ -35,10 +39,10 @@ public class EventObject : MonoBehaviour
         if(eventPage.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
         {
             nameTxt.text = "Sent";
-            amount.text = "To " + WalletUtility.ShortenAddress(eventPage.transaction.data.sender);
+            amount.text = "To " + GetReceiver();
         }
         else{
-            nameTxt.text = "Transaction";
+            nameTxt.text = "Receive";
             amount.text = "From " + WalletUtility.ShortenAddress(eventPage.transaction.data.sender);
         }
 
@@ -56,9 +60,21 @@ public class EventObject : MonoBehaviour
             statusImage.sprite = failImage;
     }
 
+    private string GetReceiver()
+    {
+        foreach (var input in eventPage.transaction.data.transaction.inputs)
+        {
+            if(input.valueType == "address")
+            {
+                return input.value;
+            }
+        }
+        return "Unknown Receiver";
+    }
+
     private void OnDestroy()
     {
-        transactionButton.onClick.RemoveAllListeners();
+        transactionButton?.onClick.RemoveAllListeners();
     }
 
 }

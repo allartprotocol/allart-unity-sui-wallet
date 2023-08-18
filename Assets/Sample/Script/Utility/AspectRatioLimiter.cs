@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(RectTransform))]
 
@@ -6,11 +7,12 @@ public class AspectRatioLimiter : MonoBehaviour
 {
     [SerializeField] private float maxAspectRatio = 1.7778f; // Example: 16:9
 
-    private RectTransform rectTransform;
+    public  RectTransform holder;
+    public  AspectRatioFitter aspectRatioFitter;
+    public CanvasScaler canvasScaler;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -18,17 +20,25 @@ public class AspectRatioLimiter : MonoBehaviour
         AdjustWidthByAspect();
     }
 
+    private float GetAspectRatio()
+    {
+        return (float) Screen.width / Screen.height;
+    }
+
     private void AdjustWidthByAspect()
     {
-        // Get the current aspect ratio of the UI element
-        float currentAspectRatio = rectTransform.rect.width / rectTransform.rect.height;
+        float aspectRatio = GetAspectRatio();
 
-        if (currentAspectRatio <= maxAspectRatio)
+        if (aspectRatio > maxAspectRatio)
         {
-            // If the current aspect ratio is less than or equal to the threshold, match the screen width
-            float desiredWidth = Screen.width * (rectTransform.anchorMax.x - rectTransform.anchorMin.x);
-            rectTransform.sizeDelta = new Vector2(desiredWidth, rectTransform.sizeDelta.y);
+            aspectRatioFitter.enabled = true;
+            canvasScaler.matchWidthOrHeight = 1;
         }
-        // If the aspect ratio exceeds the threshold, the width remains the same.
+        else
+        {
+            aspectRatioFitter.enabled = false;
+            holder.sizeDelta = new Vector2(0, 0);
+            canvasScaler.matchWidthOrHeight = 0;
+        }
     }
 }

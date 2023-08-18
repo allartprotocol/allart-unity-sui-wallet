@@ -30,6 +30,20 @@ public class SUIMarketData {
     public string image;
     public object current_price;
     public object price_change_percentage_24h;
+
+    public double current_price_double {
+        get {
+            double.TryParse(current_price.ToString(), out double price);
+            return price;
+        }
+    }
+
+    public double price_change_percentage_24h_double {
+        get {
+            double.TryParse(price_change_percentage_24h.ToString(), out double price);
+            return price;
+        }
+    }
 }
 
 public class MarketData {

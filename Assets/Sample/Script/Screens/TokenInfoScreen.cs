@@ -16,7 +16,7 @@ public class TokenInfoScreen : BaseScreen {
 
     private CoinMetadata _coinMetadata;
     private Balance _balance;
-    private GeckoCoinData geckoData;
+    private SUIMarketData geckoData;
 
     public CoinMetadata coinMetadata
     {
@@ -59,7 +59,7 @@ public class TokenInfoScreen : BaseScreen {
     {
         base.ShowScreen(data);
 
-        if (data is not Tuple<CoinMetadata, GeckoCoinData, Balance> coinData)
+        if (data is not Tuple<CoinMetadata, SUIMarketData, Balance> coinData)
         {
             return;
         }
@@ -78,12 +78,12 @@ public class TokenInfoScreen : BaseScreen {
         coinSymbol.text = coinMetadata.symbol;
         titleText.text = coinMetadata.name;
 
-        if (geckoData != null && geckoData.market_data != null) { 
-            if(geckoData.market_data.current_price == null)
+        if (geckoData != null) { 
+            if(geckoData.current_price == null)
             {
                 return;
             }
-            var usdValue = geckoData.market_data.current_price["usd"] * WalletComponent.ApplyDecimals(balance, coinMetadata);
+            var usdValue = geckoData.current_price_double * WalletComponent.ApplyDecimals(balance, coinMetadata);
             coinPrice.text = $"${usdValue:0.00}";
         }
 

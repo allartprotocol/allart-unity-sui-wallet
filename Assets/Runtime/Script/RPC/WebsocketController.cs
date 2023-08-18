@@ -80,7 +80,7 @@ public class WebsocketController: MonoBehaviour
             EventFilter filter = new("suix_subscribeTransaction", new List<object>{filterParams}); //{filterParams}
 
             string filterString = JsonConvert.SerializeObject(filter);
-            // Debug.Log(filterString);
+            Debug.Log(filterString);
             await websocket.SendText(filterString);
         }
     }

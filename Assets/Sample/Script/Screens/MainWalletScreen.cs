@@ -92,7 +92,16 @@ public class MainWalletScreen : BaseScreen
     /// </summary>
     async void PopulateHistory()
     {
+        foreach (var obj in loadedEvents)
+        {
+            Destroy(obj.gameObject);
+        }
+
+        loadedEvents.Clear();
+        
+        loadingScreen.gameObject.SetActive(true);
         var history = await WalletComponent.Instance.GetTransactionsForSelectedWallet();
+        loadingScreen.gameObject.SetActive(false);
 
         if(history.Count == 0)
         {
@@ -104,12 +113,7 @@ public class MainWalletScreen : BaseScreen
             noActivityText.gameObject.SetActive(false);
         }
 
-        foreach (var obj in loadedEvents)
-        {
-            Destroy(obj.gameObject);
-        }
 
-        loadedEvents.Clear();
         if(history.Count != 0)
         {
             history = history.OrderByDescending(x => x.timestampMs).ToList();

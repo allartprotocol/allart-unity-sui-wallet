@@ -1,26 +1,84 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
 
-// public class SampleInstallerEditor : using UnityEngine;
-// using UnityEditor;
+public class HardcodedPackageManagerImporter : EditorWindow
+{
+    // Hardcoded source path of the package you want to copy from
+    private readonly string sourcePath = "com.example.package";
+    private string destinationPath = "Assets/"; // Default destination path
 
-// public class SampleInstallerEditor : EditorWindow {
+    [MenuItem("Tools/Copy from Hardcoded Package to Assets")]
+    public static void ShowWindow()
+    {
+        GetWindow<HardcodedPackageManagerImporter>("Copy from Hardcoded Package");
+    }
 
-//     [MenuItem("allart-sui-wallet/SampleInstaller")]
-//     private static void ShowWindow() {
-//         var window = GetWindow<SampleInstallerEditor>();
-//         window.titleContent = new GUIContent("SampleInstaller");
-//         window.Show();
-//     }
+    private void OnGUI()
+    {
+        GUILayout.Label("Copy content from Hardcoded Package to Assets", EditorStyles.boldLabel);
+        GUILayout.Label($"Copying from: {sourcePath}");
 
-//     private void OnGUI() {
-//         GUILayout.Label("Click the button below to install the package.", EditorStyles.wordWrappedLabel);
+        GUILayout.BeginHorizontal();
+        GUILayout.EndHorizontal();
 
-//         if (GUILayout.Button("Install"))
-//         {
-//             string packagePath = "Assets/MyNpmPackage/MyPackage.unitypackage"; // Update this with your actual package path
-//             AssetDatabase.ImportPackage(packagePath, true);
-//         }
-//     }
-// }
+        if (GUILayout.Button("Copy"))
+        {
+            CopyContents();
+        }
+    }
+
+    void CopyContents()
+    {
+        // Construct full source path
+        string fullSourcePath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Packages", sourcePath);
+
+        // Check if source exists
+        if (!Directory.Exists(fullSourcePath))
+        {
+            Debug.LogError("Source path does not exist!");
+            return;
+        }
+
+        string fullDestinationPath = Path.Combine(Application.dataPath, destinationPath);
+
+        // Copying directory
+        DirectoryCopy(fullSourcePath, fullDestinationPath, true);
+        AssetDatabase.Refresh();
+    }
+
+    // Function to copy directories
+    private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+    {
+        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+        if (!dir.Exists)
+        {
+            throw new DirectoryNotFoundException(
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        DirectoryInfo[] dirs = dir.GetDirectories();
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        FileInfo[] files = dir.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            string tempPath = Path.Combine(destDirName, file.Name);
+            file.CopyTo(tempPath, false);
+        }
+
+        if (copySubDirs)
+        {
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string tempPath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
+            }
+        }
+    }
+}

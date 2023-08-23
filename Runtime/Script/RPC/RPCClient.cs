@@ -90,6 +90,9 @@ namespace AllArt.SUI.RPC {
                 if (uwr.result == UnityWebRequest.Result.Success)
                 {
                     Texture2D tex = ((DownloadHandlerTexture)uwr.downloadHandler).texture;
+                    tex.mipMapBias = -0.5f; // Optional: Adjust mipmap bias if needed
+                    tex.filterMode = FilterMode.Trilinear;
+                    tex.Apply(true);
                     Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);                
                     return sprite;
                 }

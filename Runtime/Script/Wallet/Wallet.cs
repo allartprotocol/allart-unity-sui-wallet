@@ -89,33 +89,7 @@ namespace AllArt.SUI.Wallets
 
         public void SaveWallet()
         {
-            List<string> wallets = GetWalletSavedKeys();
-
-            if (string.IsNullOrEmpty(walletName))
-            {
-                int lastWalletNumber = 0;
-                if (wallets.Count > 0)
-                {
-                    string lastWallet = wallets[wallets.Count - 1];
-                    lastWalletNumber = int.Parse(lastWallet.Split('_')[1]);
-                }
-                walletName = $"wallet_{lastWalletNumber + 1}";
-            }
-
-            if (!wallets.Contains(walletName))
-            {
-                wallets.Add(walletName);
-                PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
-            }
-
-            Debug.Log($"Name {walletName}");
-            if(string.IsNullOrEmpty(mnemonic))
-            {
-                mnemonic = privateKey;
-            }
-            string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, password);
-            Debug.Log($"Encoded {encodedKeyPair}");
-            PlayerPrefs.SetString(walletName, encodedKeyPair);
+            SaveWallet(password);
         }
 
         public void SaveWallet(string newPassword)
@@ -124,7 +98,7 @@ namespace AllArt.SUI.Wallets
 
             if (string.IsNullOrEmpty(walletName))
             {
-                walletName = $"wallet_{wallets.Count + 1}";
+                walletName = $"Wallet {wallets.Count + 1}";
             }
 
             if (!wallets.Contains(walletName))

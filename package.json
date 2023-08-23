@@ -6,9 +6,9 @@
 	"description": "Unity SUI Wallet",
 	"samples": [
        	{
-            "displayName": "Wallet Implementation",
+            "displayName": "SUI Wallet",
             "description": "Contains simple implementation of Unity SUI Wallet",
-            "path": "Samples~/WalletImplementation"
+            "path": "Samples~/SUIWallet"
         }],
 	"dependencies":{
 		"com.unity.nuget.newtonsoft-json": "3.2.1",

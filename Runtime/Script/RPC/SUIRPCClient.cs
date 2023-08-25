@@ -172,7 +172,6 @@ namespace AllArt.SUI.RPC
             RPCRequestBase rpcRequest = new("sui_dryRunTransactionBlock");
             rpcRequest.AddParameter(txBytes);
             var rpcResponse = await SendRequestAsync<SuiTransactionBlockResponse>(rpcRequest);
-            Debug.LogError(JsonConvert.SerializeObject(rpcResponse));
             return rpcResponse;
         }
 

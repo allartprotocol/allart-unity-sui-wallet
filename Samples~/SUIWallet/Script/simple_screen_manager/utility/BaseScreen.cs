@@ -68,6 +68,11 @@ namespace SimpleScreen
                 gameObject.SetActive(false);
             }
 
+            List<BackButton> backButtons = GetComponentsInChildren<BackButton>(true).ToList();
+            foreach (var backBtn in backButtons)
+            {
+                backBtn.Init(manager);
+            }
             backButton = GetComponentInChildren<BackButton>();
             backButton?.Init(manager);
         }

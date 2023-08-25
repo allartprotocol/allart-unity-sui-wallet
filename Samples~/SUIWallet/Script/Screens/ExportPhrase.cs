@@ -24,6 +24,7 @@ public class ExportPhrase : BaseScreen
         base.ShowScreen(data);
         wallet = data as Wallet;
         password.text = "";
+        terms.isOn = false;
     }
 
     private void OnLogin()

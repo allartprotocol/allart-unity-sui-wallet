@@ -13,6 +13,18 @@ public class QRReader : MonoBehaviour
     private Coroutine tryScanRoutine;
 
     public Action<string> OnQRRead;
+    public AspectRatioFitter imageFitter;
+
+    // Image rotation
+    Vector3 rotationVector = new Vector3(0f, 0f, 0f);
+
+    // Image uvRect
+    Rect defaultRect = new Rect(0f, 0f, 1f, 1f);
+    Rect fixedRect = new Rect(0f, 1f, 1f, -1f);
+
+    // Image Parent's scale
+    Vector3 defaultScale = new Vector3(1f, 1f, 1f);
+    Vector3 fixedScale = new Vector3(-1f, 1f, 1f);
 
     public void StartFeed()
     {
@@ -22,6 +34,19 @@ public class QRReader : MonoBehaviour
             requestedWidth = (int)feed.rectTransform.rect.width
         };
         camTexture?.Play();
+
+        rotationVector.z = -camTexture.videoRotationAngle;
+        feed.rectTransform.localEulerAngles = rotationVector;
+
+        // Set AspectRatioFitter's ratio
+        float videoRatio = 
+            (float)camTexture.width / (float)camTexture.height;
+        imageFitter.aspectRatio = videoRatio;
+
+        // Unflip if vertically flipped
+        feed.uvRect = 
+            camTexture.videoVerticallyMirrored ? fixedRect : defaultRect;
+
 
         feed.texture = camTexture;
         tryScanRoutine = StartCoroutine(ScanRoutine());

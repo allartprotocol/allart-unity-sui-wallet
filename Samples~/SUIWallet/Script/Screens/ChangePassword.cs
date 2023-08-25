@@ -30,9 +30,12 @@ public class ChangePassword : BaseScreen
 
     private void PasswordChange()
     {
+        Debug.Log("PasswordChange");
+        Debug.Log(oldPassword.text);
+        Debug.Log(newPassword.text);
+        Debug.Log(confirmPassword.text);
         if(string.IsNullOrEmpty(oldPassword.text) || string.IsNullOrEmpty(newPassword.text) || string.IsNullOrEmpty(confirmPassword.text))
         {
-            //manager.ShowPopup("Error", "Please fill all the fields");
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill all the fields");
             return;
         }
@@ -60,9 +63,9 @@ public class ChangePassword : BaseScreen
 
         try
         {
-            if(!WalletComponent.Instance.CheckPasswordValidity(oldPassword.text))
+            if(WalletComponent.Instance.CheckPasswordValidity(oldPassword.text) == false)
             {
-                //manager.ShowPopup("Error", "Password is not valid");
+                Debug.Log("Password is not valid");
                 InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Password is not valid");
                 return;
             }
@@ -70,7 +73,6 @@ public class ChangePassword : BaseScreen
         catch (Exception ex)
         {
             Debug.Log(ex.Message);
-            //manager.ShowPopup("Error", "Invalid password");
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid password");
             return;
         }
@@ -78,7 +80,6 @@ public class ChangePassword : BaseScreen
 
         if(newPassword.text != confirmPassword.text)
         {
-            //manager.ShowPopup("Error", "New password and confirm password does not match");
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "New password and confirm password does not match");
             return;
         }

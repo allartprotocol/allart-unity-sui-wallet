@@ -53,6 +53,8 @@ public class MainWalletScreen : BaseScreen
         assets.onClick.AddListener(OnAssets);
         history.onClick.AddListener(OnHistory);
         WebsocketController.instance.onWSEvent += OnNewTransaction;
+        loadingScreen = GameObject.FindObjectOfType<LoaderScreen>(true).transform;
+        loadingScreen.gameObject.SetActive(true);
     }
 
     private async void OnNewTransaction()
@@ -98,10 +100,11 @@ public class MainWalletScreen : BaseScreen
         }
 
         loadedEvents.Clear();
+
+        LoaderScreen.instance.ShowLoading("Loading history...");
         
-        loadingScreen.gameObject.SetActive(true);
         var history = await WalletComponent.Instance.GetTransactionsForSelectedWallet();
-        loadingScreen.gameObject.SetActive(false);
+        LoaderScreen.instance.HideLoading();
 
         if(history.Count == 0)
         {
@@ -205,6 +208,10 @@ public class MainWalletScreen : BaseScreen
 
         foreach (Balance balance in balances)
         {
+            if(!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
+            {
+                continue;
+            }
             var meta = WalletComponent.Instance.coinMetadatas[balance.coinType];
             if(meta.symbol == "SUI")
             {
@@ -219,6 +226,10 @@ public class MainWalletScreen : BaseScreen
                 continue;
             }
 
+            if(balance.totalBalance == 0)
+            {
+                continue;
+            }
             var obj = Instantiate(objectListItemPrefab, objectListContent);
             WalletObject wo = obj.GetComponent<WalletObject>();
             wo.Init(balance, manager);
@@ -266,7 +277,8 @@ public class MainWalletScreen : BaseScreen
 
     private async Task UpdateWalletData()
     {
-        loadingScreen.gameObject.SetActive(true);
+        // loadingScreen.gameObject.SetActive(true);
+        LoaderScreen.instance.ShowLoading("Please wait...");
         await LoadWalletData();
         UpdateBalance();
         try
@@ -274,12 +286,14 @@ public class MainWalletScreen : BaseScreen
         }
         catch (System.Exception e)
         {
-            loadingScreen.gameObject.SetActive(false);
+            // loadingScreen.gameObject.SetActive(false);
+            LoaderScreen.instance.HideLoading();
             Debug.LogError(e);
         }
         finally
         {
-            loadingScreen.gameObject.SetActive(false);
+            // loadingScreen.gameObject.SetActive(false);
+            LoaderScreen.instance.HideLoading();
         }
     }
 
@@ -300,7 +314,7 @@ public class MainWalletScreen : BaseScreen
             var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
             if (geckoData != null)
             {
-                percentageText.text = $"{0.00}%";
+                percentageText.GetComponent<PriceChangeText>().SetText($"{0.00}%");
                 if(geckoData.current_price != null){
                     double.TryParse(geckoData.current_price.ToString(), out double price);
                     var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
@@ -313,7 +327,7 @@ public class MainWalletScreen : BaseScreen
                     if(geckoData.price_change_percentage_24h != null)
                     {
                         float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
-                        percentageText.text = $"{priceChange.ToString("0.00")}%";
+                        percentageText.GetComponent<PriceChangeText>().SetText($"{priceChange.ToString("0.00")}%");
                     }
                 }catch(Exception e){
                     Debug.Log(e);

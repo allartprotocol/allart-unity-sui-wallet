@@ -26,7 +26,6 @@ public class WebsocketController: MonoBehaviour
             url = url.Replace("https://", "wss://");
 
         websocket = new WebSocket(url);
-        Debug.Log(url);
 
         websocket.OnOpen += () =>
         {
@@ -45,14 +44,11 @@ public class WebsocketController: MonoBehaviour
 
         websocket.OnMessage += (bytes) =>
         {
-            // Reading a plain text message
             var message = System.Text.Encoding.UTF8.GetString(bytes);
-            // Debug.Log("OnMessage! " + message);
             var response = JsonConvert.DeserializeObject<JsonRpcResponse<string>>(message);
             if(response.result != null)
             {
                 subId = ulong.TryParse(response.result, out ulong id) ? id : 0;
-                // Debug.Log(subId);
             }
             onWSEvent?.Invoke();
         };
@@ -65,7 +61,6 @@ public class WebsocketController: MonoBehaviour
 #if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
 #endif
-
     }
 
     public async Task Subscribe(object filterParams)
@@ -77,10 +72,9 @@ public class WebsocketController: MonoBehaviour
 
         if (websocket.State == WebSocketState.Open)
         {
-            EventFilter filter = new("suix_subscribeTransaction", new List<object>{filterParams}); //{filterParams}
+            EventFilter filter = new("suix_subscribeTransaction", new List<object>{filterParams});
 
             string filterString = JsonConvert.SerializeObject(filter);
-            Debug.Log(filterString);
             await websocket.SendText(filterString);
         }
     }
@@ -100,7 +94,6 @@ public class WebsocketController: MonoBehaviour
         {
             EventFilter filter = new("suix_unsubscribeEvent", new List<object> { ulong.Parse(id) });
             string filterString = JsonConvert.SerializeObject(filter);
-            Debug.Log(filterString);
             await websocket.SendText(filterString);
         }
     }
@@ -108,8 +101,6 @@ public class WebsocketController: MonoBehaviour
     public async void Stop()
     {
         await websocket.Close();
-    }
-
-    
+    }    
 }
 

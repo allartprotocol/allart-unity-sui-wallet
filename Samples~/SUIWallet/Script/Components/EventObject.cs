@@ -39,7 +39,10 @@ public class EventObject : MonoBehaviour
         if(eventPage.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
         {
             nameTxt.text = "Sent";
-            amount.text = "To " + GetReceiver();
+            if(GetReceiver() == "Unknown Receiver")
+                amount.text = "To " + GetReceiver();
+            else
+                amount.text = "To " + WalletUtility.ShortenAddress(GetReceiver());
         }
         else{
             nameTxt.text = "Receive";

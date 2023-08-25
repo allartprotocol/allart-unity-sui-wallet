@@ -101,6 +101,9 @@ namespace AllArt.SUI.Wallets
                 walletName = $"Wallet {wallets.Count + 1}";
             }
 
+            Debug.Log(walletName);
+            Debug.Log(wallets.Count);
+
             if (!wallets.Contains(walletName))
             {
                 wallets.Add(walletName);
@@ -126,7 +129,7 @@ namespace AllArt.SUI.Wallets
                 try
                 {
                     KeyPair keyPair = KeyPair.GenerateKeyPairFromPrivateKey(mnemonic);
-                    return new Wallet(keyPair);
+                    return new Wallet(keyPair, password, walletName);
                 }
                 catch (Exception e)
                 {

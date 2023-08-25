@@ -49,6 +49,14 @@ public class ImportMnemonicScreen : BaseScreen
 
         this.mnemonic = mnemonic;
         Wallet wal = CreateAndEncryptMnemonic(WalletComponent.Instance.password);
+
+        if(WalletComponent.Instance.DoesWalletWithPublicKeyAlreadyExists(wal.publicKey))
+        {            
+            Debug.Log("Wallet already exist");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
+            return;
+        }
+
         if(wal != null)
         {
             WalletComponent.Instance.SetCurrentWallet(wal);
@@ -80,6 +88,7 @@ public class ImportMnemonicScreen : BaseScreen
     {
         base.ShowScreen(data);
         mnemonicField.text = "";
+        
     }
 
     public override void HideScreen()

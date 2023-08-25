@@ -43,8 +43,8 @@ public class WalletObject : MonoBehaviour
 
     private void DisplayData(Balance balance)
     {
-        coin_usd.text = "$0";
-        coin_change.text = "+0%";
+        coin_usd.text = "$--";
+        coin_change.text = "--%";
         coin_balance.text = "";
         if(balance == null)
         {
@@ -90,8 +90,8 @@ public class WalletObject : MonoBehaviour
         var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
         geckoCoinData = geckoData;
 
-        coin_usd.text = "$0";
-        coin_change.text = $"{0.00}%";
+        coin_usd.text = "$--";
+        coin_change.text = $"--%";
         if (geckoData != null) { 
             if(geckoData.current_price != null){
                 try{
@@ -108,7 +108,7 @@ public class WalletObject : MonoBehaviour
                 if(geckoData.price_change_percentage_24h != null)
                 {
                     float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
-                    coin_change.text = $"{priceChange.ToString("0.00")}%";
+                    coin_change.GetComponent<PriceChangeText>().SetText($"{priceChange.ToString("0.00")}%");
                 }
             }catch(Exception e){
                 Debug.Log(e);

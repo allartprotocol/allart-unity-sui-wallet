@@ -9,6 +9,10 @@ public class BackButton : MonoBehaviour
 
     void Start()
     {
+        if(btn != null)
+        {
+            return;
+        }
         btn = GetComponent<Button>();
         btn.onClick.AddListener(OnBack);
     }
@@ -21,5 +25,11 @@ public class BackButton : MonoBehaviour
     public void Init(SimpleScreenManager screenManager)
     {
         this.screenManager = screenManager;
+        if(btn == null)
+        {
+            btn = GetComponent<Button>();
+            btn.onClick.AddListener(OnBack);
+
+        }
     }
 }

@@ -26,6 +26,8 @@ public class TransactionInfoScreen : BaseScreen {
     public Sprite failImage;
     public Sprite successImage;
 
+    public TokenImage tokenImage;
+
     public UnityEngine.UI.Image statusImage;
 
     public Button suiExplorerBtn;
@@ -43,10 +45,8 @@ public class TransactionInfoScreen : BaseScreen {
 
         foreach (var effect in suiTransactionBlockResponse.balanceChanges)
         {
-            Debug.Log(JsonConvert.SerializeObject(effect));
             if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
             {
-                Debug.Log(effect.amount);
                 balanceChange = long.Parse(effect.amount);
                 type = effect.coinType;
             }
@@ -105,17 +105,32 @@ public class TransactionInfoScreen : BaseScreen {
     public async override void ShowScreen(object data)
     {
         base.ShowScreen(data);
+        tokenImage = GetComponentInChildren<TokenImage>();
 
         suiTransactionBlockResponse = data as SuiTransactionBlockResponse;
-        
-        Debug.Log(JsonConvert.SerializeObject(suiTransactionBlockResponse));
 
-        if (suiTransactionBlockResponse.effects.status.status == "success"){
-
-            statusImage.sprite = successImage;
+        string coinType = "";
+        foreach (var effect in suiTransactionBlockResponse.balanceChanges)
+        {
+            if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
+            {
+                coinType = effect.coinType;
+            }
         }
-        else
-            statusImage.sprite = failImage;
+
+        CoinMetadata coinMetadata = null;
+        if(WalletComponent.Instance.coinMetadatas.ContainsKey(coinType))
+            coinMetadata = WalletComponent.Instance.coinMetadatas[coinType];
+        else{
+            coinMetadata = await WalletComponent.Instance.GetCoinMetadata(coinType);
+        }
+
+        if(coinMetadata == null)
+            tokenImage.Init(null, "");
+        else{
+            WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
+            tokenImage.Init(image, coinMetadata.symbol);
+        }
 
         DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)ulong.Parse(suiTransactionBlockResponse.timestampMs));
         date.text = dateTime.ToString("MMMM d, yyyy 'at' h:mm tt");
@@ -126,7 +141,7 @@ public class TransactionInfoScreen : BaseScreen {
             type.text = "Receive";
         float gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
 
-        status.text = suiTransactionBlockResponse.effects.status.status;
+        status.text = suiTransactionBlockResponse.effects.status.status == "success" ? "Succeeded" : "Failed";
         sender.text = Wallet.DisplaySuiAddress(GetReceiver());
         network.text = "SUI";
         var feeText = (gasUsedFloat / Mathf.Pow(10, 9)).ToString("0.############");

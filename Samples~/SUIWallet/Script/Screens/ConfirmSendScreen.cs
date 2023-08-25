@@ -42,7 +42,8 @@ public class ConfirmSendScreen : BaseScreen {
 
     private async void OnConfirm()
     {
-        loaderScreen.gameObject.SetActive(true);
+        // loaderScreen.gameObject.SetActive(true);
+        LoaderScreen.instance.ShowLoading("Sending");
         JsonRpcResponse<SuiTransactionBlockResponse> completedTransaction = null;
         try{
             if(WalletComponent.Instance.currentCoinMetadata.symbol == "SUI")
@@ -62,7 +63,8 @@ public class ConfirmSendScreen : BaseScreen {
             Debug.Log(e);
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction was not successful ");
         }
-        loaderScreen.gameObject.SetActive(false);
+        // loaderScreen.gameObject.SetActive(false);
+        LoaderScreen.instance.HideLoading();
 
         TransferData finalData = TransferData;
         finalData.response = completedTransaction;
@@ -145,7 +147,8 @@ public class ConfirmSendScreen : BaseScreen {
         }
 
         
-        loaderScreen.gameObject.SetActive(false);
+        // loaderScreen.gameObject.SetActive(false);
+        LoaderScreen.instance.HideLoading();
         return transaction;
     }
 
@@ -289,7 +292,8 @@ public class ConfirmSendScreen : BaseScreen {
     public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
-        loaderScreen.gameObject.SetActive(true);
+        // loaderScreen.gameObject.SetActive(true);
+        LoaderScreen.instance.ShowLoading("Running simulation");
         confirmBtn.interactable = false;
 
         string feeAmount = await WalletComponent.Instance.GetReferenceGasPrice();
@@ -299,7 +303,7 @@ public class ConfirmSendScreen : BaseScreen {
             TransferData = confirmSendData;
             to.text = Wallet.DisplaySuiAddress(confirmSendData.to);
             toHeader.text = $"To {Wallet.DisplaySuiAddress(confirmSendData.to)}";
-            amount.text = $"{confirmSendData.amount} {confirmSendData.coin.symbol}";
+            amount.text = $"-{confirmSendData.amount} {confirmSendData.coin.symbol}";
             fee.text = $"{feeAmountFloat:0.#########} SUI";
 
             WalletComponent.Instance.coinImages.TryGetValue(confirmSendData.coin.symbol, out Sprite image);
@@ -321,7 +325,8 @@ public class ConfirmSendScreen : BaseScreen {
         }
 
         confirmBtn.interactable = res != null;  
-        loaderScreen.gameObject.SetActive(false);      
+        // loaderScreen.gameObject.SetActive(false);  
+        LoaderScreen.instance.HideLoading();    
     }
 
     private float CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)

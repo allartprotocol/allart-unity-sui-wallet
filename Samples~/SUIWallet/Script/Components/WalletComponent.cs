@@ -211,16 +211,8 @@ public class WalletComponent : MonoBehaviour
             return false;
         }
 
-        try
-        {
-            RestoreAllWallets(passwordString);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            return false;
-        }
-
+        List<Wallet> wallets = RestoreWallets(passwordString);
+        
         if (wallets.Count > 0)
         {
             return true;
@@ -244,7 +236,6 @@ public class WalletComponent : MonoBehaviour
     public async void SetCurrentWallet(Wallet wallet)
     {
         currentWallet = wallet;
-        // Debug.Log(wallet.publicKey);
         var fromOrToFilter = new FromOrToAddressFilter(new FromOrObject(wallet.publicKey));
         var fromAndToFilter = new FromAndToAddressFilter(new FromToObject(wallet.publicKey, wallet.publicKey));
         var filterOr = new FilterOr(new List<object>() { new FromAddresObject(new FromAddressFilter(wallet.publicKey)), new ToAddresObject( new ToAddressFilter(wallet.publicKey)) });
@@ -287,7 +278,7 @@ public class WalletComponent : MonoBehaviour
         try{
             walletKeyPair = KeyPair.GenerateKeyPairFromPrivateKey(privateKey);
         }catch(Exception e){
-            Debug.Log(e.Message);
+            Debug.LogError(e.Message);
             return null;
         }
         Wallet wallet = new(walletKeyPair, password);        
@@ -317,9 +308,34 @@ public class WalletComponent : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.Log(e.Message);
+                Debug.LogError(e.Message);
             }
         }
+    }
+
+    public List<Wallet> RestoreWallets(string password)
+    {
+        var walletNames = Wallet.GetWalletSavedKeys();
+        List<Wallet> restoredWallets = new();
+        foreach (var walletName in walletNames)
+        {
+            try
+            {
+                Wallet wallet = Wallet.RestoreWallet(walletName, password);
+                if (wallet != null)
+                {
+                    if (!restoredWallets.Contains(wallet))
+                    {
+                        restoredWallets.Add(wallet);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
+        return restoredWallets;
     }
 
     /// <summary>
@@ -490,7 +506,16 @@ public class WalletComponent : MonoBehaviour
     /// <param name="owner">The address of the owner of the coins.</param>
     public async Task GetDataForAllCoins(string owner)
     {
-        var coins = await GetAllCoins(owner);
+        var coins = new PageForCoinAndObjectID();
+        try
+        {
+            coins = await GetAllCoins(owner);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
+            return;
+        }
 
         await GetCoins(coins);
         GetCoinMetadatas();
@@ -547,8 +572,9 @@ public class WalletComponent : MonoBehaviour
         foreach (var dataKey in coinGeckoData.Keys)
         {
             var coin = coinGeckoData[dataKey];
-            // Debug.Log(JsonConvert.SerializeObject(coin));
 
+            //check for sui and bonk
+            //hardcoded values for now
             if(coin.symbol == "sui")
             {
                 coinImages.TryAdd(dataKey, suiIcon);
@@ -559,6 +585,7 @@ public class WalletComponent : MonoBehaviour
                 coinImages.TryAdd(dataKey, bonkIcon);
                 continue;
             }
+
             if (!string.IsNullOrEmpty(coin.image))
             {
                 if (coinImages.ContainsKey(dataKey))
@@ -639,7 +666,6 @@ public class WalletComponent : MonoBehaviour
     public async Task<Sprite> GetImage(string url)
     {
         var rpc = new RPCClient(SUIConstantVars.coingeckoApi);
-        // Debug.Log(url);
         var data = await rpc.DownloadImage(url);
         return data;
     }
@@ -836,7 +862,7 @@ public class WalletComponent : MonoBehaviour
             options = null
         };
 
-        var ownedObj = await GetOwnedObjects(currentWallet.publicKey, query, null, 50);
+        var ownedObj = await GetOwnedObjects(currentWallet.publicKey, query, null, 10);
 
         if (ownedObj == null) return null;
 

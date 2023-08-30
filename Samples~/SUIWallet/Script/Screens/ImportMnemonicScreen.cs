@@ -42,7 +42,7 @@ public class ImportMnemonicScreen : BaseScreen
 
         if(WalletComponent.Instance.DoesWalletWithMnemonicExists(mnemonic))
         {
-            Debug.Log("Wallet already exist");
+            Debug.Log("Wallet already exist mnemonic");
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
             return;
         }
@@ -52,7 +52,7 @@ public class ImportMnemonicScreen : BaseScreen
 
         if(WalletComponent.Instance.DoesWalletWithPublicKeyAlreadyExists(wal.publicKey))
         {            
-            Debug.Log("Wallet already exist");
+            Debug.Log($"Wallet already exist {wal.publicKey}");
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
             return;
         }

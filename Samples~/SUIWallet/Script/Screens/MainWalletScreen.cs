@@ -44,6 +44,14 @@ public class MainWalletScreen : BaseScreen
     public WalletObject suiPrimaryWalletObject;
     public WalletObject suiSecondaryWalletObject;
 
+    public enum EDisplay
+    {
+        WALLET,
+        HISTORY
+    }
+
+    private EDisplay display = EDisplay.WALLET;
+
     private void Start()
     {
         receiveBtn.onClick.AddListener(OnReceive);
@@ -64,6 +72,7 @@ public class MainWalletScreen : BaseScreen
 
     private void OnHistory()
     {
+        display = EDisplay.HISTORY;
         assetHolder.gameObject.SetActive(false);
         historyHolder.gameObject.SetActive(true);
         PopulateHistory();
@@ -82,7 +91,7 @@ public class MainWalletScreen : BaseScreen
                 Debug.Log("Found current wallet: " + wallet.Value.publicKey + " at index: " + options.Count);
                 selectedIndex = options.Count;
             }
-            options.Add($"{options.Count + 1}. {wallet.Value.displayAddress}");
+            options.Add("<color=#BABABA>" + $"{options.Count + 1}.</color> {wallet.Value.displayAddress}");
         }
 
         walletsDropdown.AddOptions(options);
@@ -94,19 +103,14 @@ public class MainWalletScreen : BaseScreen
     /// </summary>
     async void PopulateHistory()
     {
-        foreach (var obj in loadedEvents)
-        {
-            Destroy(obj.gameObject);
-        }
-
-        loadedEvents.Clear();
+        ClearActivity();
 
         LoaderScreen.instance.ShowLoading("Loading history...");
-        
+
         var history = await WalletComponent.Instance.GetTransactionsForSelectedWallet();
         LoaderScreen.instance.HideLoading();
 
-        if(history.Count == 0)
+        if (history.Count == 0)
         {
             noActivityText.gameObject.SetActive(true);
             return;
@@ -117,26 +121,46 @@ public class MainWalletScreen : BaseScreen
         }
 
 
-        if(history.Count != 0)
+        if (history.Count > 0)
         {
             history = history.OrderByDescending(x => x.timestampMs).ToList();
         }
 
         foreach (var eventPage in history)
         {
-            if(eventPage == null)
+            if (eventPage == null)
             {
                 continue;
             }
             var obj = Instantiate(historyObjectPrefab, historyContent);
             var eventObject = obj.GetComponent<EventObject>();
-            eventObject.InitializeObject(eventPage, manager);
+            try
+            {
+                eventObject.InitializeObject(eventPage, manager);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                Destroy(obj);
+                continue;
+            }
             loadedEvents.Add(eventObject);
         }
     }
 
+    private void ClearActivity()
+    {
+        foreach (var obj in loadedEvents)
+        {
+            Destroy(obj.gameObject);
+        }
+
+        loadedEvents.Clear();
+    }
+
     private void OnAssets()
     {
+        display = EDisplay.WALLET;
         assetHolder.gameObject.SetActive(true);
         historyHolder.gameObject.SetActive(false);
     }
@@ -150,7 +174,12 @@ public class MainWalletScreen : BaseScreen
     {
         WalletComponent.Instance.SetWalletByIndex(value);
         Debug.Log("Selected wallet: " + WalletComponent.Instance.currentWallet.publicKey);
-        await UpdateWalletData();
+        if(display == EDisplay.WALLET){
+            await UpdateWalletData();
+        }
+        else{
+            PopulateHistory();
+        }
     }
 
     private void OnSend()
@@ -174,6 +203,7 @@ public class MainWalletScreen : BaseScreen
 
         suiSecondaryWalletObject.Init(null, manager);
         suiPrimaryWalletObject.Init(null, manager);
+        WalletComponent.Instance.GetSUIMarketDataForCoins();
         
         var wallet = WalletComponent.Instance.currentWallet;
         await WalletComponent.Instance.GetDataForAllCoins(wallet.publicKey);
@@ -252,25 +282,18 @@ public class MainWalletScreen : BaseScreen
     {
         base.ShowScreen(data);
 
-        if(manager.previousScreen != null)
-        {
-            Debug.Log("Previous screen: " + manager.previousScreen.name);
-            if(manager.previousScreen.name == "TransactionInfo")
-            {
-                OnHistory();
-                return;
-            }
-        }
-
         string password = WalletComponent.Instance.password;
         WalletComponent.Instance.RestoreAllWallets(password);
 
         var wallet = WalletComponent.Instance.GetAllWallets();
 
-        OnAssets();
-
-        await UpdateWalletData();
-        PopulateWalletsDropdown();
+        if(display == EDisplay.WALLET){
+            await UpdateWalletData();
+            PopulateWalletsDropdown();
+        }
+        else{
+            PopulateHistory();
+        }
 
         manager.ClearHistory(this);
     }
@@ -279,10 +302,10 @@ public class MainWalletScreen : BaseScreen
     {
         // loadingScreen.gameObject.SetActive(true);
         LoaderScreen.instance.ShowLoading("Please wait...");
-        await LoadWalletData();
-        UpdateBalance();
         try
         {
+            await LoadWalletData();
+            UpdateBalance();
         }
         catch (System.Exception e)
         {

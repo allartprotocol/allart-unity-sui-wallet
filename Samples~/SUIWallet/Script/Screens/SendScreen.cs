@@ -51,11 +51,15 @@ public class SendScreen : BaseScreen
         {
             return;
         }
-        float ammount = float.Parse(arg0);
-        if(ammount > GetMaxBalance())
+        decimal.TryParse(arg0, out decimal parseAmmount); 
+        
+
+        if(parseAmmount > GetMaxBalance())
         {
             amount.text = GetMaxBalance().ToString();
         }
+        bool maxBalance = arg0.Equals(GetMaxBalance().ToString());
+        Debug.Log($"Max Balance: {maxBalance}");
     }
 
     private void OnQRCodeFound(string obj)
@@ -79,18 +83,18 @@ public class SendScreen : BaseScreen
 
     private void OnMax()
     {
-        double balance = GetMaxBalance();
+        decimal balance = GetMaxBalance();
         amount.text = balance.ToString();
     }
 
-    private double GetMaxBalance(){
+    private decimal GetMaxBalance(){
         var meta = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault();
         if(meta.Value == null)
         {
             return 0;
         }
         var coinType = meta.Value;
-        return balance.totalBalance / (Mathf.Pow(10, coinType.decimals));
+        return balance.totalBalance / (decimal)Mathf.Pow(10, coinType.decimals);
 
     }
 
@@ -142,12 +146,12 @@ public class SendScreen : BaseScreen
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid address");
             return;
         }
-        double balance = GetMaxBalance();
+        decimal balance = GetMaxBalance();
         Debug.Log($"Balance: {balance}");
-        Debug.Log($"Amount: {double.Parse(amount.text)}");
-        bool maxBalance = double.Parse(amount.text) >= balance;
+        Debug.Log($"Amount: {amount.text}");
+        bool maxBalance = amount.text.Equals(balance.ToString());
         Debug.Log($"Max Balance: {maxBalance}");
-        
+        Debug.Log($"Transfer All: {maxBalance}");
         GoTo("SendConfirmScreen", new TransferData()
         {
             to = to.text,

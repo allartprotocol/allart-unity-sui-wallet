@@ -45,6 +45,7 @@ public class WebsocketController: MonoBehaviour
         websocket.OnMessage += (bytes) =>
         {
             var message = System.Text.Encoding.UTF8.GetString(bytes);
+            Debug.Log(message);
             var response = JsonConvert.DeserializeObject<JsonRpcResponse<string>>(message);
             if(response.result != null)
             {

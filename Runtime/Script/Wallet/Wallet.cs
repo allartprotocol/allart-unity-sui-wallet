@@ -101,6 +101,28 @@ namespace AllArt.SUI.Wallets
                 walletName = $"Wallet {wallets.Count + 1}";
             }
 
+            List<string> walletNumbers = new List<string>();
+
+            // get last number of wallet
+            foreach (string wallet in wallets)
+            {
+                string[] split = wallet.Split(' ');
+                if (split.Length > 1)
+                {
+                    walletNumbers.Add(split[1]);
+                }
+            }
+
+            // check if list of numbers is missing any
+            for (int i = 1; i <= wallets.Count; i++)
+            {
+                if (!walletNumbers.Contains(i.ToString()))
+                {
+                    walletName = $"Wallet {i}";
+                    break;
+                }
+            }
+
             Debug.Log(walletName);
             Debug.Log(wallets.Count);
 
@@ -109,6 +131,7 @@ namespace AllArt.SUI.Wallets
                 wallets.Add(walletName);
                 PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
             }
+            
             if(string.IsNullOrEmpty(mnemonic))
             {
                 mnemonic = privateKey;

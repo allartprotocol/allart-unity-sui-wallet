@@ -128,7 +128,7 @@ namespace AllArt.SUI.RPC.Response {
         public string computationCost;
         public string storageCost;
         public string storageRebate;
-        public string nonRefundableStorageFees;
+        public string nonRefundableStorageFee;
     }
 
     [System.Serializable]

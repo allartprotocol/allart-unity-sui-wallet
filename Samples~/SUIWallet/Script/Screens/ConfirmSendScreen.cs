@@ -42,7 +42,6 @@ public class ConfirmSendScreen : BaseScreen {
 
     private async void OnConfirm()
     {
-        // loaderScreen.gameObject.SetActive(true);
         LoaderScreen.instance.ShowLoading("Sending");
         JsonRpcResponse<SuiTransactionBlockResponse> completedTransaction = null;
         try{
@@ -63,7 +62,7 @@ public class ConfirmSendScreen : BaseScreen {
             Debug.Log(e);
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction was not successful ");
         }
-        // loaderScreen.gameObject.SetActive(false);
+        
         LoaderScreen.instance.HideLoading();
 
         TransferData finalData = TransferData;
@@ -272,8 +271,9 @@ public class ConfirmSendScreen : BaseScreen {
                 ownedCoinObjectIds.Add(data.data.objectId);
             }
     
-            ulong amount = (ulong)(double.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
+            ulong amount = (ulong)(decimal.Parse(TransferData.amount) * (decimal)Mathf.Pow(10, TransferData.coin.decimals));
             JsonRpcResponse<TransactionBlockBytes> res_pay = null;
+            Debug.Log(amount);
             try{
                 res_pay = await WalletComponent.Instance.Pay(wallet,
                     ownedCoinObjectIds.ToArray(),
@@ -292,7 +292,7 @@ public class ConfirmSendScreen : BaseScreen {
     public override async void ShowScreen(object data = null)
     {
         base.ShowScreen(data);
-        // loaderScreen.gameObject.SetActive(true);
+
         LoaderScreen.instance.ShowLoading("Running simulation");
         confirmBtn.interactable = false;
 
@@ -325,7 +325,7 @@ public class ConfirmSendScreen : BaseScreen {
         }
 
         confirmBtn.interactable = res != null;  
-        // loaderScreen.gameObject.SetActive(false);  
+
         LoaderScreen.instance.HideLoading();    
     }
 
@@ -341,8 +341,8 @@ public class ConfirmSendScreen : BaseScreen {
                 gasUsedFloat += float.Parse(gasUsed.storageCost);
             if (gasUsed.storageRebate != null)
                 gasUsedFloat -= float.Parse(gasUsed.storageRebate);
-            if (gasUsed.nonRefundableStorageFees != null)
-                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFees);
+            if (gasUsed.nonRefundableStorageFee != null)
+                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFee);
         }
         return gasUsedFloat;
     }
@@ -370,6 +370,7 @@ public class ConfirmSendScreen : BaseScreen {
         var res = await WalletComponent.Instance.DryRunTransaction(transactionBytes);
         if(res == null || res.error != null || res.result.effects.status.status == "failure")
         {
+            Debug.Log(JsonConvert.SerializeObject(res));
             string msg;
             if (res != null && res.error != null)
                 msg = res.error.message;

@@ -111,7 +111,13 @@ public class WalletComponent : MonoBehaviour
 
     public async void GetSUIMarketDataForCoins()
     {
-        suiMarketData = await GetCoinGeckoIDs();
+        if (suiMarketData.Count == 0 || lastUpdated.AddMinutes(5) <= DateTime.Now)
+        {
+            Debug.Log($"Getting SUI market data {suiMarketData.Count} {lastUpdated.AddMinutes(5) > DateTime.Now}");
+            suiMarketData = await GetCoingeckoCoinValues();
+            lastUpdated = DateTime.Now;
+            Debug.Log("Got SUI market data");
+        }
     }
 
     private void OnDisable()
@@ -235,6 +241,8 @@ public class WalletComponent : MonoBehaviour
     /// <param name="wallet">The wallet to set as the current wallet.</param>
     public async void SetCurrentWallet(Wallet wallet)
     {
+        if(wallet == null)
+            return;
         currentWallet = wallet;
         var fromOrToFilter = new FromOrToAddressFilter(new FromOrObject(wallet.publicKey));
         var fromAndToFilter = new FromAndToAddressFilter(new FromToObject(wallet.publicKey, wallet.publicKey));
@@ -555,8 +563,7 @@ public class WalletComponent : MonoBehaviour
         foreach (var coin in coinMetadatas.Keys)
         {
             var coinMetadata = coinMetadatas[coin];
-            if (this.coinGeckoData.ContainsKey(coinMetadata.symbol) && lastUpdated.AddMinutes(5) > DateTime.Now)
-                continue;
+            
 
             var coinMarketData = GetCoinMarketData(coinMetadata.symbol);
             if(coinMarketData == null)
@@ -637,11 +644,19 @@ public class WalletComponent : MonoBehaviour
         return data;
     }
 
-    public async Task<List<SUIMarketData>> GetCoinGeckoIDs()
+    public async Task<List<SUIMarketData>> GetCoingeckoCoinValues()
     {
         var rpc = new RPCClient("");
         string reqUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bonk%2Cbluemove%2Cturbos-finance%2Csuipad%2Cusdcet%2Csuia%2Csuifloki-inu%2Cusd-coin-wormhole-bnb%2Cseapad%2Csuipepe%2Csuitizen%2Cusdtet%2Cusd-coin-wormhole-arb%2Creleap%2Cflame-protocol%2Csui%2Ccetus-protocol%2Cusd-coin%2Cwrapped-solana%2c&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en";
         var data = await rpc.Get<List<SUIMarketData>>(reqUrl);
+        return data;
+    }
+
+    public async Task<List<CoinID>> GetAllCoingeckoIds()
+    {
+        var rpc = new RPCClient("");
+        string reqUrl = "https://api.coingecko.com/api/v3/coins/list";
+        var data = await rpc.Get<List<CoinID>>(reqUrl);
         return data;
     }
 

@@ -158,6 +158,7 @@ public class TransactionInfoScreen : BaseScreen {
 
     private float CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
     {
+        Debug.Log(JsonConvert.SerializeObject(suiTransactionBlockResponse));
         var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
         float gasUsedFloat = 0;
         if (gasUsed != null && gasUsed != default)
@@ -168,8 +169,8 @@ public class TransactionInfoScreen : BaseScreen {
                 gasUsedFloat += float.Parse(gasUsed.storageCost);
             if (gasUsed.storageRebate != null)
                 gasUsedFloat -= float.Parse(gasUsed.storageRebate);
-            if (gasUsed.nonRefundableStorageFees != null)
-                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFees);
+            if (gasUsed.nonRefundableStorageFee != null)
+                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFee);
         }
         gasUsedFloat += float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price);
         return gasUsedFloat;

@@ -47,10 +47,12 @@ namespace SimpleScreen {
             }
             var prevScreen = _screenQueue.Pop();
             var curScreen = _screenQueue.Peek();
+            var previousScreen = _screenQueue.Count > 1 ? _screenQueue.ToArray()[1] : null;
 
-            prevScreen.HideScreen();
+            if(prevScreen != null)
+                prevScreen.HideScreen();
             curScreen.ShowScreen();
-            previousScreen = prevScreen;
+            this.previousScreen = previousScreen;
             currentScreen = curScreen;
         }
 

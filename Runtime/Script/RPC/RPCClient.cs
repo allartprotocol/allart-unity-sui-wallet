@@ -32,7 +32,6 @@ namespace AllArt.SUI.RPC {
                 await Task.Yield();
             }
 
-            // Debug.Log(uwr.downloadHandler.text);
             var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
             return response;
         }
@@ -90,15 +89,14 @@ namespace AllArt.SUI.RPC {
                 if (uwr.result == UnityWebRequest.Result.Success)
                 {
                     Texture2D tex = ((DownloadHandlerTexture)uwr.downloadHandler).texture;
-                    tex.mipMapBias = -0.5f; // Optional: Adjust mipmap bias if needed
-                    tex.filterMode = FilterMode.Trilinear;
+                    tex.filterMode = FilterMode.Bilinear;
                     tex.Apply(true);
                     Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);                
                     return sprite;
                 }
                 else
                 {
-                    Debug.Log(uwr.error);
+                    Debug.LogError(uwr.error);
                 }
             }
 

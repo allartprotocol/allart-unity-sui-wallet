@@ -41,9 +41,9 @@ public class TransactionDoneScreen : BaseScreen
             ENodeType.TestNet => "testnet",
             _ => "devnet",
         };
-
+        //https://suiscan.xyz/mainnet/tx/AN9KDjQEbYVdUAnuhC3HLFguDnWkkqJkx71MGTxRMMdb
         //open browser with the transaction hash
-        Application.OpenURL($"https://suiexplorer.com/txblock/{status.response.result.digest}?network={network}");
+        Application.OpenURL($"https://suiscan.xyz/{network}/tx/{status.response.result.digest}");
     }
 
     private void OnDone()

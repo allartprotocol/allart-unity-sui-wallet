@@ -18,12 +18,12 @@ public class WalletListObject : MonoBehaviour
     public Button button;
     private SimpleScreenManager manager;
 
-    public void SetWallet(Wallet wallet, string walletName, SimpleScreenManager manager)
+    public void SetWallet(int index, Wallet wallet, string walletName, SimpleScreenManager manager)
     {
         this.manager = manager;
         this.wallet = wallet;
         this.walletName = walletName;
-        walletNameTxt.text = walletName;
+        walletNameTxt.text = $"Wallet {index}";;
         walletAddressTxt.text = wallet.displayAddress;
         button.onClick.AddListener(OnClick);
     }

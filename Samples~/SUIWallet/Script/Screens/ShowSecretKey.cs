@@ -31,7 +31,8 @@ public class ShowSecretKey : BaseScreen
 
     private void OnDone()
     {
-        GoTo("MainScreen");
+        manager.GoBack();
+        manager.GoBack();
     }
 
     public override void ShowScreen(object data = null)

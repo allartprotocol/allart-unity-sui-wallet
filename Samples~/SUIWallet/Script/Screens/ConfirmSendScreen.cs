@@ -105,6 +105,7 @@ public class ConfirmSendScreen : BaseScreen {
         }
         catch(Exception e)
         {
+            Debug.Log(e);
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
         }
 
@@ -167,8 +168,9 @@ public class ConfirmSendScreen : BaseScreen {
 
         ObjectDataOptions options = new();
         query.options = options;
-        ulong amount = (ulong)(float.Parse(TransferData.amount) * Mathf.Pow(10, TransferData.coin.decimals));
-
+        ulong amount = (ulong)(decimal.Parse(TransferData.amount) * (decimal)Mathf.Pow(10, TransferData.coin.decimals));
+        Debug.Log(amount);
+        Debug.Log(TransferData.amount);
         try {
             var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
 
@@ -283,6 +285,7 @@ public class ConfirmSendScreen : BaseScreen {
                     SUIConstantVars.GAS_BUDGET);
             }
             catch (Exception e){
+                Debug.Log(e);
                 return null;
             }
 
@@ -297,7 +300,8 @@ public class ConfirmSendScreen : BaseScreen {
         confirmBtn.interactable = false;
 
         string feeAmount = await WalletComponent.Instance.GetReferenceGasPrice();
-        float feeAmountFloat = float.Parse(feeAmount) / Mathf.Pow(10, 9);
+        decimal feeAmountFloat = decimal.Parse(feeAmount) / (decimal)Mathf.Pow(10, 9);
+
         if (data is TransferData confirmSendData)
         {
             TransferData = confirmSendData;
@@ -305,22 +309,21 @@ public class ConfirmSendScreen : BaseScreen {
             toHeader.text = $"To {Wallet.DisplaySuiAddress(confirmSendData.to)}";
             amount.text = $"-{confirmSendData.amount} {confirmSendData.coin.symbol}";
             fee.text = $"{feeAmountFloat:0.#########} SUI";
-
-            WalletComponent.Instance.coinImages.TryGetValue(confirmSendData.coin.symbol, out Sprite image);
-            tokenImage.Init(image, confirmSendData.coin.symbol);
+            Sprite icon = WalletComponent.Instance.GetCoinImage(confirmSendData.coin.symbol);
+            tokenImage.Init(icon, confirmSendData.coin.symbol);
         }
 
         SuiTransactionBlockResponse res = null;
         try{
             res = await TryRunTransaction(TransferData.transferAll);
-
             if(res != null){
-                float gasUsed = CalculateGasUsed(res);
-                float gasUsedInSUI = gasUsed / Mathf.Pow(10, 9);
+                decimal gasUsed = CalculateGasUsed(res);
+                decimal gasUsedInSUI = gasUsed / (decimal)Mathf.Pow(10, 9);
                 fee.text = $"{gasUsedInSUI:0.#########} SUI";
             }
         }
         catch(Exception e){
+            Debug.Log(e);
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction simulation failed");
         }
 
@@ -329,20 +332,20 @@ public class ConfirmSendScreen : BaseScreen {
         LoaderScreen.instance.HideLoading();    
     }
 
-    private float CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
+    private decimal CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
     {
         var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
-        float gasUsedFloat = 0;
+        decimal gasUsedFloat = 0;
         if (gasUsed != null && gasUsed != default)
         {
             if (gasUsed.computationCost != null)
-                gasUsedFloat += float.Parse(gasUsed.computationCost);
+                gasUsedFloat += decimal.Parse(gasUsed.computationCost);
             if (gasUsed.storageCost != null)
-                gasUsedFloat += float.Parse(gasUsed.storageCost);
+                gasUsedFloat += decimal.Parse(gasUsed.storageCost);
             if (gasUsed.storageRebate != null)
-                gasUsedFloat -= float.Parse(gasUsed.storageRebate);
+                gasUsedFloat -= decimal.Parse(gasUsed.storageRebate);
             if (gasUsed.nonRefundableStorageFee != null)
-                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFee);
+                gasUsedFloat += decimal.Parse(gasUsed.nonRefundableStorageFee);
         }
         return gasUsedFloat;
     }
@@ -359,31 +362,43 @@ public class ConfirmSendScreen : BaseScreen {
             transaction = await CreatePayOtherCurrenciesTransaction();
         }
 
-        string transactionBytes = transaction.result.txBytes;
+        if(transaction.error != null)
+        {
+            //{"jsonrpc":"2.0","id":1,"error":{"code":-32000,"message":"Cannot find gas coin for signer address [0x3ca4fe7e572b3703d8d3d2109102ae7f162f868a9584418265f9e89cb918eb35] with amount sufficient for the required gas amount [20000000]."},"result":null}
+           
+            if(transaction.error.code == -32000 && transaction.error.message.Contains("Cannot find gas coin for signer address"))
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Insufficient SUI to cover transaction fee");
+            }
+            else
+            {
+                InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction simulation failed");
+            }
+            return null;
+        }
 
-        if(transactionBytes == null)
+        if(transaction == null)
         {
             InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Transaction failed");
             return null;
         }
+        string transactionBytes = transaction.result.txBytes;
 
         var res = await WalletComponent.Instance.DryRunTransaction(transactionBytes);
         if(res == null || res.error != null || res.result.effects.status.status == "failure")
         {
-            Debug.Log(JsonConvert.SerializeObject(res));
             string msg;
             if (res != null && res.error != null)
                 msg = res.error.message;
             else if(res != null && res.result != null && res.result.effects != null && res.result.effects.status.error != null){
                 string error = res.result.effects.status.error;
+                Debug.LogError(error);
                 if(error.Contains("InsufficientCoinBalance")){
                     msg = "Insufficient SUI to cover transaction fee";
                 }
                 else{
                     msg = res.result.effects.status.error;
                 }
-
-
             }
             else
                 msg = "Transaction simulation failed";

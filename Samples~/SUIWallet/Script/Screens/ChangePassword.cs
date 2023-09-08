@@ -36,7 +36,7 @@ public class ChangePassword : BaseScreen
         Debug.Log(confirmPassword.text);
         if(string.IsNullOrEmpty(oldPassword.text) || string.IsNullOrEmpty(newPassword.text) || string.IsNullOrEmpty(confirmPassword.text))
         {
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill all the fields");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Please fill in all the fields");
             return;
         }
 
@@ -50,7 +50,7 @@ public class ChangePassword : BaseScreen
         if(oldPassword.text == newPassword.text)
         {
             Debug.Log("New password must be different from old password");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "New password must be different from old password");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "New password must be different from current password");
             return;
         }
 

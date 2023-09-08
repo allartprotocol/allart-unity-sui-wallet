@@ -31,14 +31,21 @@ public class ImportPrivateKeyScreen : BaseScreen
             return;
         }
 
+        if(KeyPair.IsPrivateKeyValid(privateKey) == false)
+        {
+            Debug.Log("Invalid private key");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Invalid private key");
+            return;
+        }
+
         this.privateKey = privateKey.Trim();
 
         Wallet wal = CreateAndEncryptWallet(this.privateKey, WalletComponent.Instance.password);
-
+        Debug.Log(wal.publicKey);
         if(WalletComponent.Instance.DoesWalletWithPublicKeyAlreadyExists(wal.publicKey))
         {            
             Debug.Log("Wallet already exist");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exists");
             return;
         }
 
@@ -76,6 +83,7 @@ public class ImportPrivateKeyScreen : BaseScreen
     {
         base.ShowScreen(data);
         mnemonicField.text = "";
+        privateKey = "";
     }
 
     public override void HideScreen()

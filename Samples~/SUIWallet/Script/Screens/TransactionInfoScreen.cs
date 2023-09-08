@@ -36,43 +36,81 @@ public class TransactionInfoScreen : BaseScreen {
         suiExplorerBtn.onClick.AddListener(OnSuiExplorer);
     }
 
-    async Task<string> GetBalanceChange() {
-        long balanceChange = 0;
-        string type = "";
-
-        if(suiTransactionBlockResponse.balanceChanges == null)
-            return "0";
-
+    private long GetAmmountFromBalanceChange(){
+        long ammount = 0;
         foreach (var effect in suiTransactionBlockResponse.balanceChanges)
         {
             if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
             {
-                balanceChange = long.Parse(effect.amount);
+                ammount = long.Parse(effect.amount);
+            }
+        }
+        return ammount;
+    }
+
+    private long GetAmountFromInputs(){
+        long ammount = 0;
+        foreach(var input in suiTransactionBlockResponse.transaction.data.transaction.inputs)
+        {
+            if(input.valueType == "u64")
+            {
+                ammount = long.Parse(input.value);
+            }
+        }
+        return ammount;
+    }
+
+    private async Task<CoinMetadata> GetTypeFromBalanceChanges(){
+        string type = "";
+        CoinMetadata coinMetadata = null;
+        foreach (var effect in suiTransactionBlockResponse.balanceChanges)
+        {
+            if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
+            {
                 type = effect.coinType;
             }
         }
 
-        string change = $"0";
-
-        CoinMetadata coinMetadata = null;
         if(WalletComponent.Instance.coinMetadatas.ContainsKey(type))
             coinMetadata = WalletComponent.Instance.coinMetadatas[type];
         else{
             coinMetadata = await WalletComponent.Instance.GetCoinMetadata(type);
         }
 
+        return coinMetadata;
+    }
+
+    async Task<string> GetBalanceChange() {
+        long balanceChangeAmount = 0;
+        long inputAmount = 0;
+        string change = $"0";
+
+        if(suiTransactionBlockResponse.balanceChanges == null)
+            return "0";
+
+        inputAmount = GetAmountFromInputs();
+        balanceChangeAmount = GetAmmountFromBalanceChange();
+        CoinMetadata coinMetadata = await GetTypeFromBalanceChanges(); 
+        decimal gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
+
         if(coinMetadata == null)
             return change;
-        
-        float decimalChange = WalletComponent.ApplyDecimals((long)balanceChange, coinMetadata);
 
-        if(balanceChange == 0)
-            return change;
+        decimal decimalChange = 0;
 
-        if(balanceChange > 0)
+        if(inputAmount == 0)
+        {
+            balanceChangeAmount = balanceChangeAmount > 0 ? balanceChangeAmount : balanceChangeAmount + (long)gasUsedFloat;
+            decimalChange = (decimal)balanceChangeAmount / (decimal)Mathf.Pow(10, coinMetadata.decimals);
+        }
+        else{
+            decimalChange = (decimal)inputAmount / (decimal)Mathf.Pow(10, coinMetadata.decimals);
+        }
+
+        if(decimalChange > 0)
             change = $"+{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
-        else if(balanceChange < 0)
-            change = $"{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
+        else if(decimalChange < 0)
+            change = $"-{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
 
         return change;
     }
@@ -99,7 +137,7 @@ public class TransactionInfoScreen : BaseScreen {
         };
 
         //open browser with the transaction hash
-        Application.OpenURL($"https://suiexplorer.com/txblock/{suiTransactionBlockResponse.digest}?network={network}");
+        Application.OpenURL($"https://suiscan.xyz/{network}/tx/{suiTransactionBlockResponse.digest}");//$"https://suiexplorer.com/txblock/{suiTransactionBlockResponse.digest}?network={network}");
     }
 
     public async override void ShowScreen(object data)
@@ -128,8 +166,8 @@ public class TransactionInfoScreen : BaseScreen {
         if(coinMetadata == null)
             tokenImage.Init(null, "");
         else{
-            WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
-            tokenImage.Init(image, coinMetadata.symbol);
+            Sprite icon = WalletComponent.Instance.GetCoinImage(coinMetadata.symbol);
+            tokenImage.Init(icon, coinMetadata.symbol);
         }
 
         DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)ulong.Parse(suiTransactionBlockResponse.timestampMs));
@@ -138,13 +176,13 @@ public class TransactionInfoScreen : BaseScreen {
         if (suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
             type.text = "Sent";
         else
-            type.text = "Receive";
-        float gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
+            type.text = "Received";
+        decimal gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
 
         status.text = suiTransactionBlockResponse.effects.status.status == "success" ? "Succeeded" : "Failed";
-        sender.text = Wallet.DisplaySuiAddress(GetReceiver());
+        sender.text = Wallet.DisplaySuiAddress(suiTransactionBlockResponse.transaction.data.sender);
         network.text = "SUI";
-        var feeText = (gasUsedFloat / Mathf.Pow(10, 9)).ToString("0.############");
+        var feeText = (gasUsedFloat / (decimal)Mathf.Pow(10, 9)).ToString("0.############");
         fee.text = $"~{feeText} SUI";
         try
         {
@@ -156,23 +194,19 @@ public class TransactionInfoScreen : BaseScreen {
         }
     }
 
-    private float CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
+    private decimal CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
     {
-        Debug.Log(JsonConvert.SerializeObject(suiTransactionBlockResponse));
         var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
-        float gasUsedFloat = 0;
+        decimal gasUsedFloat = 0;
         if (gasUsed != null && gasUsed != default)
         {
             if (gasUsed.computationCost != null)
-                gasUsedFloat += float.Parse(gasUsed.computationCost);
+                gasUsedFloat += decimal.Parse(gasUsed.computationCost);
             if (gasUsed.storageCost != null)
-                gasUsedFloat += float.Parse(gasUsed.storageCost);
+                gasUsedFloat += decimal.Parse(gasUsed.storageCost);
             if (gasUsed.storageRebate != null)
-                gasUsedFloat -= float.Parse(gasUsed.storageRebate);
-            if (gasUsed.nonRefundableStorageFee != null)
-                gasUsedFloat += float.Parse(gasUsed.nonRefundableStorageFee);
+                gasUsedFloat -= decimal.Parse(gasUsed.storageRebate);
         }
-        gasUsedFloat += float.Parse(suiTransactionBlockResponse.transaction.data.gasData.price);
         return gasUsedFloat;
     }
 }

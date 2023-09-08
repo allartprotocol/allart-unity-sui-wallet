@@ -83,13 +83,13 @@ public class TokenInfoScreen : BaseScreen {
             {
                 return;
             }
-            var usdValue = geckoData.current_price_double * WalletComponent.ApplyDecimals(balance, coinMetadata);
+            var usdValue = (decimal)geckoData.current_price_double * WalletComponent.ApplyDecimals(balance, coinMetadata);
             coinPrice.text = $"${usdValue:0.00}";
         }
 
         var tokenImage = GetComponentInChildren<TokenImage>();
-        WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
-        tokenImage.Init(image, coinMetadata.symbol);
+        Sprite icon = WalletComponent.Instance.GetCoinImage(coinMetadata.symbol);
+        tokenImage.Init(icon, coinMetadata.symbol);
     }
 
     private void OnSend()

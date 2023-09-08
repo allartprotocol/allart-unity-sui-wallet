@@ -3,10 +3,10 @@ namespace AllArt.SUI.RPC.Filter.Types {
     public class InputObjectFilter{
         public InputObjectFilter(string inputObject)
         {
-            ChangedObject = inputObject;
+            InputObject = inputObject;
         }
 
-        public string ChangedObject { get; set; }
+        public string InputObject { get; set; }
     }
 
     public class FromAndToAddressFilter {

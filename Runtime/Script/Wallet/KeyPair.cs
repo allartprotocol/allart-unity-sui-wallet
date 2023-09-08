@@ -41,6 +41,9 @@ namespace AllArt.SUI.Wallets
 
             this.publicKey = publicKey;
             this.privateKey = privateKey;
+            Debug.Log("Private key length " + privateKey.Length);
+            Debug.Log("Public Key: " + CryptoBytes.ToBase64String(publicKey));
+            Debug.Log("Private Key: " + CryptoBytes.ToBase64String(privateKey));
             this.publicKeyString = CryptoBytes.ToBase64String(publicKey);
             this.suiAddress = ToSuiAddress(publicKey);
         }
@@ -60,6 +63,29 @@ namespace AllArt.SUI.Wallets
             string hashString = BitConverter.ToString(result);
             hashString = hashString.Replace("-", "").ToLowerInvariant();
             return "0x" + hashString.Substring(0, 64);
+        }
+
+        private bool VerifyPrivateKey(byte[] privateKey)
+        {
+            byte[] publicKey = Ed25519.PublicKeyFromSeed(privateKey);
+            return publicKey == this.publicKey;
+        }
+
+        public static bool IsPrivateKeyValid(string privateKey)
+        {
+            if (privateKey.Length >= 2 && privateKey.Substring(0, 2) == "0x")
+            {
+                privateKey = privateKey.Substring(2); // Remove the "0x" prefix
+            }
+
+            Debug.Log(privateKey.Length);
+            if (privateKey.Length != 64)
+            {
+                return false;
+            }
+            Debug.Log(privateKey);
+
+            return true;
         }
 
 
@@ -85,7 +111,10 @@ namespace AllArt.SUI.Wallets
 
         public static KeyPair GenerateKeyPairFromPrivateKey(string privateKey)
         {
-            privateKey = privateKey.Replace("0x", "");
+            if (privateKey.Length >= 2 && privateKey.Substring(0, 2) == "0x")
+            {
+                privateKey = privateKey.Substring(2); // Remove the "0x" prefix
+            }
             byte[] privateKeyBytes = CryptoBytes.FromHexString(privateKey);
             byte[] publicKey = Ed25519.PublicKeyFromSeed(privateKeyBytes);
 

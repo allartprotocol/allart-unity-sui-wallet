@@ -1,6 +1,7 @@
 using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,6 +50,7 @@ public class WalletListScreen : BaseScreen
 
         walletListObjects.Clear();
 
+        int index = 1;
         foreach (var wallet in wallets)
         {
             if (walletListObjects.Exists(x => x.walletName == wallet.Key))
@@ -57,8 +59,9 @@ public class WalletListScreen : BaseScreen
             }
             var walletItem = Instantiate(walletItemPrefab, container);
             var walletListObject = walletItem.GetComponent<WalletListObject>();
-            walletListObject.SetWallet(wallet.Value, wallet.Key, manager);
+            walletListObject.SetWallet(index, wallet.Value, wallet.Key, manager);
             walletListObjects.Add(walletListObject);
+            index++;
         }
 
         addWallet.transform.SetAsLastSibling();

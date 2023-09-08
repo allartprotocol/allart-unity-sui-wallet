@@ -4,7 +4,7 @@ using System.Numerics;
 namespace AllArt.SUI.RPC.Response {
 
     public class PageForTransactionBlockResponseAndTransactionDigest{
-        public List<TransactionDigest> data;
+        public List<SuiTransactionBlockResponse> data;
     }
 
     [System.Serializable]
@@ -47,6 +47,16 @@ namespace AllArt.SUI.RPC.Response {
     [System.Serializable]
     public class TransactionDigest{
         public string digest;
+
+        public TransactionBlock transaction;
+        public string rawTransaction;
+        public TransactionEffects effects;
+        public object[] objectChanges;
+        public List<BalanceChange> balanceChanges;
+        public string timestampMs;
+        public string checkpoint;
+        public ObjectResponseError error;
+        public string[] errors;
     }
 
     [System.Serializable]

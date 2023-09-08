@@ -43,7 +43,7 @@ public class ImportMnemonicScreen : BaseScreen
         if(WalletComponent.Instance.DoesWalletWithMnemonicExists(mnemonic))
         {
             Debug.Log("Wallet already exist mnemonic");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exists");
             return;
         }
 
@@ -53,12 +53,13 @@ public class ImportMnemonicScreen : BaseScreen
         if(WalletComponent.Instance.DoesWalletWithPublicKeyAlreadyExists(wal.publicKey))
         {            
             Debug.Log($"Wallet already exist {wal.publicKey}");
-            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exist");
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, "Wallet already exists");
             return;
         }
 
         if(wal != null)
         {
+            wal.SaveWallet();
             WalletComponent.Instance.SetCurrentWallet(wal);
             WalletComponent.Instance.RestoreAllWallets(WalletComponent.Instance.password);
         }
@@ -88,6 +89,7 @@ public class ImportMnemonicScreen : BaseScreen
     {
         base.ShowScreen(data);
         mnemonicField.text = "";
+        mnemonic = "";
         
     }
 

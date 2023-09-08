@@ -45,7 +45,7 @@ public class EventObject : MonoBehaviour
                 amount.text = "To " + WalletUtility.ShortenAddress(GetReceiver());
         }
         else{
-            nameTxt.text = "Receive";
+            nameTxt.text = "Received";
             amount.text = "From " + WalletUtility.ShortenAddress(eventPage.transaction.data.sender);
         }
 

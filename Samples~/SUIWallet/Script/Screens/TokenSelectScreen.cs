@@ -25,7 +25,7 @@ public class TokenSelectScreen : BaseScreen
         base.HideScreen();
     }
 
-    async void PopulateTokenList()
+    void PopulateTokenList()
     {
         foreach (var tokenSelect in tokenSelects)
         {
@@ -35,7 +35,7 @@ public class TokenSelectScreen : BaseScreen
         tokenSelects.Clear();
         foreach (var coin in WalletComponent.Instance.coinMetadatas)
         {
-            Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, coin.Key);
+            Balance balance = WalletComponent.Instance.GetCurrentWalletBalanceForType(coin.Key);
             if(balance == null)
             {
                 continue;
@@ -44,7 +44,7 @@ public class TokenSelectScreen : BaseScreen
             var tokenSelectComponent = tokenSelect.GetComponent<TokenSelect>();
             var coinMetadata = WalletComponent.Instance.coinMetadatas[coin.Key];
 
-            WalletComponent.Instance.coinGeckoData.TryGetValue(coinMetadata.symbol, out SUIMarketData coinGeckoData);
+            SUIMarketData coinGeckoData = WalletComponent.Instance.GetCoinMarketData(coinMetadata.symbol);
 
             tokenSelectComponent.InitComponent(coin.Value, coinGeckoData, balance, manager);
             tokenSelects.Add(tokenSelectComponent);

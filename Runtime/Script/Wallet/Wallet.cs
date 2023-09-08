@@ -182,13 +182,14 @@ namespace AllArt.SUI.Wallets
         public byte[] Sign(byte[] message)
         {
             var signature = new byte[64];
+            Debug.Log(keyPair.privateKey.Length);
+            Debug.Log(keyPair.privateKey);
             Ed25519.Sign(new ArraySegment<byte>(signature), new ArraySegment<byte>(message), new ArraySegment<byte>(keyPair.privateKey));
             return signature;
         }
 
         public string SignData(byte[] data)
         {
-
             var digest = ComputeBlake2bHash(data);
             var signature = Sign(digest);
 

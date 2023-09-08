@@ -197,10 +197,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 25
-    m_Bottom: 25
+    m_Left: 32
+    m_Right: 32
+    m_Top: 24
+    m_Bottom: 24
   m_ChildAlignment: 4
   m_Spacing: 0.62
   m_ChildForceExpandWidth: 1
@@ -246,8 +246,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 292, y: 0}
-  m_SizeDelta: {x: 584, y: 0}
+  m_AnchoredPosition: {x: 342, y: 0}
+  m_SizeDelta: {x: 620, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8186054673571278664
 CanvasRenderer:
@@ -277,7 +277,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Transaction
+  m_text: 'Insufficient SUI to cover fee budget. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 037f1c73b19ab8c41908533b6d244275, type: 2}
   m_sharedMaterial: {fileID: -8435131566116626612, guid: 037f1c73b19ab8c41908533b6d244275, type: 2}
@@ -286,8 +286,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3861452801
-  m_fontColor: {r: 0.003921569, g: 0.09411765, b: 0.16078432, a: 0.9019608}
+    rgba: 4286542432
+  m_fontColor: {r: 0.3764706, g: 0.44705883, b: 0.49803922, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

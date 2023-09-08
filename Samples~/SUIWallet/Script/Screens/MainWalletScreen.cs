@@ -1,4 +1,5 @@
 using AllArt.SUI.RPC.Response;
+using AllArt.SUI.Wallets;
 using SimpleScreen;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ public class MainWalletScreen : BaseScreen
     public TextMeshProUGUI percentageText;
 
     public TMP_Dropdown walletsDropdown;
+    public TextMeshProUGUI walletNameDrop;
 
     public Button receiveBtn;
     public Button sendBtn;
@@ -84,6 +86,9 @@ public class MainWalletScreen : BaseScreen
         walletsDropdown.ClearOptions();
         var wallets = WalletComponent.Instance.GetAllWallets();
         List<string> options = new();
+
+        int index = 1;
+
         foreach (var wallet in wallets)
         {
             if (wallet.Value.publicKey == WalletComponent.Instance.currentWallet.publicKey)
@@ -92,6 +97,7 @@ public class MainWalletScreen : BaseScreen
                 selectedIndex = options.Count;
             }
             options.Add("<color=#BABABA>" + $"{options.Count + 1}.</color> {wallet.Value.displayAddress}");
+            index++;
         }
 
         walletsDropdown.AddOptions(options);
@@ -104,8 +110,9 @@ public class MainWalletScreen : BaseScreen
     async void PopulateHistory()
     {
         ClearActivity();
+        Debug.Log("Populating history");
 
-        LoaderScreen.instance.ShowLoading("Loading history...");
+        LoaderScreen.instance.ShowLoading("Loading activity...");
 
         var history = await WalletComponent.Instance.GetTransactionsForSelectedWallet();
         LoaderScreen.instance.HideLoading();
@@ -173,13 +180,19 @@ public class MainWalletScreen : BaseScreen
     private async void OnWalletSelected(int value)
     {
         WalletComponent.Instance.SetWalletByIndex(value);
-        Debug.Log("Selected wallet: " + WalletComponent.Instance.currentWallet.publicKey);
+        SetWalletName(WalletComponent.Instance.currentWallet);
+
         if(display == EDisplay.WALLET){
             await UpdateWalletData();
         }
         else{
             PopulateHistory();
         }
+    }
+
+    private void SetWalletName(Wallet wallet){
+        int index = WalletComponent.Instance.GetWalletIndex(wallet);
+        walletNameDrop.text = $"Wallet {index + 1}";
     }
 
     private void OnSend()
@@ -195,11 +208,14 @@ public class MainWalletScreen : BaseScreen
 
     private async Task LoadWalletData()
     {
+        walletNameDrop.text = "Wallet";
         if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
 
         if (WalletComponent.Instance.currentWallet == null)
             return;
+
+        SetWalletName(WalletComponent.Instance.currentWallet);
 
         suiSecondaryWalletObject.Init(null, manager);
         suiPrimaryWalletObject.Init(null, manager);
@@ -214,6 +230,7 @@ public class MainWalletScreen : BaseScreen
         percentageText.text = "";
 
         var balances = await WalletComponent.Instance.GetAllBalances(wallet);
+        WalletComponent.Instance.SetWalletBalance(balances);
         if(balances == null)
         {
             return;
@@ -282,10 +299,19 @@ public class MainWalletScreen : BaseScreen
     {
         base.ShowScreen(data);
 
+        Debug.Log(manager.previousScreen.name);
         string password = WalletComponent.Instance.password;
         WalletComponent.Instance.RestoreAllWallets(password);
 
-        var wallet = WalletComponent.Instance.GetAllWallets();
+        Wallet wallet = WalletComponent.Instance.currentWallet;
+
+        if (wallet == null)
+        {
+            wallet = WalletComponent.Instance.GetWalletByIndex(0);
+            WalletComponent.Instance.SetCurrentWallet(wallet);
+        }
+
+        SetWalletName(wallet);
 
         if(display == EDisplay.WALLET){
             await UpdateWalletData();
@@ -327,41 +353,43 @@ public class MainWalletScreen : BaseScreen
         walletBalanceText.text = "$0";
         if (!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
             return;
+
         CoinMetadata coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];
-        if (balance != null && balance.totalBalance > 0)
-        {
-            if(!WalletComponent.Instance.coinGeckoData.ContainsKey(coinMetadata.symbol))
-            {
-                return;
-            }
-            var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
-            if (geckoData != null)
-            {
-                percentageText.GetComponent<PriceChangeText>().SetText($"{0.00}%");
-                if(geckoData.current_price != null){
-                    double.TryParse(geckoData.current_price.ToString(), out double price);
-                    var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
-                    walletBalanceText.text = $"${usdValue.ToString("0.00")}";
-                }
-                else{
-                    walletBalanceText.text = "$0";
-                }
-                try{
-                    if(geckoData.price_change_percentage_24h != null)
-                    {
-                        float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
-                        percentageText.GetComponent<PriceChangeText>().SetText($"{priceChange.ToString("0.00")}%");
-                    }
-                }catch(Exception e){
-                    Debug.Log(e);
-                }
-            }
-        }
 
         if (WalletComponent.Instance.currentCoinMetadata == null)
         {
             WalletComponent.Instance.currentCoinMetadata = coinMetadata;
         }
+
+        if (balance != null && balance.totalBalance > 0)
+        {
+            var geckoData = WalletComponent.Instance.GetCoinMarketData(coinMetadata.symbol);
+            if(geckoData == null)
+            {
+                return;
+            }
+
+            percentageText.GetComponent<PriceChangeText>().SetText($"{0.00}%");
+            if(geckoData.current_price != null){
+                decimal.TryParse(geckoData.current_price.ToString(), out decimal price);
+                var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
+                walletBalanceText.text = $"${usdValue.ToString("0.00")}";
+            }
+            else{
+                walletBalanceText.text = "$0";
+            }
+            try{
+                if(geckoData.price_change_percentage_24h != null)
+                {
+                    float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
+                    percentageText.GetComponent<PriceChangeText>().SetText($"{priceChange.ToString("0.00")}%");
+                }
+            }catch(Exception e){
+                Debug.Log(e);
+            }
+        }
+
+        
     }
 
     public override void HideScreen()

@@ -43,8 +43,8 @@ public class WalletObject : MonoBehaviour
 
     private void DisplayData(Balance balance)
     {
-        coin_usd.text = "$--";
-        coin_change.text = "--%";
+        coin_usd.text = "-";
+        coin_change.text = "-";
         coin_balance.text = "";
         if(balance == null)
         {
@@ -71,33 +71,31 @@ public class WalletObject : MonoBehaviour
         var tokenImage = GetComponentInChildren<TokenImage>();
         if(!overrideImage)
         {
-            if(WalletComponent.Instance.coinImages != null)
-            {
-                if(WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image)){
-                    tokenImage.Init(image, coinMetadata.name);
-                }
-            }            
+            Sprite icon = WalletComponent.Instance.GetCoinImage(coinMetadata.symbol);
+            if(icon != null)
+                tokenImage.Init(icon, coinMetadata.name);
         }
 
-        if(WalletComponent.Instance.coinGeckoData == null){
-            return;
-        }
-        
-        if(!WalletComponent.Instance.coinGeckoData.ContainsKey(coinMetadata.symbol))
+        var geckoData = WalletComponent.Instance.GetCoinMarketData(coinMetadata.symbol);
+        if(geckoData == null)
         {
             return;
         }
-        var geckoData = WalletComponent.Instance.coinGeckoData[coinMetadata.symbol];
-        geckoCoinData = geckoData;
 
-        coin_usd.text = "$--";
-        coin_change.text = $"--%";
+        coin_usd.text = "-";
+        coin_change.text = $"-";
+        decimal minValue = 0.01m;
         if (geckoData != null) { 
             if(geckoData.current_price != null){
                 try{
-                    float.TryParse(geckoData.current_price.ToString(), out float price);
+                    decimal.TryParse(geckoData.current_price.ToString(), out decimal price);
                     var usdValue = price * WalletComponent.ApplyDecimals(balance, coinMetadata);
-                    coin_usd.text = $"${usdValue:0.00}";
+                    if(usdValue < minValue)
+                    {
+                        coin_usd.text = "<$0.01";
+                    }
+                    else
+                        coin_usd.text = $"${usdValue:0.00}";
                 }
                 catch(Exception e){
                     Debug.Log(e);
@@ -107,7 +105,7 @@ public class WalletObject : MonoBehaviour
             try{
                 if(geckoData.price_change_percentage_24h != null)
                 {
-                    float.TryParse(geckoData.price_change_percentage_24h.ToString(), out float priceChange);
+                    decimal.TryParse(geckoData.price_change_percentage_24h.ToString(), out decimal priceChange);
                     coin_change.GetComponent<PriceChangeText>().SetText($"{priceChange.ToString("0.00")}%");
                 }
             }catch(Exception e){

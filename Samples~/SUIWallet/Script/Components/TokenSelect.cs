@@ -68,8 +68,8 @@ public class TokenSelect : MonoBehaviour
         this.manager = manager;
 
         tokenImage = GetComponentInChildren<TokenImage>();
-        WalletComponent.Instance.coinImages.TryGetValue(coinMetadata.symbol, out Sprite image);
-        tokenImage.Init(image, coinMetadata.name);
+        Sprite icon = WalletComponent.Instance.GetCoinImage(coinMetadata.symbol);
+        tokenImage.Init(icon, coinMetadata.name);
         go.onClick.AddListener(OnGo);
     }
 

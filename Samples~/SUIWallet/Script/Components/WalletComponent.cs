@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AllArt.SUI.RPC;
 using AllArt.SUI.RPC.Filter.Types;
@@ -26,11 +27,25 @@ public class WalletComponent : MonoBehaviour
     private WebsocketController websocketController {get; set;}
 
     // cached coin data
-    public List<SUIMarketData> suiMarketData = new();
+    private List<SUIMarketData> suiMarketData = new();
     public Dictionary<string, CoinMetadata> coinMetadatas {get; private set;} = new();
-    public Dictionary<string, SUIMarketData> coinGeckoData {get; private set;} = new();
+    // public Dictionary<string, SUIMarketData> coinGeckoData {get; private set;} = new();
     public Dictionary<string, CoinPage> coinPages {get; private set;} = new();
-    public Dictionary<string, Sprite> coinImages {get; private set;} = new();
+    private Dictionary<string, Sprite> coinImages {get; set;} = new();
+
+    private List<Balance> _currentWalletBalance = new();
+
+    public List<Balance> currentWalletBalance
+    {
+        get
+        {
+            return _currentWalletBalance;
+        }
+        private set
+        {
+            _currentWalletBalance = value;
+        }
+    }
 
     public DateTime lastUpdated {get; private set;} = DateTime.Now;
 
@@ -88,6 +103,8 @@ public class WalletComponent : MonoBehaviour
             return;
         }
         Destroy(this.gameObject);
+
+        Application.targetFrameRate = 60;
     }
 
     private void Start()
@@ -111,11 +128,11 @@ public class WalletComponent : MonoBehaviour
 
     public async void GetSUIMarketDataForCoins()
     {
-        if (suiMarketData.Count == 0 || lastUpdated.AddMinutes(5) <= DateTime.Now)
+        if (suiMarketData.Count == 0 || lastUpdated.AddMinutes(1) <= DateTime.Now)
         {
-            Debug.Log($"Getting SUI market data {suiMarketData.Count} {lastUpdated.AddMinutes(5) > DateTime.Now}");
-            suiMarketData = await GetCoingeckoCoinValues();
+            Debug.Log($"Getting SUI market data {suiMarketData.Count} {lastUpdated.AddMinutes(1) > DateTime.Now}");
             lastUpdated = DateTime.Now;
+            suiMarketData = await GetCoingeckoCoinValues();
             Debug.Log("Got SUI market data");
         }
     }
@@ -153,13 +170,8 @@ public class WalletComponent : MonoBehaviour
             time = PlayerPrefs.GetFloat("timeout");
         }
 
-        if(time == -1)
-        {
-            timeoutTimer = DateTime.MaxValue;
-        }
-        else{
-            timeoutTimer = DateTime.Now.AddSeconds(time);     
-        }
+        timeoutTimer = time == -1 ? DateTime.MaxValue : DateTime.Now.AddSeconds(time);
+        
         isLocked = false;   
     }
     
@@ -235,6 +247,19 @@ public class WalletComponent : MonoBehaviour
         SetCurrentWallet(GetWalletByIndex(value));
     }
 
+    public int GetWalletIndex(Wallet wallet)
+    {
+        var walletNames = Wallet.GetWalletSavedKeys();
+        for (int i = 0; i < walletNames.Count; i++)
+        {
+            if (walletNames[i] == wallet.walletName)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /// <summary>
     /// Sets the current wallet to the specified wallet and subscribes to its transactions using the websocket controller.
     /// </summary>
@@ -249,9 +274,29 @@ public class WalletComponent : MonoBehaviour
         var filterOr = new FilterOr(new List<object>() { new FromAddresObject(new FromAddressFilter(wallet.publicKey)), new ToAddresObject( new ToAddressFilter(wallet.publicKey)) });
         var toFilter = new ToAddressFilter(wallet.publicKey);
         var fromFilter = new FromAddressFilter(wallet.publicKey);
-        await GetTransactionsForSelectedWallet();
         websocketController.UnsubscribeCurrent();
-        await websocketController.Subscribe(fromOrToFilter);
+        await websocketController.Subscribe(toFilter);
+    }
+
+    public void SetWalletBalance(List<Balance> balances)
+    {
+        if(balances == null)
+        {
+            currentWalletBalance = new List<Balance>();
+            return;
+        }
+        currentWalletBalance = balances;
+    }
+
+    public Balance GetCurrentWalletBalanceForType(string coinType){
+        foreach (var balance in currentWalletBalance)
+        {
+            if(balance.coinType == coinType)
+            {
+                return balance;
+            }
+        }
+        return null;
     }
 
     #region Wallet Management
@@ -276,7 +321,6 @@ public class WalletComponent : MonoBehaviour
     public Wallet CreateWallet(string mnemonic, string password = "password", string walletName = "")
     {
         Wallet wallet = new(mnemonic, password, walletName);
-        wallet.SaveWallet();
         return wallet;
     }
 
@@ -526,8 +570,7 @@ public class WalletComponent : MonoBehaviour
         }
 
         await GetCoins(coins);
-        GetCoinMetadatas();
-        await GetCoinGeckoData();
+        await GetCoinImageData();
     }
 
     private async Task GetCoins(PageForCoinAndObjectID coins)
@@ -558,57 +601,53 @@ public class WalletComponent : MonoBehaviour
         }
     }
 
-    private void GetCoinMetadatas()
+    public Sprite GetCoinImage(string symbol)
     {
-        foreach (var coin in coinMetadatas.Keys)
+        if(coinImages.ContainsKey(symbol.ToLower()))
         {
-            var coinMetadata = coinMetadatas[coin];
-            
-
-            var coinMarketData = GetCoinMarketData(coinMetadata.symbol);
-            if(coinMarketData == null)
-                continue;
-            this.coinGeckoData.TryAdd(coinMetadata.symbol, coinMarketData);
-            
-            lastUpdated = DateTime.Now;
+            return coinImages[symbol.ToLower()];
         }
+        return null;
     }
 
-    private async Task GetCoinGeckoData()
-    {
-        foreach (var dataKey in coinGeckoData.Keys)
-        {
-            var coin = coinGeckoData[dataKey];
+    public List<Sprite> sprites = new List<Sprite>();
 
+    private async Task GetCoinImageData()
+    {
+        foreach (var coin in suiMarketData)
+        {
             //check for sui and bonk
             //hardcoded values for now
+            if(coinImages.Keys.Contains(coin.symbol))
+            {
+                continue;
+            }
+
             if(coin.symbol == "sui")
             {
-                coinImages.TryAdd(dataKey, suiIcon);
+                coinImages.TryAdd(coin.symbol, suiIcon);
                 continue;
             }
             if(coin.symbol == "bonk")
             {
-                coinImages.TryAdd(dataKey, bonkIcon);
+                coinImages.TryAdd(coin.symbol, bonkIcon);
                 continue;
             }
 
             if (!string.IsNullOrEmpty(coin.image))
             {
-                if (coinImages.ContainsKey(dataKey))
+                if (coinImages.ContainsKey(coin.symbol))
                 {
                     continue;
                 }
                 var image = await GetImage(coin.image);
-                if (image != null)
-                {
-                    coinImages.TryAdd(dataKey, image);
-                }
+                coinImages.TryAdd(coin.symbol, image);   
+                sprites.Add(image);             
             }
         }
     }
 
-    private SUIMarketData GetCoinMarketData(string symbol)
+    public SUIMarketData GetCoinMarketData(string symbol)
     {
         foreach (var coin in suiMarketData)
         {
@@ -647,7 +686,7 @@ public class WalletComponent : MonoBehaviour
     public async Task<List<SUIMarketData>> GetCoingeckoCoinValues()
     {
         var rpc = new RPCClient("");
-        string reqUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bonk%2Cbluemove%2Cturbos-finance%2Csuipad%2Cusdcet%2Csuia%2Csuifloki-inu%2Cusd-coin-wormhole-bnb%2Cseapad%2Csuipepe%2Csuitizen%2Cusdtet%2Cusd-coin-wormhole-arb%2Creleap%2Cflame-protocol%2Csui%2Ccetus-protocol%2Cusd-coin%2Cwrapped-solana%2c&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en";
+        string reqUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bonk%2Cbluemove%2Cmeadow%2Cturbos-finance%2Csuipad%2Cusdcet%2Csuia%2Csuifloki-inu%2Cusd-coin-wormhole-bnb%2Cseapad%2Csuipepe%2Csuitizen%2Cusdtet%2Cusd-coin-wormhole-arb%2Creleap%2Cflame-protocol%2Csui%2Ccetus-protocol%2Cusd-coin%2Cwrapped-solana%2C&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en";
         var data = await rpc.Get<List<SUIMarketData>>(reqUrl);
         return data;
     }
@@ -691,9 +730,9 @@ public class WalletComponent : MonoBehaviour
     /// <param name="balance">The balance to apply the decimal places to.</param>
     /// <param name="coinMetadata">The metadata for the coin to apply the decimal places for.</param>
     /// <returns>The balance with the decimal places applied.</returns>
-    public static float ApplyDecimals(Balance balance, CoinMetadata coinMetadata)
+    public static decimal ApplyDecimals(Balance balance, CoinMetadata coinMetadata)
     {
-        return balance.totalBalance / Mathf.Pow(10f, coinMetadata.decimals);
+        return balance.totalBalance / (decimal)Mathf.Pow(10f, coinMetadata.decimals);
     }
 
     /// <summary>
@@ -702,14 +741,14 @@ public class WalletComponent : MonoBehaviour
     /// <param name="balance">The balance to apply the decimal places to.</param>
     /// <param name="coinMetadata">The metadata for the coin to apply the decimal places for.</param>
     /// <returns>The balance with the decimal places applied.</returns>
-    public static float ApplyDecimals(ulong balance, CoinMetadata coinMetadata)
+    public static decimal ApplyDecimals(ulong balance, CoinMetadata coinMetadata)
     {
-        return balance / Mathf.Pow(10f, coinMetadata.decimals);
+        return balance / (decimal)Mathf.Pow(10f, coinMetadata.decimals);
     }
 
-    public static float ApplyDecimals(long balance, CoinMetadata coinMetadata)
+    public static decimal ApplyDecimals(long balance, CoinMetadata coinMetadata)
     {
-        return balance / Mathf.Pow(10f, coinMetadata.decimals);
+        return balance / (decimal)Mathf.Pow(10f, coinMetadata.decimals);
     }
 
     public async Task<List<Balance>> GetAllBalances(Wallet wallet)
@@ -871,40 +910,37 @@ public class WalletComponent : MonoBehaviour
     /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="List{T}"/> of <see cref="SuiTransactionBlockResponse"/> objects representing the retrieved SUI transaction blocks.</returns>
     public async Task<List<SuiTransactionBlockResponse>> GetTransactionsForSelectedWallet()
     {
-        ObjectResponseQuery query = new()
-        {
-            filter = null,
-            options = null
-        };
-
-        var ownedObj = await GetOwnedObjects(currentWallet.publicKey, query, null, 10);
-
-        if (ownedObj == null) return null;
-
-        if (ownedObj.data == null) return null;
-
-        List<string> digests = new();
-
-        foreach (var obj in ownedObj.data)
-        {
-            var request = await client.QueryTransactionBlocks(
-                new Filter(
-                    new InputObjectFilter(obj.data.objectId)
-                ));
-
-            if (request == null) continue;
-            if (request.result == null) continue;
-
-            foreach (var transactionBlock in request.result.data)
-            {
-                if (!digests.Contains(transactionBlock.digest))
-                    digests.Add(transactionBlock.digest);
+        var transactions = new List<SuiTransactionBlockResponse>();
+        
+        var requestFrom = await client.QueryTransactionBlocks(
+            new SuiTransactionBlockResponseQuery(){
+                filter = new FromAddressFilter(currentWallet.publicKey),
+                options = new TransactionBlockResponseOptions(true, true, true, true, true, true)
             }
+        );
+
+        var requestTo = await client.QueryTransactionBlocks(
+            new SuiTransactionBlockResponseQuery(){
+                filter = new ToAddressFilter(currentWallet.publicKey),
+                options = new TransactionBlockResponseOptions(true, true, true, true, true, true)
+            }
+        );
+
+        foreach (var transactionBlock in requestFrom.result.data)
+        {
+            if (!transactions.Contains(transactionBlock))
+                transactions.Add(transactionBlock);
         }
 
-        var transactions = await client.MultiGetTransactionBlocks(digests, new TransactionBlockResponseOptions());
+        foreach (var transactionBlock in requestTo.result.data)
+        {
+            if (!transactions.Contains(transactionBlock))
+                transactions.Add(transactionBlock);
+        }
 
-        return transactions;
+        var cleanList = transactions.GroupBy(x => x.digest).Select(x => x.First()).ToList();
+
+        return cleanList;
     }
 
     public async Task<string> GetReferenceGasPrice()

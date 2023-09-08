@@ -16,11 +16,9 @@ public class ShowPhrase : BaseScreen {
     public Button copyBtn;
 
     public void Start()
-    {
-        
+    {        
         doneBtn.onClick.AddListener(OnDone);
         copyBtn.onClick.AddListener(OnCopy);
-
     }
 
     private void OnCopy()
@@ -30,8 +28,9 @@ public class ShowPhrase : BaseScreen {
     }
 
     private void OnDone()
-    {
-        GoTo("MainScreen");
+    {        
+        manager.GoBack();
+        manager.GoBack();
     }
 
     public override void ShowScreen(object data = null)

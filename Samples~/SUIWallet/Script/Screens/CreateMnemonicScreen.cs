@@ -36,6 +36,7 @@ public class CreateMnemonicScreen : BaseScreen
         string password = WalletComponent.Instance.password;
 
         Wallet wallet = WalletComponent.Instance.CreateWallet(mnemonic, password);
+        wallet.SaveWallet();
         WalletComponent.Instance.SetCurrentWallet(wallet);
         GoTo("WalletSuccessScreen", "Wallet Created successfully!");
     }
@@ -59,6 +60,7 @@ public class CreateMnemonicScreen : BaseScreen
     {
         base.ShowScreen(data);
         PopulateWords();
+        WalletComponent.Instance.SetCurrentWallet(null);
         saveConfirmationToggle.isOn = false;
     }
 

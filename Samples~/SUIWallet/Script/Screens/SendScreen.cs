@@ -117,8 +117,8 @@ public class SendScreen : BaseScreen
         maxAmmount.text = $"Available {GetMaxBalance()} Tokens";
 
         var tokenImgComponent = GetComponentInChildren<TokenImage>();
-        WalletComponent.Instance.coinImages.TryGetValue(WalletComponent.Instance.currentCoinMetadata.symbol, out Sprite image);
-        tokenImgComponent.Init(image, WalletComponent.Instance.currentCoinMetadata.symbol);
+        Sprite icon = WalletComponent.Instance.GetCoinImage( WalletComponent.Instance.currentCoinMetadata.symbol);
+        tokenImgComponent.Init(icon, WalletComponent.Instance.currentCoinMetadata.symbol);
     }
 
     override public void HideScreen()
@@ -152,6 +152,7 @@ public class SendScreen : BaseScreen
         bool maxBalance = amount.text.Equals(balance.ToString());
         Debug.Log($"Max Balance: {maxBalance}");
         Debug.Log($"Transfer All: {maxBalance}");
+
         GoTo("SendConfirmScreen", new TransferData()
         {
             to = to.text,

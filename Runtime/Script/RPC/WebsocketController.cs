@@ -45,7 +45,6 @@ public class WebsocketController: MonoBehaviour
         websocket.OnMessage += (bytes) =>
         {
             var message = System.Text.Encoding.UTF8.GetString(bytes);
-            Debug.Log("OnMessage! " + message);
             var response = JsonConvert.DeserializeObject<JsonRpcResponse<string>>(message);
             if(response.result != null)
             {
@@ -80,7 +79,6 @@ public class WebsocketController: MonoBehaviour
             EventFilter filter = new("suix_subscribeTransaction", new List<object>{filterParams});
 
             string filterString = JsonConvert.SerializeObject(filter);
-            Debug.Log(filterString);
             await websocket.SendText(filterString);
         }
     }

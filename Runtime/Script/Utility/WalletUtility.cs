@@ -29,8 +29,9 @@ public static class WalletUtility
             return "0";
         }
 
-        if(decimalValue == 0)
+        if(decimalValue == 0 || Math.Abs(decimalValue) < 0.000001m)
         {
+            Debug.Log(decimalValue + " " + (decimalValue < 0.000001m)) ;
             return "0";
         }
 

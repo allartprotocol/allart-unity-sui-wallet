@@ -36,7 +36,7 @@ To install this package, follow these steps:
 
 3.  Click on + and then Add package from git URL...
 
-4.  Enter https://github.com/allartprotocol/allart-unity-sui-wallet.git
+4.  Enter https://github.com/allartprotocol/allart-unity-sui-wallet.git#upm
 
 Unity should download and import the package automatically.
 

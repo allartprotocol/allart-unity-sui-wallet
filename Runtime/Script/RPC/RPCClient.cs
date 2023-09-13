@@ -76,7 +76,6 @@ namespace AllArt.SUI.RPC {
             {
                 await Task.Yield();
             }
-            Debug.Log(uwr.downloadHandler.text);
             var response = JsonConvert.DeserializeObject<T>(uwr.downloadHandler.text);
             return response;
         }

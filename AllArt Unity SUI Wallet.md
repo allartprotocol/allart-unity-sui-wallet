@@ -191,11 +191,11 @@ Packages used for this project:
 
 ## Components
 
-### WalletComponent
+## WalletComponent
 
-#### CreateWallet(string name)
+## CreateWallet(string name)
 
-##### Description
+### Description
 
 Creates a new Wallet object with the given name and adds it to the
 wallets dictionary.

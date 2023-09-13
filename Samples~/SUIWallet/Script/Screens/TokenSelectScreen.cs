@@ -36,7 +36,7 @@ public class TokenSelectScreen : BaseScreen
         foreach (var coin in WalletComponent.Instance.coinMetadatas)
         {
             Balance balance = WalletComponent.Instance.GetCurrentWalletBalanceForType(coin.Key);
-            if(balance == null)
+            if(balance == null || balance.totalBalance == 0)
             {
                 continue;
             }

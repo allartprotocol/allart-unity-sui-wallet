@@ -41,9 +41,9 @@ namespace AllArt.SUI.Wallets
 
             this.publicKey = publicKey;
             this.privateKey = privateKey;
-            Debug.Log("Private key length " + privateKey.Length);
-            Debug.Log("Public Key: " + CryptoBytes.ToBase64String(publicKey));
-            Debug.Log("Private Key: " + CryptoBytes.ToBase64String(privateKey));
+            // Debug.Log("Private key length " + privateKey.Length);
+            // Debug.Log("Public Key: " + CryptoBytes.ToBase64String(publicKey));
+            // Debug.Log("Private Key: " + CryptoBytes.ToBase64String(privateKey));
             this.publicKeyString = CryptoBytes.ToBase64String(publicKey);
             this.suiAddress = ToSuiAddress(publicKey);
         }

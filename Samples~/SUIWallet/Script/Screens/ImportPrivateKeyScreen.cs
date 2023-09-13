@@ -53,10 +53,8 @@ public class ImportPrivateKeyScreen : BaseScreen
 
         if(wal != null)
         {
-            WalletComponent.Instance.SetCurrentWallet(wal);
             WalletComponent.Instance.RestoreAllWallets(WalletComponent.Instance.password);
-            Debug.Log(wal.publicKey);
-            Debug.Log(wal.privateKey);
+            WalletComponent.Instance.SetCurrentWallet(wal);
         }
         else
         {

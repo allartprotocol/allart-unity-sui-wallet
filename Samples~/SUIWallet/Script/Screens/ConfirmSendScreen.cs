@@ -307,7 +307,7 @@ public class ConfirmSendScreen : BaseScreen {
             TransferData = confirmSendData;
             to.text = Wallet.DisplaySuiAddress(confirmSendData.to);
             toHeader.text = $"To {Wallet.DisplaySuiAddress(confirmSendData.to)}";
-            amount.text = $"-{confirmSendData.amount} {confirmSendData.coin.symbol}";
+            amount.text = $"-{WalletUtility.ParseDecimalValueToString(WalletUtility.ParseDecimalValueFromString(confirmSendData.amount))} {confirmSendData.coin.symbol}";
             fee.text = $"{feeAmountFloat:0.#########} SUI";
             Sprite icon = WalletComponent.Instance.GetCoinImage(confirmSendData.coin.symbol);
             tokenImage.Init(icon, confirmSendData.coin.symbol);
@@ -393,7 +393,7 @@ public class ConfirmSendScreen : BaseScreen {
             else if(res != null && res.result != null && res.result.effects != null && res.result.effects.status.error != null){
                 string error = res.result.effects.status.error;
                 Debug.LogError(error);
-                if(error.Contains("InsufficientCoinBalance")){
+                if(error.Contains("InsufficientCoinBalance") || error.Contains("GasBalanceTooLow")){
                     msg = "Insufficient SUI to cover transaction fee";
                 }
                 else{

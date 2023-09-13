@@ -594,8 +594,16 @@ public class WalletComponent : MonoBehaviour
             if (coinMetadatas.ContainsKey(coinType))
                 continue;
             var coinMetadata = await GetCoinMetadata(coinType);
+
             if (coinMetadata != null)
             {
+                //remove this picece of code later
+                if(coinMetadata.symbol == "SCP")
+                {
+                    coinMetadata.symbol = "AART";
+                    coinMetadata.name = "AllArt";
+                }
+
                 coinMetadatas.TryAdd(coinType, coinMetadata);
             }
         }
@@ -603,14 +611,13 @@ public class WalletComponent : MonoBehaviour
 
     public Sprite GetCoinImage(string symbol)
     {
+        Debug.Log(symbol);
         if(coinImages.ContainsKey(symbol.ToLower()))
         {
             return coinImages[symbol.ToLower()];
         }
         return null;
     }
-
-    public List<Sprite> sprites = new List<Sprite>();
 
     private async Task GetCoinImageData()
     {
@@ -628,7 +635,7 @@ public class WalletComponent : MonoBehaviour
                 coinImages.TryAdd(coin.symbol, suiIcon);
                 continue;
             }
-            if(coin.symbol == "bonk")
+            if(coin.symbol == "scp")
             {
                 coinImages.TryAdd(coin.symbol, bonkIcon);
                 continue;
@@ -640,11 +647,12 @@ public class WalletComponent : MonoBehaviour
                 {
                     continue;
                 }
+                coin.image = coin.image.Replace("/large/", "/small/");
                 var image = await GetImage(coin.image);
-                coinImages.TryAdd(coin.symbol, image);   
-                sprites.Add(image);             
+                coinImages.TryAdd(coin.symbol, image);        
             }
         }
+        Debug.Log("Coin image count: " + coinImages.Count);
     }
 
     public SUIMarketData GetCoinMarketData(string symbol)
@@ -686,7 +694,7 @@ public class WalletComponent : MonoBehaviour
     public async Task<List<SUIMarketData>> GetCoingeckoCoinValues()
     {
         var rpc = new RPCClient("");
-        string reqUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bonk%2Cbluemove%2Cmeadow%2Cturbos-finance%2Csuipad%2Cusdcet%2Csuia%2Csuifloki-inu%2Cusd-coin-wormhole-bnb%2Cseapad%2Csuipepe%2Csuitizen%2Cusdtet%2Cusd-coin-wormhole-arb%2Creleap%2Cflame-protocol%2Csui%2Ccetus-protocol%2Cusd-coin%2Cwrapped-solana%2C&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en";
+        string reqUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bonk%2Call-art%2Cbluemove%2Cmeadow%2Cturbos-finance%2Csuipad%2Cusdcet%2Csuia%2Csuifloki-inu%2Cusd-coin-wormhole-bnb%2Cseapad%2Csuipepe%2Csuitizen%2Cusdtet%2Cusd-coin-wormhole-arb%2Creleap%2Cflame-protocol%2Csui%2Ccetus-protocol%2Cusd-coin%2Cwrapped-solana%2C&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en";
         var data = await rpc.Get<List<SUIMarketData>>(reqUrl);
         return data;
     }
@@ -893,7 +901,7 @@ public class WalletComponent : MonoBehaviour
 
         foreach (var wallet in wallets.Values)
         {
-            wallet.SaveWallet(newPassword);
+            wallet.UpdateWalletAndSave(newPassword);
         }
     }
 
@@ -915,21 +923,24 @@ public class WalletComponent : MonoBehaviour
         var requestFrom = await client.QueryTransactionBlocks(
             new SuiTransactionBlockResponseQuery(){
                 filter = new FromAddressFilter(currentWallet.publicKey),
-                options = new TransactionBlockResponseOptions(true, true, true, true, true, true)
+                options = new TransactionBlockResponseOptions(true, false, true, true, true, true)
             }
         );
 
         var requestTo = await client.QueryTransactionBlocks(
             new SuiTransactionBlockResponseQuery(){
                 filter = new ToAddressFilter(currentWallet.publicKey),
-                options = new TransactionBlockResponseOptions(true, true, true, true, true, true)
+                options = new TransactionBlockResponseOptions(true, false, true, true, true, true)
             }
         );
 
-        foreach (var transactionBlock in requestFrom.result.data)
-        {
-            if (!transactions.Contains(transactionBlock))
-                transactions.Add(transactionBlock);
+        if(requestFrom != null){
+
+            foreach (var transactionBlock in requestFrom.result.data)
+            {
+                if (!transactions.Contains(transactionBlock))
+                    transactions.Add(transactionBlock);
+            }
         }
 
         foreach (var transactionBlock in requestTo.result.data)

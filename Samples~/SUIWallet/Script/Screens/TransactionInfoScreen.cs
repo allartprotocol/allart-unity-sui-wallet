@@ -16,6 +16,8 @@ public class TransactionInfoScreen : BaseScreen {
 
     public TextMeshProUGUI date;
     public TextMeshProUGUI status;
+
+    public TextMeshProUGUI senderLabel;
     public TextMeshProUGUI sender;
     public TextMeshProUGUI network;
     public TextMeshProUGUI fee;
@@ -36,51 +38,7 @@ public class TransactionInfoScreen : BaseScreen {
         suiExplorerBtn.onClick.AddListener(OnSuiExplorer);
     }
 
-    private long GetAmmountFromBalanceChange(){
-        long ammount = 0;
-        foreach (var effect in suiTransactionBlockResponse.balanceChanges)
-        {
-            if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
-            {
-                ammount = long.Parse(effect.amount);
-            }
-        }
-        return ammount;
-    }
-
-    private long GetAmountFromInputs(){
-        long ammount = 0;
-        foreach(var input in suiTransactionBlockResponse.transaction.data.transaction.inputs)
-        {
-            if(input.valueType == "u64")
-            {
-                ammount = long.Parse(input.value);
-            }
-        }
-        return ammount;
-    }
-
-    private async Task<CoinMetadata> GetTypeFromBalanceChanges(){
-        string type = "";
-        CoinMetadata coinMetadata = null;
-        foreach (var effect in suiTransactionBlockResponse.balanceChanges)
-        {
-            if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
-            {
-                type = effect.coinType;
-            }
-        }
-
-        if(WalletComponent.Instance.coinMetadatas.ContainsKey(type))
-            coinMetadata = WalletComponent.Instance.coinMetadatas[type];
-        else{
-            coinMetadata = await WalletComponent.Instance.GetCoinMetadata(type);
-        }
-
-        return coinMetadata;
-    }
-
-    async Task<string> GetBalanceChange() {
+    async Task<string> GetBalanceChange(CoinMetadata coinMetadata = null) {
         long balanceChangeAmount = 0;
         long inputAmount = 0;
         string change = $"0";
@@ -88,10 +46,10 @@ public class TransactionInfoScreen : BaseScreen {
         if(suiTransactionBlockResponse.balanceChanges == null)
             return "0";
 
-        inputAmount = GetAmountFromInputs();
-        balanceChangeAmount = GetAmmountFromBalanceChange();
-        CoinMetadata coinMetadata = await GetTypeFromBalanceChanges(); 
-        decimal gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
+        inputAmount = PayTransactionParsing.GetAmountFromInputs(suiTransactionBlockResponse);
+        balanceChangeAmount = PayTransactionParsing.GetAmmountFromBalanceChange(suiTransactionBlockResponse, WalletComponent.Instance.currentWallet);
+        
+        decimal gasUsedFloat = PayTransactionParsing.CalculateGasUsed(suiTransactionBlockResponse);
 
         if(coinMetadata == null)
             return change;
@@ -107,25 +65,20 @@ public class TransactionInfoScreen : BaseScreen {
             decimalChange = (decimal)inputAmount / (decimal)Mathf.Pow(10, coinMetadata.decimals);
         }
 
+        Debug.Log(decimalChange);
+
+        if(suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
+            decimalChange = decimalChange * -1;
+
         if(decimalChange > 0)
-            change = $"+{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
+            change = $"+{WalletUtility.ParseDecimalValueToString(decimalChange)} {coinMetadata.symbol}";
         else if(decimalChange < 0)
-            change = $"-{decimalChange.ToString("0.############")} {coinMetadata.symbol}";
+            change = $"{WalletUtility.ParseDecimalValueToString(decimalChange)} {coinMetadata.symbol}";
 
         return change;
     }
 
-    private string GetReceiver()
-    {
-        foreach (var input in suiTransactionBlockResponse.transaction.data.transaction.inputs)
-        {
-            if(input.valueType == "address")
-            {
-                return input.value;
-            }
-        }
-        return "Unknown Receiver";
-    }
+  
 
     private void OnSuiExplorer()
     {
@@ -147,16 +100,11 @@ public class TransactionInfoScreen : BaseScreen {
 
         suiTransactionBlockResponse = data as SuiTransactionBlockResponse;
 
-        string coinType = "";
-        foreach (var effect in suiTransactionBlockResponse.balanceChanges)
-        {
-            if(effect.owner.AddressOwner == WalletComponent.Instance.currentWallet.publicKey)
-            {
-                coinType = effect.coinType;
-            }
-        }
+        string coinType = PayTransactionParsing.GetCoinTypeFromObjectChanges(suiTransactionBlockResponse, WalletComponent.Instance.currentWallet);
+        Debug.Log(coinType);
 
         CoinMetadata coinMetadata = null;
+
         if(WalletComponent.Instance.coinMetadatas.ContainsKey(coinType))
             coinMetadata = WalletComponent.Instance.coinMetadatas[coinType];
         else{
@@ -170,43 +118,35 @@ public class TransactionInfoScreen : BaseScreen {
             tokenImage.Init(icon, coinMetadata.symbol);
         }
 
-        DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)ulong.Parse(suiTransactionBlockResponse.timestampMs));
+        DateTimeOffset dateTime = PayTransactionParsing.GetDateTimeFromBlock(suiTransactionBlockResponse);
         date.text = dateTime.ToString("MMMM d, yyyy 'at' h:mm tt");
 
         if (suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
+        {
+            senderLabel.text = "To";
+            sender.text = Wallet.DisplaySuiAddress(PayTransactionParsing.GetReceiver(suiTransactionBlockResponse));
             type.text = "Sent";
+        }
         else
+        {
+            senderLabel.text = "From";
+            sender.text = Wallet.DisplaySuiAddress(suiTransactionBlockResponse.transaction.data.sender);
             type.text = "Received";
-        decimal gasUsedFloat = CalculateGasUsed(suiTransactionBlockResponse);
+        }
+
+        decimal gasUsedFloat = PayTransactionParsing.CalculateGasUsed(suiTransactionBlockResponse);
 
         status.text = suiTransactionBlockResponse.effects.status.status == "success" ? "Succeeded" : "Failed";
-        sender.text = Wallet.DisplaySuiAddress(suiTransactionBlockResponse.transaction.data.sender);
         network.text = "SUI";
         var feeText = (gasUsedFloat / (decimal)Mathf.Pow(10, 9)).ToString("0.############");
         fee.text = $"~{feeText} SUI";
         try
         {
-            balanceChange.text = await GetBalanceChange();
+            balanceChange.text = await GetBalanceChange(coinMetadata);
         }
         catch (Exception e)
         {
             Debug.LogError(e);
         }
-    }
-
-    private decimal CalculateGasUsed(SuiTransactionBlockResponse suiTransactionBlockResponse)
-    {
-        var gasUsed = suiTransactionBlockResponse.effects.gasUsed;
-        decimal gasUsedFloat = 0;
-        if (gasUsed != null && gasUsed != default)
-        {
-            if (gasUsed.computationCost != null)
-                gasUsedFloat += decimal.Parse(gasUsed.computationCost);
-            if (gasUsed.storageCost != null)
-                gasUsedFloat += decimal.Parse(gasUsed.storageCost);
-            if (gasUsed.storageRebate != null)
-                gasUsedFloat -= decimal.Parse(gasUsed.storageRebate);
-        }
-        return gasUsedFloat;
     }
 }

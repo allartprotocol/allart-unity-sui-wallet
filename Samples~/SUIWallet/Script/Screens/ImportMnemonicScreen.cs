@@ -60,8 +60,8 @@ public class ImportMnemonicScreen : BaseScreen
         if(wal != null)
         {
             wal.SaveWallet();
-            WalletComponent.Instance.SetCurrentWallet(wal);
             WalletComponent.Instance.RestoreAllWallets(WalletComponent.Instance.password);
+            WalletComponent.Instance.SetCurrentWallet(wal);
         }
         else
         {

@@ -238,7 +238,7 @@ namespace AllArt.SUI.RPC
             RPCRequestBase rpcRequest = new("suix_queryTransactionBlocks");
             rpcRequest.AddParameter(filters);
             rpcRequest.AddParameter(null);
-            rpcRequest.AddParameter(100);
+            rpcRequest.AddParameter(50);
             rpcRequest.AddParameter(true);
             var rpcResponse = await SendRequestAsync<PageForTransactionBlockResponseAndTransactionDigest>(rpcRequest);
             return rpcResponse;

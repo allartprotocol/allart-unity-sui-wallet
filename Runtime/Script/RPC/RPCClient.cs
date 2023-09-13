@@ -31,9 +31,15 @@ namespace AllArt.SUI.RPC {
             {
                 await Task.Yield();
             }
+            try{
+                var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
+                return response;
 
-            var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
-            return response;
+            }
+            catch(Exception e){
+                Debug.Log(e);
+                return null;
+            }
         }
 
         internal async Task<T> SendAPIRequest<T>(object data)
@@ -70,13 +76,19 @@ namespace AllArt.SUI.RPC {
             {
                 await Task.Yield();
             }
-
+            Debug.Log(uwr.downloadHandler.text);
             var response = JsonConvert.DeserializeObject<T>(uwr.downloadHandler.text);
             return response;
         }
 
         public async Task<Sprite> DownloadImage(string url)
         {
+            if(string.IsNullOrEmpty(url))
+                return null;
+
+            if(!url.Contains("http") || !url.Contains("https"))
+                return null;
+
             using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url))
             {
                 uwr.SendWebRequest();

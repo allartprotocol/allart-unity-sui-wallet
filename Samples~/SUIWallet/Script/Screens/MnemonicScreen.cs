@@ -17,9 +17,6 @@ public class MnemonicScreen : BaseScreen
     public Button checkBtn;
 
     private WalletComponent walletComponent;
-
-    string suiRpc = SUIConstantVars.mainNetNode;
-
     private void Start()
     {
         PlayerPrefs.DeleteAll();
@@ -42,20 +39,6 @@ public class MnemonicScreen : BaseScreen
         ObjectDataOptions options = new ObjectDataOptions();
         query.options = options;
         var res = await walletComponent.GetOwnedObjects(wallet.publicKey, query, null, 3);
-        Debug.Log(JsonConvert.SerializeObject(res));
-        // var res_pay = await walletComponent.PaySui(wallet, res.data[0].data.objectId, "0xc4b63f85eea06ed2874d61dc3a6816818299e4286f6918546d666383a74529c2",
-            // 1000000000ul, "1000000000");
-
-        // Debug.Log(JsonConvert.SerializeObject(res_pay));
-        // var signature = wallet.SignData(Wallet.GetMessageWithIntent(CryptoBytes.FromBase64String(res_pay.txBytes)));
-
-        // var transaction = await walletComponent.client.ExecuteTransactionBlock(res_pay.txBytes,
-        //     new string[] { signature }, new ObjectDataOptions(), ExecuteTransactionRequestType.WaitForEffectsCert);
-
-        // Debug.Log(JsonConvert.SerializeObject(transaction));
-        // Debug.Log(wallet.publicKey);
-        // var result = await walletComponent.GetAllBalances(wallet);
-        // Debug.Log(JsonConvert.SerializeObject(result));
     }
 
     private void RegenerateKey()

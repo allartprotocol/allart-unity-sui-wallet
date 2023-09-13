@@ -14,12 +14,22 @@ namespace AllArt.SUI.RPC.Response {
         public TransactionBlock transaction;
         public string rawTransaction;
         public TransactionEffects effects;
-        public object[] objectChanges;
+        public ObjectChange[] objectChanges;
         public List<BalanceChange> balanceChanges;
         public string timestampMs;
         public string checkpoint;
         public ObjectResponseError error;
         public string[] errors;
+    }
+
+    public class ObjectChange{
+        public Owner owner;
+        public string objectId;
+        public string version;
+        public string digest;
+        public string objectType;
+        public string type;
+        public string sender;
     }
 
     [System.Serializable]   
@@ -94,7 +104,7 @@ namespace AllArt.SUI.RPC.Response {
     {
         public string type;
         public string valueType;
-        public string value;
+        public object value;
     }
 
     [System.Serializable]

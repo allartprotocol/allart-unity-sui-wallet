@@ -46,10 +46,12 @@ public class WalletObject : MonoBehaviour
         coin_usd.text = "-";
         coin_change.text = "-";
         coin_balance.text = "";
+        string symbol = "";
         if(balance == null)
         {
             return;
         }
+
 
         coinMetadata = null;
         if(WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
@@ -57,26 +59,31 @@ public class WalletObject : MonoBehaviour
             coinMetadata = WalletComponent.Instance.coinMetadatas[balance.coinType];           
         }
 
-        coin_balance.text = balance.totalBalance.ToString();
+        coin_balance.text = WalletUtility.ParseDecimalValueToString<long>(balance.totalBalance);
 
         if (coinMetadata == null)
         {
             return;
         }
+        Debug.Log(balance.coinType);
+
+        symbol = coinMetadata.symbol;
+        Debug.Log(symbol);
 
         if(!overrideImage)
             coin_name.text = coinMetadata.name;
-        coin_balance.text = $"{WalletComponent.ApplyDecimals(balance, coinMetadata)} {coinMetadata.symbol}";
+
+        coin_balance.text = $"{WalletUtility.ParseDecimalValueToString(WalletComponent.ApplyDecimals(balance, coinMetadata))} {coinMetadata.symbol}";
 
         var tokenImage = GetComponentInChildren<TokenImage>();
         if(!overrideImage)
         {
-            Sprite icon = WalletComponent.Instance.GetCoinImage(coinMetadata.symbol);
+            Sprite icon = WalletComponent.Instance.GetCoinImage(symbol);
             if(icon != null)
                 tokenImage.Init(icon, coinMetadata.name);
         }
 
-        var geckoData = WalletComponent.Instance.GetCoinMarketData(coinMetadata.symbol);
+        var geckoData = WalletComponent.Instance.GetCoinMarketData(symbol);
         if(geckoData == null)
         {
             return;
@@ -95,7 +102,7 @@ public class WalletObject : MonoBehaviour
                         coin_usd.text = "<$0.01";
                     }
                     else
-                        coin_usd.text = $"${usdValue:0.00}";
+                        coin_usd.text = $"${WalletUtility.ParseDecimalValueToString(WalletUtility.ParseDecimalValueFromString(usdValue.ToString("0.00")))}";
                 }
                 catch(Exception e){
                     Debug.Log(e);

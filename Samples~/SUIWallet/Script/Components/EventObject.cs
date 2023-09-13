@@ -69,7 +69,7 @@ public class EventObject : MonoBehaviour
         {
             if(input.valueType == "address")
             {
-                return input.value;
+                return (string)input.value;
             }
         }
         return "Unknown Receiver";

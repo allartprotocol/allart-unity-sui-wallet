@@ -92,50 +92,42 @@ namespace AllArt.SUI.Wallets
             SaveWallet(password);
         }
 
+        public void UpdateWalletAndSave(string newPassword)
+        {
+            if(string.IsNullOrEmpty(mnemonic))
+            {
+                mnemonic = privateKey;
+            }
+
+            string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, newPassword);
+            PlayerPrefs.SetString(walletName, encodedKeyPair);
+        }
+
         public void SaveWallet(string newPassword)
         {
             List<string> wallets = GetWalletSavedKeys();
+
+            int walletIndex = wallets.Count + 1;
 
             if (string.IsNullOrEmpty(walletName))
             {
                 walletName = $"Wallet {wallets.Count + 1}";
             }
 
-            List<string> walletNumbers = new List<string>();
-
-            // get last number of wallet
-            foreach (string wallet in wallets)
+            while (wallets.Contains(walletName))
             {
-                string[] split = wallet.Split(' ');
-                if (split.Length > 1)
-                {
-                    walletNumbers.Add(split[1]);
-                }
+                walletIndex++;
+                walletName = $"Wallet {walletIndex}"; 
             }
 
-            // check if list of numbers is missing any
-            for (int i = 1; i <= wallets.Count; i++)
-            {
-                if (!walletNumbers.Contains(i.ToString()))
-                {
-                    walletName = $"Wallet {i}";
-                    break;
-                }
-            }
-
-            Debug.Log(walletName);
-            Debug.Log(wallets.Count);
-
-            if (!wallets.Contains(walletName))
-            {
-                wallets.Add(walletName);
-                PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
-            }
+            wallets.Add(walletName);
+            PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
             
             if(string.IsNullOrEmpty(mnemonic))
             {
                 mnemonic = privateKey;
             }
+
             string encodedKeyPair = Mnemonics.EncryptMnemonicWithPassword(mnemonic, newPassword);
             PlayerPrefs.SetString(walletName, encodedKeyPair);
         }

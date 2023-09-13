@@ -182,16 +182,15 @@ public class MainWalletScreen : BaseScreen
         WalletComponent.Instance.SetWalletByIndex(value);
         SetWalletName(WalletComponent.Instance.currentWallet);
 
-        if(display == EDisplay.WALLET){
-            await UpdateWalletData();
-        }
-        else{
+        await UpdateWalletData();
+        if(display == EDisplay.HISTORY){
             PopulateHistory();
         }
     }
 
     private void SetWalletName(Wallet wallet){
         int index = WalletComponent.Instance.GetWalletIndex(wallet);
+        walletPubText.SetText(wallet.publicKey, wallet.displayAddress);
         walletNameDrop.text = $"Wallet {index + 1}";
     }
 
@@ -206,8 +205,23 @@ public class MainWalletScreen : BaseScreen
         GoTo("QRScreen", wallet);
     }
 
+    private bool IsTotalBalanceAboveZero(List<Balance> balances)
+    {
+        foreach (var balance in balances)
+        {
+            if (balance.totalBalance > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private async Task LoadWalletData()
     {
+        walletBalanceText.text = "$0";
+        percentageText.text = "";
         walletNameDrop.text = "Wallet";
         if (WalletComponent.Instance.currentWallet == null)
             WalletComponent.Instance.SetWalletByIndex(0);
@@ -266,7 +280,7 @@ public class MainWalletScreen : BaseScreen
                 suiPrimary = true;
                 continue;
             }
-            else if(meta.symbol == "Bonk")
+            else if(meta.symbol == "AART")
             {
                 suiSecondaryWalletObject.Init(balance, manager);
                 suiSecondary = true;
@@ -293,6 +307,8 @@ public class MainWalletScreen : BaseScreen
         {
             suiSecondaryWalletObject.Init(null, manager);
         }
+
+        sendBtn.interactable = IsTotalBalanceAboveZero(balances);
     }
 
     public override async void ShowScreen(object data = null)
@@ -312,12 +328,10 @@ public class MainWalletScreen : BaseScreen
         }
 
         SetWalletName(wallet);
+        PopulateWalletsDropdown();
 
-        if(display == EDisplay.WALLET){
-            await UpdateWalletData();
-            PopulateWalletsDropdown();
-        }
-        else{
+        await UpdateWalletData();
+        if(display == EDisplay.HISTORY){
             PopulateHistory();
         }
 
@@ -326,7 +340,6 @@ public class MainWalletScreen : BaseScreen
 
     private async Task UpdateWalletData()
     {
-        // loadingScreen.gameObject.SetActive(true);
         LoaderScreen.instance.ShowLoading("Please wait...");
         try
         {
@@ -335,22 +348,20 @@ public class MainWalletScreen : BaseScreen
         }
         catch (System.Exception e)
         {
-            // loadingScreen.gameObject.SetActive(false);
             LoaderScreen.instance.HideLoading();
             Debug.LogError(e);
         }
         finally
         {
-            // loadingScreen.gameObject.SetActive(false);
             LoaderScreen.instance.HideLoading();
         }
     }
 
     private async void UpdateBalance()
     {
-        Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet, "0x2::sui::SUI");
         percentageText.text = "";
         walletBalanceText.text = "$0";
+        Balance balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet, "0x2::sui::SUI");
         if (!WalletComponent.Instance.coinMetadatas.ContainsKey(balance.coinType))
             return;
 
@@ -388,8 +399,6 @@ public class MainWalletScreen : BaseScreen
                 Debug.Log(e);
             }
         }
-
-        
     }
 
     public override void HideScreen()

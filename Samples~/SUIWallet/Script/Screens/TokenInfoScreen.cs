@@ -39,7 +39,7 @@ public class TokenInfoScreen : BaseScreen {
             _balance = value;
             if (_balance != null)
             {
-                coinBalance.text = $"{(_balance.totalBalance / Mathf.Pow(10, coinMetadata.decimals)).ToString()} {coinMetadata.symbol}";
+                coinBalance.text = $"{WalletUtility.ParseDecimalValueToString(WalletComponent.ApplyDecimals(_balance, coinMetadata))} {coinMetadata.symbol}";
             }
         }
     }

@@ -127,7 +127,7 @@ currently active wallet.
 guarantee their stability and availability. In the final product, we
 recommend using a dedicated node.
 
-Wallet user interface
+**Wallet user interface**
 
 If you are in need of extending wallet with new screen it is simple as:
 
@@ -158,17 +158,44 @@ public class ChangePassword : BaseScreen
     GoTo("ImportPrivateKeyScreen"); 
 ```
 
+## Development
 
+Want to contribute? Great!
+
+To fix a bug or enhance an existing module, follow these steps:
+
+- Fork the repo
+- Create a new branch (`git checkout -b improve-feature`)
+- Make the appropriate changes in the files
+- Add changes to reflect the changes made
+- Commit your changes (`git commit -am 'Improve feature'`)
+- Push to the branch (`git push origin improve-feature`)
+- Create a Pull Request
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## License
+
+This project is licensed under the Open Source License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+Packages used for this project:
+1. https://www.bouncycastle.org/
+2. https://github.com/somdoron/NaCl.net.git
+3. https://github.com/endel/NativeWebSocket.git
 
 # API
 
 ## Components
 
-## WalletComponent
+### WalletComponent
 
-## CreateWallet(string name)
+#### CreateWallet(string name)
 
-### Description
+##### Description
 
 Creates a new Wallet object with the given name and adds it to the
 wallets dictionary.

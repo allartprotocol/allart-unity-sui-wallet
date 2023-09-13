@@ -1,16 +1,19 @@
----
-title: |
-  <span id="_mou6ok2tdvqo" class="anchor"></span>AllArt Unity SUI Wallet
-
-  <span id="_y69rm6iekpw4" class="anchor"></span>
-
-  <span id="_gima5l1gcycy" class="anchor"></span>Overview
----
+# AllArt SUI Blockchain Wallet Implementation for Unity
 
 Welcome to the AllArt SUI Blockchain Wallet Implementation for Unity.
 This Unity package provides a wallet implementation for the SUI
 Blockchain, enabling straightforward integration of the SUI Blockchain
 into your Unity projects.
+
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+- [API](#api)
 
 ## Getting Started
 
@@ -44,8 +47,7 @@ following these steps:
 
 1.  Go to Package Manager
 
-2.  Find AllArt Unity SUI Wallet in the list of packages added to your
-    > project.
+2.  Find AllArt Unity SUI Wallet in the list of packages added to your project.
 
 3.  Under Samples you will find a SUI Wallet sample.
 
@@ -63,25 +65,17 @@ Wallets are saved locally by saving its mnemonic phrase encrypted with
 the provided password. If you want to add new wallet you can do that
 through interface or externally:
 
-| WalletComponent.Instance.CreateWallet(this.mnemonic, password); |
-|-----------------------------------------------------------------|
+```c#
+    WalletComponent.Instance.CreateWallet(this.mnemonic, password);
+```
 
 Restoring saved wallets:
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>string password = "1234";<br />
-WalletComponent.Instance.RestoreAllWallets(password);<br />
-Wallet wallet = WalletComponent.Instance.GetWalletByIndex(0);</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```c#
+    string password = "1234";
+    WalletComponent.Instance.RestoreAllWallets(password);<br />
+    Wallet wallet = WalletComponent.Instance.GetWalletByIndex(0);</th>
+```
 
 The **WalletComponent** class contains methods for creating, restoring,
 and removing wallets, as well as retrieving wallet information.
@@ -139,49 +133,38 @@ If you are in need of extending wallet with new screen it is simple as:
 
 1.  Creating user interface for the page
 
-2.  Creating **MonoBehaviour** script that inherits **BaseScreen** class
-    > and attaching it to the parent of the UI.
+2.  Creating **MonoBehaviour** script that inherits **BaseScreen** class and attaching it to the parent of the UI.
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>public class ChangePassword : BaseScreen<br />
-{<br />
-override public void ShowScreen(object data = null)<br />
-{<br />
-base.ShowScreen(data);<br />
-}<br />
-<br />
-public override void HideScreen()<br />
-{<br />
-base.HideScreen();<br />
-}<br />
-}</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```c#
+public class ChangePassword : BaseScreen
+{
+    override public void ShowScreen(object data = null)
+    {
+        base.ShowScreen(data);
+    }
+
+    public override void HideScreen()
+    {
+        base.HideScreen();
+    }
+}
+```
 
 3.  Add a new screen to the list of screens in **SimpleScreenManager**.
 
-4.  To go to the next page you simply call the **GoTo** method and pass
-    > the screen name. Screen name is the name of the game object that
-    > the new script is attached to.
+4.  To go to the next page you simply call the **GoTo** method and pass the screen name. Screen name is the name of the game object that the new script is attached to.
 
-| GoTo("ImportPrivateKeyScreen"); |
-|---------------------------------|
+```c#
+    GoTo("ImportPrivateKeyScreen"); 
+```
 
-## 
 
-API
 
-Components
+# API
 
-# WalletComponent
+## Components
+
+## WalletComponent
 
 ## CreateWallet(string name)
 

@@ -806,7 +806,6 @@ public class WalletComponent : MonoBehaviour
     /// <returns>A <see cref="Task"/> representing the asynchronous operation. The result of the task contains a <see cref="TransactionBlockBytes"/> object representing the transaction bytes for the payment transaction.</returns>
     public async Task<JsonRpcResponse<TransactionBlockBytes>> Pay(Wallet wallet, string[] inputCoins, string[] recipients, string[] amounts, string gas, string gasBudget)
     {
-
         var request = await client.Pay(wallet, inputCoins, recipients, amounts, gas, gasBudget);
         return request;
     }

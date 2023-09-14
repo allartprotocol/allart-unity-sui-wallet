@@ -255,6 +255,7 @@ public class ConfirmSendScreen : BaseScreen {
             var wallet = WalletComponent.Instance.currentWallet;
     
             string type = WalletComponent.Instance.coinMetadatas.FirstOrDefault(x => x.Value == WalletComponent.Instance.currentCoinMetadata).Key;
+            Debug.Log(type);
             Page_for_SuiObjectResponse_and_ObjectID ownedCoins = await WalletComponent.Instance.GetOwnedObjectsOfType(wallet, type);
     
             if (ownedCoins == null || ownedCoins.data.Count == 0)
@@ -269,6 +270,7 @@ public class ConfirmSendScreen : BaseScreen {
                 ownedCoinObjectIds.Add(data.data.objectId);
             }
     
+            Debug.Log(JsonConvert.SerializeObject(ownedCoinObjectIds));
             ulong amount = (ulong)(decimal.Parse(TransferData.amount) * (decimal)Mathf.Pow(10, TransferData.coin.decimals));
             JsonRpcResponse<TransactionBlockBytes> res_pay = null;
             Debug.Log(amount);
@@ -355,8 +357,11 @@ public class ConfirmSendScreen : BaseScreen {
                 transaction = await CreatePaySuiTransaction();
         }
         else{
+            Debug.Log("pay other currency");
             transaction = await CreatePayOtherCurrenciesTransaction();
         }
+
+        Debug.Log(JsonConvert.SerializeObject(transaction));
 
         if(transaction.error != null)
         {
@@ -381,6 +386,7 @@ public class ConfirmSendScreen : BaseScreen {
         string transactionBytes = transaction.result.txBytes;
 
         var res = await WalletComponent.Instance.DryRunTransaction(transactionBytes);
+        Debug.Log(JsonConvert.SerializeObject(res));
         if(res == null || res.error != null || res.result.effects.status.status == "failure")
         {
             string msg;

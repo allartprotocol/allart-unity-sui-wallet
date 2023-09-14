@@ -12,7 +12,7 @@ into your Unity projects.
 - [Usage](#usage)
 - [Development](#development)
 - [License](#license)
-- [API](LICENSE.md)
+- [API](API.md)
 
 ## Getting Started
 

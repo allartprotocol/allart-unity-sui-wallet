@@ -62,7 +62,19 @@ public static class WalletUtility
         Debug.Log("No decimal point or no non-zero digit after decimal point");
 
         // If we reached here, we just limit the number to 7 characters
-        return strNumber.Substring(0, 8);
+        return RemoveTrailingZeroes(strNumber.Substring(0, 8));
+    }
+
+    public static string RemoveTrailingZeroes(string strNumber)
+    {
+        
+        if (strNumber.Contains('.'))
+        {
+            strNumber = strNumber.TrimEnd('0');  // Remove trailing zeroes
+            strNumber = strNumber.TrimEnd('.');  // Remove trailing period, if any
+        }
+        
+        return strNumber;
     }
 
     public static string ParseDecimalValueToString<T>(T value, bool overrideMinimum = false) where T : struct, IConvertible

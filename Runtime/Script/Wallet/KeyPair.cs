@@ -115,8 +115,7 @@ namespace AllArt.SUI.Wallets
             {
                 privateKey = privateKey.Substring(2); // Remove the "0x" prefix
             }
-            byte[] privateKeyBytes = CryptoBytes.FromHexString(privateKey);
-            byte[] publicKey = Ed25519.PublicKeyFromSeed(privateKeyBytes);
+            Ed25519.KeyPairFromSeed(out byte[] publicKey, out byte[] privateKeyBytes, CryptoBytes.FromHexString(privateKey));
 
             return new KeyPair(publicKey, privateKeyBytes);
         }

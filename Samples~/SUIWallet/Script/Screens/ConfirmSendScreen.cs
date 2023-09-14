@@ -67,8 +67,6 @@ public class ConfirmSendScreen : BaseScreen {
 
         TransferData finalData = TransferData;
         finalData.response = completedTransaction;
-
-        Debug.Log(JsonConvert.SerializeObject(completedTransaction));
         GoTo("TransactionDone", TransferData);
     }
 

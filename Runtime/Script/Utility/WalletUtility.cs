@@ -40,7 +40,7 @@ public static class WalletUtility
 
     public static string FormatDecimal(decimal number)
     {
-        string strNumber = number.ToString("0.################"); // Convert number to string without E notation
+        string strNumber = number.ToString("0.################");
         
         if (strNumber.Length <= 7)
         {
@@ -48,20 +48,15 @@ public static class WalletUtility
         }
 
         int periodIndex = strNumber.IndexOf('.');
-        if (periodIndex != -1) // if there's a decimal point
+        if (periodIndex != -1)
         {
             int firstNonZeroAfterPeriod = strNumber.Substring(periodIndex).IndexOfAny(new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' });
-            Debug.Log(firstNonZeroAfterPeriod);
             if (firstNonZeroAfterPeriod != -1 && firstNonZeroAfterPeriod + periodIndex + 1 >= 7)
             {
-                // Taking all characters up to the first non-zero decimal
                 return strNumber.Substring(0, firstNonZeroAfterPeriod + periodIndex + 1);
             }
         }
 
-        Debug.Log("No decimal point or no non-zero digit after decimal point");
-
-        // If we reached here, we just limit the number to 7 characters
         return RemoveTrailingZeroes(strNumber.Substring(0, 8));
     }
 

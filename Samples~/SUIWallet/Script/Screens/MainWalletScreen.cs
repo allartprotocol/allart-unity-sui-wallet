@@ -314,7 +314,6 @@ public class MainWalletScreen : BaseScreen
     {
         base.ShowScreen(data);
 
-        Debug.Log(manager.previousScreen.name);
         string password = WalletComponent.Instance.password;
         WalletComponent.Instance.RestoreAllWallets(password);
 

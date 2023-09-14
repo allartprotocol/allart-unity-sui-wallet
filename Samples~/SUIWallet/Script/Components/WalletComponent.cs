@@ -128,6 +128,9 @@ public class WalletComponent : MonoBehaviour
 
     public async void GetSUIMarketDataForCoins()
     {
+        if(suiMarketData == null){
+            suiMarketData = new();
+        }
         if (suiMarketData.Count == 0 || lastUpdated.AddMinutes(1) <= DateTime.Now)
         {
             lastUpdated = DateTime.Now;
@@ -349,11 +352,9 @@ public class WalletComponent : MonoBehaviour
         {
             try
             {
-                Debug.Log(walletName);
                 Wallet wallet = Wallet.RestoreWallet(walletName, password);
                 if (wallet != null)
                 {
-                    Debug.Log(wallet.publicKey);
                     if (!this.wallets.ContainsKey(wallet.walletName))
                     {
                         this.wallets.Add(wallet.walletName, wallet);

@@ -30,5 +30,6 @@ public class QRScreen : BaseScreen
     public void OnCopy()
     {
         GUIUtility.systemCopyBuffer = wallet.publicKey;
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Copied to clipboard");
     }
 }

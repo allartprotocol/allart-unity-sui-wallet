@@ -25,11 +25,11 @@ public class SendScreen : BaseScreen
     public Button scanButton;
     public Transform feed;
 
-
+    private QRReader qrReader;
     public Button max;
 
-    Balance balance;
-    private QRReader qrReader;
+    private Balance balance;
+    private CoinMetadata coinMetadata;
 
     private void Start()
     {
@@ -51,21 +51,27 @@ public class SendScreen : BaseScreen
         {
             return;
         }
-        decimal.TryParse(arg0, out decimal parseAmmount); 
+
+        // limit to 8 decimal places
+        if(arg0.Contains(".") && arg0.Split('.')[1].Length > coinMetadata.decimals)
+        {
+            amount.text = arg0.Split('.')[0] + "." + arg0.Split('.')[1].Substring(0, coinMetadata.decimals);
+            InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Error, $"The value exceeds the maximum decimals ({coinMetadata.decimals})");
+        }
         
+        decimal.TryParse(arg0, out decimal parseAmmount);
 
         if(parseAmmount > GetMaxBalance())
         {
             amount.text = GetMaxBalance().ToString();
         }
+
         bool maxBalance = arg0.Equals(GetMaxBalance().ToString());
-        Debug.Log($"Max Balance: {maxBalance}");
     }
 
     private void OnQRCodeFound(string obj)
     {
         to.text = obj;
-        Debug.Log("QR Code Found: " + obj);
         OnClose();
     }
 
@@ -109,6 +115,7 @@ public class SendScreen : BaseScreen
         to.text = "";
         amount.text = "";
         maxAmmount.text = "";
+        coinMetadata = WalletComponent.Instance.currentCoinMetadata;
         tokenName.text = $"Send {WalletComponent.Instance.currentCoinMetadata.symbol}";
         var coinType = WalletComponent.Instance.coinMetadatas.Where(x => x.Value.symbol == WalletComponent.Instance.currentCoinMetadata.symbol).FirstOrDefault().Key;
         balance = await WalletComponent.Instance.GetBalance(WalletComponent.Instance.currentWallet.publicKey, 
@@ -147,11 +154,7 @@ public class SendScreen : BaseScreen
             return;
         }
         decimal balance = GetMaxBalance();
-        Debug.Log($"Balance: {balance}");
-        Debug.Log($"Amount: {amount.text}");
         bool maxBalance = amount.text.Equals(balance.ToString());
-        Debug.Log($"Max Balance: {maxBalance}");
-        Debug.Log($"Transfer All: {maxBalance}");
 
         GoTo("SendConfirmScreen", new TransferData()
         {

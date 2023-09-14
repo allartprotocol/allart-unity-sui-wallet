@@ -130,7 +130,6 @@ public class WalletComponent : MonoBehaviour
     {
         if (suiMarketData.Count == 0 || lastUpdated.AddMinutes(1) <= DateTime.Now)
         {
-            Debug.Log($"Getting SUI market data {suiMarketData.Count} {lastUpdated.AddMinutes(1) > DateTime.Now}");
             lastUpdated = DateTime.Now;
             suiMarketData = await GetCoingeckoCoinValues();
             Debug.Log("Got SUI market data");
@@ -345,13 +344,16 @@ public class WalletComponent : MonoBehaviour
     public void RestoreAllWallets(string password)
     {
         var walletNames = Wallet.GetWalletSavedKeys();
+        this.wallets.Clear();
         foreach (var walletName in walletNames)
         {
             try
             {
+                Debug.Log(walletName);
                 Wallet wallet = Wallet.RestoreWallet(walletName, password);
                 if (wallet != null)
                 {
+                    Debug.Log(wallet.publicKey);
                     if (!this.wallets.ContainsKey(wallet.walletName))
                     {
                         this.wallets.Add(wallet.walletName, wallet);
@@ -432,6 +434,7 @@ public class WalletComponent : MonoBehaviour
 
     public Dictionary<string, Wallet> GetAllWallets()
     {
+        RestoreAllWallets(password);
         return wallets;
     }
 
@@ -508,8 +511,8 @@ public class WalletComponent : MonoBehaviour
     /// <param name="wallet">The wallet to remove.</param>
     public void RemoveWallet(Wallet wallet)
     {
-        wallet.RemoveWallet();
         wallets.Remove(wallet.walletName);
+        wallet.RemoveWallet();
     }
 
     /// <summary>
@@ -611,7 +614,6 @@ public class WalletComponent : MonoBehaviour
 
     public Sprite GetCoinImage(string symbol)
     {
-        Debug.Log(symbol);
         if(coinImages.ContainsKey(symbol.ToLower()))
         {
             return coinImages[symbol.ToLower()];
@@ -652,7 +654,6 @@ public class WalletComponent : MonoBehaviour
                 coinImages.TryAdd(coin.symbol, image);        
             }
         }
-        Debug.Log("Coin image count: " + coinImages.Count);
     }
 
     public SUIMarketData GetCoinMarketData(string symbol)

@@ -31,6 +31,11 @@ public class WalletObject : MonoBehaviour
         {
             return;
         }
+
+        if(balance.totalBalance == 0)
+        {
+            return;
+        }
         manager.ShowScreen("TokenInfoScreen", new Tuple<CoinMetadata, SUIMarketData, Balance>(coinMetadata, geckoCoinData, balance));
     }
 
@@ -65,10 +70,7 @@ public class WalletObject : MonoBehaviour
         {
             return;
         }
-        Debug.Log(balance.coinType);
-
         symbol = coinMetadata.symbol;
-        Debug.Log(symbol);
 
         if(!overrideImage)
             coin_name.text = coinMetadata.name;

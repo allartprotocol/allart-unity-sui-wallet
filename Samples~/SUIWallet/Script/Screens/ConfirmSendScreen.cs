@@ -169,8 +169,6 @@ public class ConfirmSendScreen : BaseScreen {
         ObjectDataOptions options = new();
         query.options = options;
         ulong amount = (ulong)(decimal.Parse(TransferData.amount) * (decimal)Mathf.Pow(10, TransferData.coin.decimals));
-        Debug.Log(amount);
-        Debug.Log(TransferData.amount);
         try {
             var res = await WalletComponent.Instance.GetOwnedObjects(wallet.publicKey, query, null, 3);
 
@@ -307,7 +305,7 @@ public class ConfirmSendScreen : BaseScreen {
             TransferData = confirmSendData;
             to.text = Wallet.DisplaySuiAddress(confirmSendData.to);
             toHeader.text = $"To {Wallet.DisplaySuiAddress(confirmSendData.to)}";
-            amount.text = $"-{WalletUtility.ParseDecimalValueToString(WalletUtility.ParseDecimalValueFromString(confirmSendData.amount))} {confirmSendData.coin.symbol}";
+            amount.text = $"-{WalletUtility.ParseDecimalValueToString(WalletUtility.ParseDecimalValueFromString(confirmSendData.amount), true)} {confirmSendData.coin.symbol}";
             fee.text = $"{feeAmountFloat:0.#########} SUI";
             Sprite icon = WalletComponent.Instance.GetCoinImage(confirmSendData.coin.symbol);
             tokenImage.Init(icon, confirmSendData.coin.symbol);
@@ -389,16 +387,12 @@ public class ConfirmSendScreen : BaseScreen {
         {
             string msg;
             if (res != null && res.error != null)
-                msg = res.error.message;
+            {
+                msg = ParseErrorMessage(res.error.message);
+            }
             else if(res != null && res.result != null && res.result.effects != null && res.result.effects.status.error != null){
                 string error = res.result.effects.status.error;
-                Debug.LogError(error);
-                if(error.Contains("InsufficientCoinBalance") || error.Contains("GasBalanceTooLow")){
-                    msg = "Insufficient SUI to cover transaction fee";
-                }
-                else{
-                    msg = res.result.effects.status.error;
-                }
+                msg = ParseErrorMessage(error);
             }
             else
                 msg = "Transaction simulation failed";
@@ -408,4 +402,13 @@ public class ConfirmSendScreen : BaseScreen {
 
         return res.result;
     }
+    private string ParseErrorMessage(string msg, string defaultMessage = "Transaction failed"){
+        if(msg.Contains("InsufficientCoinBalance") || msg.Contains("GasBalanceTooLow")){
+            return "Insufficient SUI to cover transaction fee";
+        }
+        else{
+            return defaultMessage;
+        }
+    }
 }
+

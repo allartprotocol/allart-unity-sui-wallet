@@ -55,6 +55,7 @@ public class TransactionInfoScreen : BaseScreen {
             return change;
 
         decimal decimalChange = 0;
+        Debug.Log("inputAmount: " + inputAmount);
 
         if(inputAmount == 0)
         {
@@ -68,12 +69,12 @@ public class TransactionInfoScreen : BaseScreen {
         Debug.Log(decimalChange);
 
         if(suiTransactionBlockResponse.transaction.data.sender == WalletComponent.Instance.currentWallet.publicKey)
-            decimalChange = decimalChange * -1;
+            decimalChange = Math.Abs(decimalChange) * -1;
 
         if(decimalChange > 0)
-            change = $"+{WalletUtility.ParseDecimalValueToString(decimalChange)} {coinMetadata.symbol}";
+            change = $"+{WalletUtility.ParseDecimalValueToString(decimalChange, true)} {coinMetadata.symbol}";
         else if(decimalChange < 0)
-            change = $"{WalletUtility.ParseDecimalValueToString(decimalChange)} {coinMetadata.symbol}";
+            change = $"{WalletUtility.ParseDecimalValueToString(decimalChange, true)} {coinMetadata.symbol}";
 
         return change;
     }

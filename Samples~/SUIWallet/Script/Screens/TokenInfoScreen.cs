@@ -72,6 +72,9 @@ public class TokenInfoScreen : BaseScreen {
         this.coinMetadata = coinMetadata;
         this.balance = balance;
         this.manager = manager;
+
+        sendBtn.interactable = balance.totalBalance > 0;
+        
         Debug.Log(JsonConvert.SerializeObject(coinMetadata));
 
         coinPrice.text = "0 $";

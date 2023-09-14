@@ -23,6 +23,7 @@ public class CreateMnemonicScreen : BaseScreen
     private void OnCopy()
     {
         GUIUtility.systemCopyBuffer = mnemonic;
+        InfoPopupManager.instance.AddNotif(InfoPopupManager.InfoType.Info, "Copied to clipboard");
     }
 
     private void OnContinue()

@@ -93,7 +93,6 @@ public class MainWalletScreen : BaseScreen
         {
             if (wallet.Value.publicKey == WalletComponent.Instance.currentWallet.publicKey)
             {
-                Debug.Log("Found current wallet: " + wallet.Value.publicKey + " at index: " + options.Count);
                 selectedIndex = options.Count;
             }
             options.Add("<color=#BABABA>" + $"{options.Count + 1}.</color> {wallet.Value.displayAddress}");

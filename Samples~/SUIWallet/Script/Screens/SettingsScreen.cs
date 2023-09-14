@@ -28,7 +28,6 @@ public class SettingsScreen : BaseScreen
         var time = PlayerPrefs.GetFloat("timeout", -1);
         var network = (ENodeType)PlayerPrefs.GetInt("nodeType", 0);
         var timestring = ConvertSecondsToMinutesOrHours((int)time);
-        Debug.Log(time);
         timeText.text = time == -1 ? "Never" : timestring;
         networkText.text = network.ToString();
     }

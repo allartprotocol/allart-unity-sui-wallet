@@ -6,248 +6,248 @@
 
 ## CreateWallet(string name)
 
-### Description
+#### Description
 
 Creates a new Wallet object with the given name and adds it to the
 wallets dictionary.
 
-### Parameters
+#### Parameters
 
 -   name: The name of the new wallet.
 
 ## DeleteWallet(string id)
 
-### Description
+#### Description
 
 Deletes the Wallet object with the given ID from the wallets dictionary.
 
-### Parameters
+#### Parameters
 
 -   id: The ID of the wallet to delete.
 
 ## SelectWallet(string id)
 
-### Description
+#### Description
 
 Sets the currentWallet field to the Wallet object with the given ID.
 
-### Parameters
+#### Parameters
 
 -   id: The ID of the wallet to select.
 
 ## GetWallet(string id)
 
-### Description
+#### Description
 
 Returns the Wallet object with the given ID.
 
-### Parameters
+#### Parameters
 
 -   id: The ID of the wallet to get.
 
-### Returns
+#### Returns
 
 The Wallet object with the given ID.
 
 ## GetWallets()
 
-### Description
+#### Description
 
 Returns a list of all Wallet objects.
 
-### Returns
+#### Returns
 
 A list of all Wallet objects.
 
 ## GetCoinMetadata(string symbol)
 
-### Description
+#### Description
 
 Returns the CoinMetadata object for the coin with the given symbol.
 
-### Parameters
+#### Parameters
 
 -   symbol: The symbol of the coin to get metadata for.
 
-### Returns
+#### Returns
 
 The CoinMetadata object for the coin with the given symbol.
 
 ## GetCoinGeckoData(string symbol)
 
-### Description
+#### Description
 
 Returns the SUIMarketData object for the coin with the given symbol.
 
-### Parameters
+#### Parameters
 
 -   symbol: The symbol of the coin to get market data for.
 
-### Returns
+#### Returns
 
 The SUIMarketData object for the coin with the given symbol.
 
 ## GetCoinPage(string symbol)
 
-### Description
+#### Description
 
 Returns the CoinPage object for the coin with the given symbol.
 
-### Parameters
+#### Parameters
 
 -   symbol: The symbol of the coin to get the page for.
 
-### Returns
+#### Returns
 
 The CoinPage object for the coin with the given symbol.
 
 ## GetCoinImage(string symbol)
 
-### Description
+#### Description
 
 Returns the Sprite object for the coin with the given symbol.
 
-### Parameters
+#### Parameters
 
 -   symbol: The symbol of the coin to get the image for.
 
-### Returns
+#### Returns
 
 The Sprite object for the coin with the given symbol.
 
 ## UpdateCoinData()
 
-### Description
+#### Description
 
 Updates the cached coin data by making an RPC call to the SUI daemon and
 parsing the response.
 
 ## UpdateCoinMetadata()
 
-### Description
+#### Description
 
 Updates the coinMetadatas dictionary by making an RPC call to the SUI
 daemon and parsing the response.
 
 ## UpdateCoinGeckoData()
 
-### Description
+#### Description
 
 Updates the coinGeckoData dictionary by making an API call to CoinGecko
 and parsing the response.
 
 ## UpdateCoinPages()
 
-### Description
+#### Description
 
 Updates the coinPages dictionary by making an API call to CoinGecko and
 parsing the response.
 
 ## UpdateCoinImages()
 
-### Description
+#### Description
 
 Updates the coinImages dictionary by loading coin images from the
 Resources folder.
 
 ## UpdateLastUpdated()
 
-### Description
+#### Description
 
 Updates the lastUpdated field to the current date and time.
 
 ## SaveCoinData()
 
-### Description
+#### Description
 
 Saves the cached coin data to disk.
 
 ## LoadCoinData()
 
-### Description
+#### Description
 
 Loads the cached coin data from disk.
 
 ## GetCoinData()
 
-### Description
+#### Description
 
 Makes an RPC call to the SUI daemon to get the latest coin data.
 
-### Returns
+#### Returns
 
 A Task\<RpcResponse> object representing the RPC response.
 
 ## GetCoinMetadata()
 
-### Description
+#### Description
 
 Makes an RPC call to the SUI daemon to get the latest coin metadata.
 
-### Returns
+#### Returns
 
 A Task\<RpcResponse> object representing the RPC response.
 
 ## GetTransaction(string txid)
 
-### Description
+#### Description
 
 Returns the Transaction object with the given transaction ID.
 
-### Parameters
+#### Parameters
 
 -   txid: The transaction ID of the transaction to get.
 
-### Returns
+#### Returns
 
 The Transaction object with the given transaction ID.
 
 ## GetTransactions()
 
-### Description
+#### Description
 
 Returns a list of all Transaction objects.
 
-### Returns
+#### Returns
 
 A list of all Transaction objects.
 
 ## GetTransactionHistory(string address)
 
-### Description
+#### Description
 
 Returns a list of Transaction objects for the given address.
 
-### Parameters
+#### Parameters
 
 -   address: The address to get transaction history for.
 
-### Returns
+#### Returns
 
 A list of Transaction objects for the given address.
 
 ## GetBalance(string address)
 
-### Description
+#### Description
 
 Returns the balance of the given address.
 
-### Parameters
+#### Parameters
 
 -   address: The address to get the balance for.
 
-### Returns
+#### Returns
 
 The balance of the given address.
 
 ## SendTransaction(string fromAddress, string toAddress, decimal amount)
 
-### Description
+#### Description
 
 Sends a transaction from the given address to the given address with the
 given amount.
 
-### Parameters
+#### Parameters
 
 -   fromAddress: The address to send the transaction from.
 
@@ -255,7 +255,7 @@ given amount.
 
 -   amount: The amount to send in the transaction.
 
-### Returns
+#### Returns
 
 A Task\<RpcResponse> object representing the RPC response.
 
@@ -263,84 +263,84 @@ A Task\<RpcResponse> object representing the RPC response.
 
 ## Property: screens
 
-### Description
+#### Description
 
 Gets or sets the array of BaseScreen objects managed by the
 SimpleScreenManager.
 
 ## Property: currentScreen
 
-### Description
+#### Description
 
 Gets or sets the current BaseScreen object being displayed by the
 SimpleScreenManager.
 
 ## Property: previousScreen
 
-### Description
+#### Description
 
 Gets or sets the previous BaseScreen object that was displayed by the
 SimpleScreenManager.
 
 ## Property: historyCount
 
-### Description
+#### Description
 
 Gets the number of BaseScreen objects in the history stack of the
 SimpleScreenManager.
 
 ## Property: mainHolder
 
-### Description
+#### Description
 
 Gets or sets the Transform object that holds the BaseScreen objects
 managed by the SimpleScreenManager.
 
 ## Hide()
 
-### Description
+#### Description
 
 Hides the mainHolder object of the SimpleScreenManager.
 
 ## Show()
 
-### Description
+#### Description
 
 Shows the mainHolder object of the SimpleScreenManager.
 
 ## ToggleAllScreens()
 
-### Description
+#### Description
 
 Toggles the visibility of the mainHolder object of the
 SimpleScreenManager.
 
 ## GoBack()
 
-### Description
+#### Description
 
 Goes back to the previous BaseScreen object in the history stack of the
 SimpleScreenManager.
 
 ## ClearHistory(BaseScreen baseScreen)
 
-### Description
+#### Description
 
 Clears the history stack of the SimpleScreenManager and optionally
 pushes a BaseScreen object onto the stack.
 
-### Parameters
+#### Parameters
 
 -   baseScreen: The BaseScreen object to push onto the history stack.
 
 ## ShowScreen(BaseScreen curScreen, BaseScreen screen)
 
-### Description
+#### Description
 
 Shows the given BaseScreen object and sets it as the current screen of
 the SimpleScreenManager.
 
-### Parameters
+#### Parameters
 
 -   curScreen: The current BaseScreen object being displayed by the
     > SimpleScreenManager.
@@ -349,24 +349,24 @@ the SimpleScreenManager.
 
 ## ShowScreen(string name)
 
-### Description
+#### Description
 
 Shows the BaseScreen object with the given name and sets it as the
 current screen of the SimpleScreenManager.
 
-### Parameters
+#### Parameters
 
 -   name: The name of the BaseScreen object to show.
 
 ## ShowScreen(string name, object data = default)
 
-### Description
+#### Description
 
 Shows the BaseScreen object with the given name and sets it as the
 current screen of the SimpleScreenManager, passing the given data to the
 ShowScreen method of the BaseScreen object.
 
-### Parameters
+#### Parameters
 
 -   name: The name of the BaseScreen object to show.
 
@@ -375,12 +375,12 @@ ShowScreen method of the BaseScreen object.
 
 ## ShowScreen(BaseScreen curScreen, int index)
 
-### Description
+#### Description
 
 Shows the BaseScreen object at the given index and sets it as the
 current screen of the SimpleScreenManager.
 
-### Parameters
+#### Parameters
 
 -   curScreen: The current BaseScreen object being displayed by the
     > SimpleScreenManager.
@@ -389,13 +389,13 @@ current screen of the SimpleScreenManager.
 
 ## ShowScreen(BaseScreen curScreen, string name, object data = null)
 
-### Description
+#### Description
 
 Shows the BaseScreen object with the given name and sets it as the
 current screen of the SimpleScreenManager, passing the given data to the
 ShowScreen method of the BaseScreen object.
 
-### Parameters
+#### Parameters
 
 -   curScreen: The current BaseScreen object being displayed by the
     > SimpleScreenManager.
@@ -407,22 +407,22 @@ ShowScreen method of the BaseScreen object.
 
 ## HideScreen(string name)
 
-### Description
+#### Description
 
 Hides the BaseScreen object with the given name.
 
-### Parameters
+#### Parameters
 
 -   name: The name of the BaseScreen object to hide.
 
 ## HideAll(int screenIndex = 0)
 
-### Description
+#### Description
 
 Hides all BaseScreen objects managed by the SimpleScreenManager except
 for the BaseScreen object at the given index.
 
-### Parameters
+#### Parameters
 
 -   screenIndex: The index of the BaseScreen object to show. Default
     > value is 0.
@@ -431,26 +431,26 @@ for the BaseScreen object at the given index.
 
 ## Property: manager
 
-### Description
+#### Description
 
 Gets or sets the SimpleScreenManager object that manages the BaseScreen
 object.
 
 ## Property: tween
 
-### Description
+#### Description
 
 Gets or sets the IScreenAnimation object that animates the BaseScreen
 object.
 
 ## GoTo(string page, object data = null)
 
-### Description
+#### Description
 
 Navigates to the BaseScreen object with the given name and passes the
 given data to the ShowScreen method of the BaseScreen object.
 
-### Parameters
+#### Parameters
 
 -   page: The name of the BaseScreen object to navigate to.
 
@@ -459,51 +459,51 @@ given data to the ShowScreen method of the BaseScreen object.
 
 ## HideScreen()
 
-### Description
+#### Description
 
 Hides the BaseScreen object.
 
 ## InitScreen()
 
-### Description
+#### Description
 
 Initializes the BaseScreen object.
 
 ## ShowScreen(object data = null)
 
-### Description
+#### Description
 
 Shows the BaseScreen object and passes the given data to the ShowScreen
 method of the BaseScreen object.
 
-### Parameters
+#### Parameters
 
 -   data: The data to pass to the ShowScreen method of the BaseScreen
     > object.
 
 ## ShowScreen(T data = default)
 
-### Description
+#### Description
 
 Shows the BaseScreen object and passes the given data to the ShowScreen
 method of the BaseScreen object.
 
-### Parameters
+#### Parameters
 
 -   data: The data to pass to the ShowScreen method of the BaseScreen
     > object.
 
 ## GetInputByName(string name) where T : Object
 
-### Description
+#### Description
 
 Gets the Object with the given name from the BaseScreen object.
 
-### Parameters
+#### Parameters
 
 -   name: The name of the Object to get.
 
-### Returns
+#### Returns
 
 The Object with the given name.
 
@@ -525,7 +525,7 @@ method clears all notification popups managed by the
 **NotificationPopup** object from the list of notification popups
 managed by the **InfoPopupManager**.
 
-### Example
+#### Example
 
 | infoPopupManager.AddNotif(InfoType.Info, "This is an info message."); |
 |-----------------------------------------------------------------------|
@@ -546,82 +546,82 @@ make the underlay visible.
 
 ## Property: contentHolder
 
-### Description
+#### Description
 
 Gets or sets the Transform object that holds the notification popups
 managed by the InfoPopupManager.
 
 ## Property: notifPrefab
 
-### Description
+#### Description
 
 Gets or sets the GameObject prefab used for creating notification
 popups.
 
 ## Property: instance
 
-### Description
+#### Description
 
 Gets or sets the InfoPopupManager instance.
 
 ## Property: warningColor
 
-### Description
+#### Description
 
 Gets or sets the color used for warning notification popups.
 
 ## Property: errorColor
 
-### Description
+#### Description
 
 Gets or sets the color used for error notification popups.
 
 ## Property: infoColor
 
-### Description
+#### Description
 
 Gets or sets the color used for info notification popups.
 
 ## Property: warningSprite
 
-### Description
+#### Description
 
 Gets or sets the sprite used for warning notification popups.
 
 ## Property: errorSprite
 
-### Description
+#### Description
 
 Gets or sets the sprite used for error notification popups.
 
 ## Property: infoSprite
 
-### Description
+#### Description
 
 Gets or sets the sprite used for info notification popups.
 
 ## Property: notifQueue
 
-### Description
+#### Description
 
 Gets or sets the list of NotificationPopup objects managed by the
 InfoPopupManager.
 
 ## Property: underlay
 
-### Description
+#### Description
 
 Gets or sets the Transform object used as an underlay for the
 notification popups managed by the InfoPopupManager.
 
 ## AddNotif(InfoType type, string message)
 
-### Description
+#### Description
 
 Adds a notification popup of the given type and message to the
 InfoPopupManager.
 
-### Parameters
+#### Parameters
 
 -   type: The type of the notification popup to add.
 
@@ -629,18 +629,18 @@ InfoPopupManager.
 
 ## ClearNotif()
 
-### Description
+#### Description
 
 Clears all notification popups managed by the InfoPopupManager.
 
 ## RemoveNotif(NotificationPopup notif)
 
-### Description
+#### Description
 
 Removes the given NotificationPopup object from the list of notification
 popups managed by the InfoPopupManager.
 
-### Parameters
+#### Parameters
 
 -   notif: The NotificationPopup object to remove.
 
@@ -654,34 +654,34 @@ overview of the methods contained in the class:
 
 ## SetupConnection(string url)
 
-### Description
+#### Description
 
 This method sets up a WebSocket connection to the specified URL. It
 takes in a string url as a parameter.
 
 ## Subscribe(object filterParams)
 
-### Description
+#### Description
 
 This method subscribes to a WebSocket event with the specified filter
 parameters. It takes in an object filterParams as a parameter.
 
 ## UnsubscribeCurrent()
 
-### Description
+#### Description
 
 This method unsubscribes from the current WebSocket event.
 
 ## Unsubscribe(string id)
 
-### Description
+#### Description
 
 This method unsubscribes from a WebSocket event with the specified ID.
 It takes in a string id as a parameter.
 
 ## Stop()
 
-### Description
+#### Description
 
 This method closes the WebSocket connection.
 
@@ -746,17 +746,17 @@ argument and sets it as the \_uri field.
 
 ## async Task\<JsonRpcResponse\<T>\> SendRequest\<T>(object data)
 
-#### Description
+##### Description
 
 The SendRequest method takes an object of type T and sends it to the
 server as a JSON-RPC request. The method returns a JsonRpcResponse\<T>
 object, which contains the result of the request.
 
-#### Parameters
+##### Parameters
 
 -   data: The data to be sent to the server as a JSON-RPC request.
 
-#### Returns
+##### Returns
 
 -   Task\<JsonRpcResponse\<T>\>: A Task object that represents the
     > asynchronous operation. The JsonRpcResponse\<T> object contains
@@ -764,68 +764,68 @@ object, which contains the result of the request.
 
 ## async Task\<T> SendAPIRequest\<T>(object data)
 
-#### Description
+##### Description
 
 The SendAPIRequest method is similar to SendRequest, but it returns an
 object of type T instead of a JsonRpcResponse\<T> object.
 
-#### Parameters
+##### Parameters
 
 -   data: The data to be sent to the server as a JSON-RPC request.
 
-#### Returns
+##### Returns
 
 -   Task\<T>: A Task object that represents the asynchronous operation.
     > The object of type T contains the result of the request.
 
 ## async Task\<T> Get\<T>(string url)
 
-#### Description
+##### Description
 
 The Get method sends a GET request to the specified URL and returns an
 object of type T.
 
-#### Parameters
+##### Parameters
 
 -   url: The URL to send the GET request to.
 
-#### Returns
+##### Returns
 
 -   Task\<T>: A Task object that represents the asynchronous operation.
     > The object of type T contains the result of the request.
 
 ## async Task\<Sprite> DownloadImage(string url)
 
-#### Description
+##### Description
 
 The DownloadImage method downloads an image from the specified URL and
 returns it as a Sprite object.
 
-#### Parameters
+##### Parameters
 
 -   url: The URL to download the image from.
 
-#### Returns
+##### Returns
 
 -   Task\<Sprite>: A Task object that represents the asynchronous
     > operation. The Sprite object contains the downloaded image.
 
 ## IEnumerator SendRequestCoroutine(string uri, Action\<UnityWebRequest> callback)
 
-#### Description
+##### Description
 
 The SendRequestCoroutine method sends a request to the server using a
 coroutine and calls the specified callback function when the request is
 complete.
 
-#### Parameters
+##### Parameters
 
 -   uri: The URI to send the request to.
 
 -   callback: The callback function to call when the request is
     > complete.
 
-#### Returns
+##### Returns
 
 -   IEnumerator: An IEnumerator object that represents the coroutine.
 
@@ -840,130 +840,130 @@ sending requests to a SUI RPC server. Class extends RPCClient class.
 
 Creates a new instance of the SUIRPCClient class with the specified URI.
 
-#### Parameters
+##### Parameters
 
 -   uri - The URI of the SUI RPC server.
 
-### Public Methods
+#### Public Methods
 
 ## SendRequestAsync
 
-#### Description
+##### Description
 
 Sends a JSON-RPC request to the SUI RPC server and returns the response.
 
-#### Parameters
+##### Parameters
 
 -   data - The data to send with the request.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<T> object representing the response from the
     > server.
 
 ## SendRequestAsync
 
-#### Description
+##### Description
 
 Sends a JSON-RPC request to the SUI RPC server and returns the response.
 
-#### Parameters
+##### Parameters
 
 -   data - The RPCRequestBase object representing the request to send.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<T> object representing the response from the
     > server.
 
 ## SendRequestAsync
 
-#### Description
+##### Description
 
 Sends a JSON-RPC request to the SUI RPC server and returns the response.
 
-#### Parameters
+##### Parameters
 
 -   method - The name of the method to call.
 
 -   parameters - The parameters to pass to the method.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<T> object representing the response from the
     > server.
 
 ## GetAllBalances
 
-#### Description
+##### Description
 
 Gets the balances of all coins for the specified wallet.
 
-#### Parameters
+##### Parameters
 
 -   wallet - The wallet to get the balances for.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<List\<Balance>\> object representing the response
     > from the server.
 
 ## GetAllBalances
 
-#### Description
+##### Description
 
 Gets the balances of all coins for the specified public key.
 
-#### Parameters
+##### Parameters
 
 -   publicKey - The public key to get the balances for.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<List\<Balance>\> object representing the response
     > from the server.
 
 ## GetBalance
 
-#### Description
+##### Description
 
 Gets the balance of the specified coin for the specified wallet.
 
-#### Parameters
+##### Parameters
 
 -   wallet - The wallet to get the balance for.
 
 -   cointType - The type of coin to get the balance for.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<Balance> object representing the response from
     > the server.
 
 ## GetBalance
 
-#### Description
+##### Description
 
 Gets the balance of the specified coin for the specified public key.
 
-#### Parameters
+##### Parameters
 
 -   publicKey - The public key to get the balance for.
 
 -   cointType - The type of coin to get the balance for.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<Balance> object representing the response from
     > the server.
 
 ## GetAllCoins
 
-#### Description
+##### Description
 
 Gets all coins for the specified wallet.
 
-#### Parameters
+##### Parameters
 
 -   wallet - The wallet to get the coins for.
 
@@ -971,18 +971,18 @@ Gets all coins for the specified wallet.
 
 -   limit - The maximum number of coins to return.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<PageForCoinAndObjectID> object representing the
     > response from the server.
 
 ## GetAllCoins
 
-#### Description
+##### Description
 
 Gets all coins for the specified public key.
 
-#### Parameters
+##### Parameters
 
 -   publicKey - The public key to get the coins for.
 
@@ -990,18 +990,18 @@ Gets all coins for the specified public key.
 
 -   limit - The maximum number of coins to return.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<PageForCoinAndObjectID> object representing the
     > response from the server.
 
 ## GetCoins
 
-#### Description
+##### Description
 
 Gets the coins of the specified type for the specified wallet.
 
-#### Parameters
+##### Parameters
 
 -   wallet - The wallet to get the coins for.
 
@@ -1011,74 +1011,74 @@ Gets the coins of the specified type for the specified wallet.
 
 -   limit - The maximum number of coins to return.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<CoinPage> object representing the response from
     > the server.
 
 ## GetCoinMetadata
 
-#### Description
+##### Description
 
 Gets the metadata for the specified coin.
 
-#### Parameters
+##### Parameters
 
 -   coinType - The type of coin to get the metadata for.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<CoinMetadata> object representing the response
     > from the server.
 
 ## GetReferenceGasPrice
 
-#### Description
+##### Description
 
 Gets the reference gas price.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<string> object representing the response from the
     > server.
 
 ## GetObject
 
-#### Description
+##### Description
 
 Gets the object with the specified ID.
 
-#### Parameters
+##### Parameters
 
 -   objectId - The ID of the object to get.
 
-#### Returns
+##### Returns
 
 -   A SUIObjectResponse object representing the response from the
     > server.
 
 ## GetObject
 
-#### Description
+##### Description
 
 Gets the object with the specified ID.
 
-#### Parameters
+##### Parameters
 
 -   objectId - The ID of the object to get.
 
-#### Returns
+##### Returns
 
 -   A SUIObjectResponse object representing the response from the
     > server.
 
 ## GetOwnedObjects
 
-#### Description
+##### Description
 
 Gets the objects owned by the specified address.
 
-#### Parameters
+##### Parameters
 
 -   address - The address to get the objects for.
 
@@ -1088,47 +1088,47 @@ Gets the objects owned by the specified address.
 
 -   limit - The maximum number of objects to return.
 
-#### Returns
+##### Returns
 
 -   A Page_for_SuiObjectResponse_and_ObjectID object representing the
     > response from the server.
 
 ## GetTotalSupply
 
-#### Description
+##### Description
 
 Gets the total supply of the specified coin.
 
-#### Parameters
+##### Parameters
 
 -   coinType - The type of coin to get the total supply for.
 
-#### Returns
+##### Returns
 
 -   A Supply object representing the response from the server.
 
 ## ExecuteTransactionBlock
 
-#### Description
+##### Description
 
 Executes a transaction block.
 
-#### Parameters
+##### Parameters
 
 -   args - The arguments to use for the transaction block.
 
-#### Returns
+##### Returns
 
 -   A SuiTransactionBlockResponse object representing the response from
     > the server.
 
 ## ExecuteTransactionBlock
 
-#### Description
+##### Description
 
 Executes a transaction block.
 
-#### Parameters
+##### Parameters
 
 -   txBytes - The transaction bytes to use for the transaction block.
 
@@ -1139,33 +1139,33 @@ Executes a transaction block.
 
 -   requestType - The type of request to use for the transaction block.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<SuiTransactionBlockResponse> object representing
     > the response from the server.
 
 ## DryRunTransactionBlock
 
-#### Description
+##### Description
 
 Dry runs a transaction block.
 
-#### Parameters
+##### Parameters
 
 -   txBytes - The transaction bytes to use for the transaction block.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<SuiTransactionBlockResponse> object representing
     > the response from the server.
 
 ## PaySui
 
-#### Description
+##### Description
 
 Pays SUI.
 
-#### Parameters
+##### Parameters
 
 -   signer - The wallet to use for signing the transaction.
 
@@ -1177,18 +1177,18 @@ Pays SUI.
 
 -   gasBudget - The gas budget for the transaction.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<TransactionBlockBytes> object representing the
     > response from the server.
 
 ## PayAllSui
 
-#### Description
+##### Description
 
 Pays all SUI.
 
-#### Parameters
+##### Parameters
 
 -   signer - The wallet to use for signing the transaction.
 
@@ -1198,18 +1198,18 @@ Pays all SUI.
 
 -   gasBudget - The gas budget for the transaction.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<TransactionBlockBytes> object representing the
     > response from the server.
 
 ## Pay
 
-#### Description
+##### Description
 
 Returns built transaction with passed parameters.
 
-#### Parameters
+##### Parameters
 
 -   signer - The wallet to use for signing the transaction.
 
@@ -1223,37 +1223,37 @@ Returns built transaction with passed parameters.
 
 -   gasBudget - The gas budget for the transaction.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<TransactionBlockBytes> object representing the
     > response from the server.
 
 ## QueryEvents
 
-#### Description
+##### Description
 
 Queries events.
 
-#### Parameters
+##### Parameters
 
 -   filter - The filter to use for the query.
 
-#### Returns
+##### Returns
 
 -   A JsonRpcResponse\<PageForEventAndEventID> object representing the
     > response from the server.
 
 ## QueryTransactionBlocks
 
-#### Description
+##### Description
 
 Queries transaction blocks.
 
-#### Parameters
+##### Parameters
 
 -   filters - The filters to use for the query.
 
-#### Returns
+##### Returns
 
 -   A
     > JsonRpcResponse\<PageForTransactionBlockResponseAndTransactionDigest>
@@ -1261,17 +1261,17 @@ Queries transaction blocks.
 
 ## MultiGetTransactionBlocks
 
-#### Description
+##### Description
 
 Gets multiple transaction blocks.
 
-#### Parameters
+##### Parameters
 
 -   digests - The digests of the transaction blocks to get.
 
 -   options - The options to use for the transaction blocks.
 
-#### Returns
+##### Returns
 
 -   A List\<SuiTransactionBlockResponse> object representing the
     > response from the server.
@@ -1280,18 +1280,18 @@ Gets multiple transaction blocks.
 
 ## Wallet()
 
-### Description
+#### Description
 
 Constructor for the Wallet class.
 
 ## Wallet(KeyPair keyPair, string password = "", string walletName = "")
 
-### Description
+#### Description
 
 Constructor for the Wallet class that takes a KeyPair object, password,
 and wallet name as parameters.
 
-### Parameters
+#### Parameters
 
 -   keyPair: The KeyPair object to use for the wallet.
 
@@ -1301,12 +1301,12 @@ and wallet name as parameters.
 
 ## Wallet(string mnemonic, string password = "", string walletName = "")
 
-### Description
+#### Description
 
 Constructor for the Wallet class that takes a mnemonic, password, and
 wallet name as parameters.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The mnemonic to use for the wallet.
 
@@ -1316,125 +1316,125 @@ wallet name as parameters.
 
 ## CreateAccount()
 
-### Description
+#### Description
 
 Generates a new mnemonic and key pair for the wallet.
 
-### Returns
+#### Returns
 
 The KeyPair object for the new account.
 
 ## RestoreAccount(string mnemonic)
 
-### Description
+#### Description
 
 Restores a key pair from the given mnemonic.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The mnemonic to use for restoring the key pair.
 
-### Returns
+#### Returns
 
 The KeyPair object for the restored account.
 
 ## GetWalletSavedKeys()
 
-### Description
+#### Description
 
 Returns a list of all saved wallet names.
 
-### Returns
+#### Returns
 
 A list of all saved wallet names.
 
 ## SaveWallet()
 
-### Description
+#### Description
 
 Saves the wallet to disk.
 
 ## SaveWallet(string newPassword)
 
-### Description
+#### Description
 
 Saves the wallet to disk with the given password.
 
-### Parameters
+#### Parameters
 
 -   newPassword: The password to use for saving the wallet.
 
 ## RestoreWallet(string walletName, string password)
 
-### Description
+#### Description
 
 Restores a wallet from disk.
 
-### Parameters
+#### Parameters
 
 -   walletName: The name of the wallet to restore.
 
 -   password: The password to use for restoring the wallet.
 
-### Returns
+#### Returns
 
 The restored Wallet object.
 
 ## RestoreWalletFromPrivateKey(string privateKey)
 
-### Description
+#### Description
 
 Restores a wallet from the given private key.
 
-### Parameters
+#### Parameters
 
 -   privateKey: The private key to use for restoring the wallet.
 
 ## RemoveWallet()
 
-### Description
+#### Description
 
 Removes the wallet from disk.
 
 ## Sign(byte\[\] message)
 
-### Description
+#### Description
 
 Signs the given message with the wallet's private key.
 
-### Parameters
+#### Parameters
 
 -   message: The message to sign.
 
-### Returns
+#### Returns
 
 The signature for the message.
 
 ## SignData(byte\[\] data)
 
-### Description
+#### Description
 
 Signs the given data with the wallet's private key.
 
-### Parameters
+#### Parameters
 
 -   data: The data to sign.
 
-### Returns
+#### Returns
 
 The signature for the data.
 
 ## GetMessageWithIntent(byte\[\] message)
 
-### Description
+#### Description
 
 Adds an intent to the given message.
 
-### Parameters
+#### Parameters
 
 -   message: The message to add an intent to.
 
-### Returns
+#### Returns
 
 The message with the added intent.
 
@@ -1444,134 +1444,134 @@ I hope this helps! Let me know if you have any further questions.
 
 ## GenerateNewMnemonic()
 
-### Description
+#### Description
 
 Generates a new BIP39 mnemonic.
 
-### Returns
+#### Returns
 
 The generated mnemonic.
 
 ## CheckMnemonicValidity(string mnemonic)
 
-### Description
+#### Description
 
 Checks if the given mnemonic is valid.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The mnemonic to check.
 
-### Returns
+#### Returns
 
 true if the mnemonic is valid, false otherwise.
 
 ## StringToByteArrayFastest(string hex)
 
-### Description
+#### Description
 
 Converts a hexadecimal string to a byte array.
 
-### Parameters
+#### Parameters
 
 -   hex: The hexadecimal string to convert.
 
-### Returns
+#### Returns
 
 The byte array representation of the hexadecimal string.
 
 ## GetBIP39SeedBytes(string seed)
 
-### Description
+#### Description
 
 Converts a BIP39 mnemonic to a byte array seed.
 
-### Parameters
+#### Parameters
 
 -   seed: The BIP39 mnemonic to convert.
 
-### Returns
+#### Returns
 
 The byte array seed.
 
 ## MnemonicToSeedHex(string seed)
 
-### Description
+#### Description
 
 Converts a BIP39 mnemonic to a hexadecimal seed.
 
-### Parameters
+#### Parameters
 
 -   seed: The BIP39 mnemonic to convert.
 
-### Returns
+#### Returns
 
 The hexadecimal seed.
 
 ## GenerateSeedFromMnemonic(string mnemonic)
 
-### Description
+#### Description
 
 Generates a seed from a BIP39 mnemonic.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The BIP39 mnemonic to generate the seed from.
 
-### Returns
+#### Returns
 
 The generated seed.
 
 ## IsValidPath(string path)
 
-### Description
+#### Description
 
 Checks if the given derivation path is valid.
 
-### Parameters
+#### Parameters
 
 -   path: The derivation path to check.
 
-### Returns
+#### Returns
 
 true if the derivation path is valid, false otherwise.
 
 ## IsValidMnemonic(string mnemonic)
 
-### Description
+#### Description
 
 Checks if the given mnemonic is valid.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The mnemonic to check.
 
-### Returns
+#### Returns
 
 true if the mnemonic is valid, false otherwise.
 
 ## SanitizeMnemonic(string mnemonic)
 
-### Description
+#### Description
 
 Sanitizes the given mnemonic.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The mnemonic to sanitize.
 
-### Returns
+#### Returns
 
 The sanitized mnemonic.
 
 ## DerivePath(string path, byte\[\] \_masterKey, byte\[\] \_chainCode)
 
-### Description
+#### Description
 
 Derives a key pair from the given derivation path, master key, and chain
 code.
 
-### Parameters
+#### Parameters
 
 -   path: The derivation path to use.
 
@@ -1579,70 +1579,70 @@ code.
 
 -   \_chainCode: The chain code to use.
 
-### Returns
+#### Returns
 
 A tuple containing the derived key and chain code.
 
 ## GenerateKeyPairFromMnemonic(string mnemonics)
 
-### Description
+#### Description
 
 Generates a key pair from the given BIP39 mnemonic.
 
-### Parameters
+#### Parameters
 
 -   mnemonics: The BIP39 mnemonic to use.
 
-### Returns
+#### Returns
 
 A KeyPair object containing the generated public and private keys.
 
 ## EncryptMnemonicWithPassword(string mnemonic, string password)
 
-### Description
+#### Description
 
 Encrypts the given BIP39 mnemonic with the given password.
 
-### Parameters
+#### Parameters
 
 -   mnemonic: The BIP39 mnemonic to encrypt.
 
 -   password: The password to use for encryption.
 
-### Returns
+#### Returns
 
 The encrypted mnemonic.
 
 ## DecryptMnemonicWithPassword(string encryptedMnemonic, string password)
 
-### Description
+#### Description
 
 Decrypts the given encrypted BIP39 mnemonic with the given password.
 
-### Parameters
+#### Parameters
 
 -   encryptedMnemonic: The encrypted BIP39 mnemonic to decrypt.
 
 -   password: The password to use for decryption.
 
-### Returns
+#### Returns
 
 The decrypted BIP39 mnemonic.
 
 ## GetPasswordWithMenmonic(string encryptedMnemonic, string mnemonic)
 
-### Description
+#### Description
 
 Decrypts the given encrypted BIP39 mnemonic with the given BIP39
 mnemonic.
 
-### Parameters
+#### Parameters
 
 -   encryptedMnemonic: The encrypted BIP39 mnemonic to decrypt.
 
 -   mnemonic: The BIP39 mnemonic to use for decryption.
 
-### Returns
+#### Returns
 
 The password used for encryption.
 
@@ -1650,56 +1650,56 @@ The password used for encryption.
 
 ## Property: publicKey
 
-### Description
+#### Description
 
 Gets or sets the public key for the KeyPair object.
 
 ## Property: privateKey
 
-### Description
+#### Description
 
 Gets or sets the private key for the KeyPair object.
 
 ## Property: publicKeyString
 
-### Description
+#### Description
 
 Gets or sets the public key as a base64-encoded string.
 
 ## Property: suiAddress
 
-### Description
+#### Description
 
 Gets or sets the SUI address for the KeyPair object.
 
 ## Property: suiSecret
 
-### Description
+#### Description
 
 Gets the SUI secret for the KeyPair object.
 
 ## IsSuiAddressInCorrectFormat(string address)
 
-### Description
+#### Description
 
 Checks if the given SUI address is in the correct format.
 
-### Parameters
+#### Parameters
 
 -   address: The SUI address to check.
 
-### Returns
+#### Returns
 
 true if the SUI address is in the correct format, false otherwise.
 
 ## KeyPair(byte\[\] publicKey, byte\[\] privateKey)
 
-### Description
+#### Description
 
 Constructor for the KeyPair class that takes a public key and private
 key as parameters.
 
-### Parameters
+#### Parameters
 
 -   publicKey: The public key to use for the KeyPair object.
 
@@ -1707,44 +1707,44 @@ key as parameters.
 
 ## ToSuiAddress(byte\[\] publicKeyBytes)
 
-### Description
+#### Description
 
 Converts the given public key to an SUI address.
 
-### Parameters
+#### Parameters
 
 -   publicKeyBytes: The public key to convert.
 
-### Returns
+#### Returns
 
 The SUI address for the public key.
 
 ## GetPrivateKeyFromSuiSecret(string suiSecret)
 
-### Description
+#### Description
 
 Gets the private key from the given SUI secret.
 
-### Parameters
+#### Parameters
 
 -   suiSecret: The SUI secret to use for getting the private key.
 
-### Returns
+#### Returns
 
 The private key for the SUI secret.
 
 ## GenerateKeyPairFromPrivateKey(string privateKey)
 
-### Description
+#### Description
 
 Generates a KeyPair object from the given private key.
 
-### Parameters
+#### Parameters
 
 -   privateKey: The private key to use for generating the KeyPair
     > object.
 
-### Returns
+#### Returns
 
 The generated KeyPair object.
 
@@ -1752,32 +1752,32 @@ The generated KeyPair object.
 
 ## Encrypt(string plainText, string passPhrase)
 
-### Description
+#### Description
 
 Encrypts the given plain text using the given pass phrase.
 
-### Parameters
+#### Parameters
 
 -   plainText: The plain text to encrypt.
 
 -   passPhrase: The pass phrase to use for encryption.
 
-### Returns
+#### Returns
 
 The encrypted cipher text.
 
 ## Decrypt(string cipherText, string passPhrase)
 
-### Description
+#### Description
 
 Decrypts the given cipher text using the given pass phrase.
 
-### Parameters
+#### Parameters
 
 -   cipherText: The cipher text to decrypt.
 
 -   passPhrase: The pass phrase to use for decryption.
 
-### Returns
+#### Returns
 
 The decrypted plain text.

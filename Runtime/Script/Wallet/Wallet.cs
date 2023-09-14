@@ -111,7 +111,7 @@ namespace AllArt.SUI.Wallets
 
             if (string.IsNullOrEmpty(walletName))
             {
-                walletName = $"Wallet {wallets.Count + 1}";
+                walletName = $"Wallet {walletIndex}";
             }
 
             while (wallets.Contains(walletName))
@@ -167,7 +167,11 @@ namespace AllArt.SUI.Wallets
         public void RemoveWallet()
         {
             List<string> wallets = GetWalletSavedKeys();
+            Debug.Log(walletName);
+            Debug.Log(wallets.Count);
             wallets.Remove(walletName);
+            Debug.Log(wallets.Count);
+            PlayerPrefs.DeleteKey(walletName);
             PlayerPrefs.SetString("wallets", string.Join(",", wallets.ToArray()));
         }
 

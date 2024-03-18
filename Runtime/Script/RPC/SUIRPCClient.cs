@@ -1,7 +1,6 @@
 using AllArt.SUI.Requests;
 using AllArt.SUI.RPC.Filter.Types;
 using AllArt.SUI.RPC.Response;
-using AllArt.SUI.RPC.Response;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Numerics;
@@ -109,34 +108,34 @@ namespace AllArt.SUI.RPC
             return rpcResponse;
         }
 
-        public async Task<SUIObjectResponse> GetObject(ObjectId objectId)
+        public async Task<SUIObjectResponse<ObjectType>> GetObject<ObjectType>(ObjectId objectId)
         {
             RPCRequestBase rpcRequest = new RPCRequestBase("suix_getObject");
             rpcRequest.AddParameter(objectId.id);
             ObjectDataOptions objectDataOptions = new ObjectDataOptions();
             rpcRequest.AddParameter(objectDataOptions);
-            var rpcResponse = await SendRequestAsync<SUIObjectResponse>(rpcRequest);
+            var rpcResponse = await SendRequestAsync<SUIObjectResponse<ObjectType>>(rpcRequest);
             return rpcResponse.result;
         }
 
-        public async Task<SUIObjectResponse> GetObject(string objectId)
+        public async Task<SUIObjectResponse<ObjectType>> GetObject<ObjectType>(string objectId)
         {
             RPCRequestBase rpcRequest = new RPCRequestBase("suix_getObject");
             rpcRequest.AddParameter(objectId);
             ObjectDataOptions objectDataOptions = new ObjectDataOptions();
             rpcRequest.AddParameter(objectDataOptions);
-            var rpcResponse = await SendRequestAsync<SUIObjectResponse>(rpcRequest);
+            var rpcResponse = await SendRequestAsync<SUIObjectResponse<ObjectType>>(rpcRequest);
             return rpcResponse.result;
         }
 
-        public async Task<Page_for_SuiObjectResponse_and_ObjectID> GetOwnedObjects(string address, ObjectResponseQuery query, string objectId, uint limit)
+        public async Task<Page_for_SuiObjectResponse_and_ObjectID<ObjectsType>> GetOwnedObjects<ObjectsType>(string address, ObjectResponseQuery query, string objectId, uint limit)
         {
             RPCRequestBase rpcRequest = new RPCRequestBase("suix_getOwnedObjects");
             rpcRequest.AddParameter(address);
             rpcRequest.AddParameter(query);
             rpcRequest.AddParameter(objectId);
             rpcRequest.AddParameter(limit);
-            var rpcResponse = await SendRequestAsync<Page_for_SuiObjectResponse_and_ObjectID>(rpcRequest);
+            var rpcResponse = await SendRequestAsync<Page_for_SuiObjectResponse_and_ObjectID<ObjectsType>>(rpcRequest);
             return rpcResponse.result;
         }
 
@@ -219,6 +218,21 @@ namespace AllArt.SUI.RPC
             rpcRequest.AddParameter(inputCoins);
             rpcRequest.AddParameter(recipients);
             rpcRequest.AddParameter(amounts);
+            rpcRequest.AddParameter(gas);
+            rpcRequest.AddParameter(gasBudget);
+            var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);
+            return rpcResponse;
+        }
+
+		public async Task<JsonRpcResponse<TransactionBlockBytes>> MoveCall(AllArt.SUI.Wallets.Wallet signer, string package, string module, string fun, string[] typeArguments, object[] arguments, string gasBudget, string gas = null)
+        {
+            RPCRequestBase rpcRequest = new RPCRequestBase("unsafe_moveCall");
+            rpcRequest.AddParameter(signer.publicKey);
+            rpcRequest.AddParameter(package);
+            rpcRequest.AddParameter(module);
+            rpcRequest.AddParameter(fun);
+            rpcRequest.AddParameter(typeArguments);
+            rpcRequest.AddParameter(arguments);
             rpcRequest.AddParameter(gas);
             rpcRequest.AddParameter(gasBudget);
             var rpcResponse = await SendRequestAsync<TransactionBlockBytes>(rpcRequest);

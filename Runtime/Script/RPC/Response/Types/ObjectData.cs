@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace AllArt.SUI.RPC.Response {
 
-    public class SUIObjectResponse {
-        public ObjectData data;
+    public class SUIObjectResponse<ObjectFields> {
+        public ObjectData<ObjectFields> data;
         public ObjectResponseError error;
     }
 
-    public class ObjectData
+    public class ObjectData<ObjectFields>
     { 
         public string objectId;
         public string version;
@@ -18,15 +18,15 @@ namespace AllArt.SUI.RPC.Response {
         public Owner owner;
         public string previousTransaction;
         public string storageRebate;
-        public Content content;
+        public Content<ObjectFields> content;
     }
 
-    public class  Content
+    public class  Content<ObjectFields>
     {
         public string dataType;
         public string type;
         public bool hasPublicTransfer;
-        public Fields fields;
+        public ObjectFields fields;
     }
 
     public class Fields

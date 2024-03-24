@@ -26,6 +26,7 @@ namespace AllArt.SUI.Wallets {
         {
             BIP39 p = new BIP39();
             string mnemonic = p.GenerateMnemonic(128, BIP39Wordlist.English);
+            mnemonic = new string(mnemonic.Where(c => char.IsLetter(c) || c == ' ').ToArray());
             return mnemonic;
         }
 

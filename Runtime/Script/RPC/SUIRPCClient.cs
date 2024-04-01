@@ -120,7 +120,8 @@ namespace AllArt.SUI.RPC
 
         public async Task<SUIObjectResponse<ObjectType>> GetObject<ObjectType>(string objectId)
         {
-            RPCRequestBase rpcRequest = new RPCRequestBase("suix_getObject");
+            // RPCRequestBase rpcRequest = new RPCRequestBase("suix_getObject");
+            RPCRequestBase rpcRequest = new RPCRequestBase("sui_getObject");
             rpcRequest.AddParameter(objectId);
             ObjectDataOptions objectDataOptions = new ObjectDataOptions();
             rpcRequest.AddParameter(objectDataOptions);
@@ -128,12 +129,12 @@ namespace AllArt.SUI.RPC
             return rpcResponse.result;
         }
 
-        public async Task<Page_for_SuiObjectResponse_and_ObjectID<ObjectsType>> GetOwnedObjects<ObjectsType>(string address, ObjectResponseQuery query, string objectId, uint limit)
+        public async Task<Page_for_SuiObjectResponse_and_ObjectID<ObjectsType>> GetOwnedObjects<ObjectsType>(string address, ObjectResponseQuery query, string cursor, uint limit)
         {
             RPCRequestBase rpcRequest = new RPCRequestBase("suix_getOwnedObjects");
             rpcRequest.AddParameter(address);
             rpcRequest.AddParameter(query);
-            rpcRequest.AddParameter(objectId);
+            rpcRequest.AddParameter(cursor);
             rpcRequest.AddParameter(limit);
             var rpcResponse = await SendRequestAsync<Page_for_SuiObjectResponse_and_ObjectID<ObjectsType>>(rpcRequest);
             return rpcResponse.result;

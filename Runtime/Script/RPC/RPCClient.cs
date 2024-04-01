@@ -19,7 +19,7 @@ namespace AllArt.SUI.RPC {
         internal async Task<JsonRpcResponse<T>> SendRequest<T>(object data)
         {
             var requestJson = JsonConvert.SerializeObject(data, new Newtonsoft.Json.Converters.StringEnumConverter());
-            // Debug.Log(requestJson);
+            Debug.Log($"REQUEST: {requestJson}");
             var requestData = System.Text.Encoding.UTF8.GetBytes(requestJson);
             using var uwr = new UnityWebRequest(_uri, "POST");
             uwr.uploadHandler = new UploadHandlerRaw(requestData);
@@ -32,7 +32,8 @@ namespace AllArt.SUI.RPC {
                 await Task.Yield();
             }
             try{
-                var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
+                Debug.Log($"RESPONSE: {uwr.downloadHandler.text}");
+				var response = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(uwr.downloadHandler.text);
                 return response;
 
             }
